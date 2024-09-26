@@ -1,6 +1,7 @@
 # ITI400-MI-infrastructure
 The project goal is to develop, implement, and maintain an easy-to-use website that allows users to report issues pertaining to public infrastructure.
-Including: Potholes, broken sidewalks, Street lights, street lights, and damaged signs
+Including Potholes, broken sidewalks, Street lights, street lights, and damaged signs
+
 The reporting and repair process will be streamlined resulting in faster and improved public safety
 This project will facilitate collaboration between users and local authorities by integrating GPS data and photo submissions, thus enhancing transparency, communication, and responsiveness to maintenance needs.
 
