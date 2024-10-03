@@ -7,4 +7,6 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
+in the directory of the server.js (/ITI400-MI-infrastructure\MI-Infrastructure) 
+type npm install express
 type npm run serve in cmd (pointed to file directory of MI-Infrastructure) to start the server
