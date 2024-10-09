@@ -40,3 +40,18 @@
 .read-the-docs {
   color: #888;
 }
+
+
+.bg-image {
+  background-image: url('https://plus.unsplash.com/premium_photo-1682724602925-f0264b85953f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YnVpbGRpbmclMjBjb25zdHJ1Y3Rpb258ZW58MHx8MHx8fDA%3D'); /* Replace with your image URL */
+  background-size: cover; /* This ensures the image covers the entire area */
+  background-position: center center; /* This centers the image */
+  background-repeat: no-repeat; /* Prevents the image from repeating */
+  width: 100%; /* Full width of the parent */
+  height: 70vh; /* Full viewport height, adjust as needed */
+  display: flex; /* Use flexbox to center content */
+  justify-content: center; /* Center contents horizontally */
+  align-items: center; /* Center contents vertically */
+ 
+}
+
