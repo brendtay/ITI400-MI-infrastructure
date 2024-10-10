@@ -1,31 +1,3 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
 
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
@@ -42,16 +14,19 @@
 }
 
 
-.bg-image {
-  background-image: url('https://plus.unsplash.com/premium_photo-1682724602925-f0264b85953f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YnVpbGRpbmclMjBjb25zdHJ1Y3Rpb258ZW58MHx8MHx8fDA%3D'); /* Replace with your image URL */
-  background-size: cover; /* This ensures the image covers the entire area */
-  background-position: center center; /* This centers the image */
-  background-repeat: no-repeat; /* Prevents the image from repeating */
-  width: 100%; /* Full width of the parent */
-  height: 70vh; /* Full viewport height, adjust as needed */
-  display: flex; /* Use flexbox to center content */
-  justify-content: center; /* Center contents horizontally */
-  align-items: center; /* Center contents vertically */
- 
+.container-fluid {
+  width: 100%; /* Ensures the container spans the full width of the page */
+  padding: 0;  /* Removes any default padding/margin */
+}
+
+.img-fluid {
+  width: 100%; /* Ensures the image takes the full width of its container */
+  height: auto; /* Keeps the image aspect ratio intact */
+}
+
+.position-absolute {
+  top: 50%; /* Centers the button vertically */
+  left: 50%; /* Centers the button horizontally */
+  transform: translate(-50%, -50%); /* Perfectly centers the button */
 }
 

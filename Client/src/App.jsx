@@ -6,9 +6,12 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css"
 import Navbar from './components/Navbar';
 import HomeButton from './components/HomeButton';
+import BackgroundImage from './components/backgroundImage';
+
 
 
 function App() {
+  
   const [count, setCount] = useState(0);
   const [array, setArray] = useState([]);  // This will store the fetched fruits
 
@@ -38,37 +41,24 @@ function App() {
         </div>
       </div>
 
+    
+      <div style={{ margin: 0, padding: 0 }}>
+      <BackgroundImage />
+      {/* Other components or content */}
+    </div>
+
+
+      </div>
+
       {/* Main Container for Navbar and HomeButton */}
       <div className="container"> {/* Bootstrap container for alignment */}
         <div className="row justify-content-center"> {/* Bootstrap row for flex layout */}
           <div className="col-auto"> {/* Column for Navbar with automatic width */}
             <Navbar />
-          </div>
-          <div className="col-auto"> {/* Column for HomeButton with automatic width */}
-            <HomeButton />
-          </div>
+
         </div>
       </div>
     </div>
-
-    <div className="container text-center my-5">
-</div>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        {
-          array.length > 0 ? (  // Render the fruits if the array has data
-            array.map((fruit, index) => (
-              <div key={index}>
-                <p>{fruit}</p>
-              </div>
-            ))
-          ) : (
-            <p>No fruits available</p>  // Fallback message if no data is fetched
-          )
-        }
-      </div>
 
     </div>
       
