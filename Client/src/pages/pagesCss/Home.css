@@ -1,0 +1,33 @@
+
+@media (prefers-reduced-motion: no-preference) {
+    a:nth-of-type(2) .logo {
+      animation: logo-spin infinite 20s linear;
+    }
+  }
+  
+  .card {
+    padding: 2em;
+  }
+  
+  .read-the-docs {
+    color: #888;
+  }
+  
+  
+  .container-fluid {
+    width: 100%; /* Ensures the container spans the full width of the page */
+    padding: 0;  /* Removes any default padding/margin */
+  }
+  
+  .img-fluid {
+    width: 100%; /* Ensures the image takes the full width of its container */
+    height: auto; /* Keeps the image aspect ratio intact */
+  }
+  
+  .position-absolute {
+    top: 50%; /* Centers the button vertically */
+    left: 50%; /* Centers the button horizontally */
+    transform: translate(-50%, -50%); /* Perfectly centers the button */
+  }
+  
+  

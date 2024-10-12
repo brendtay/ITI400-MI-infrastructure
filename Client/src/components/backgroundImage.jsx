@@ -1,7 +1,7 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Corrected the typo
 
-import '../components/componentCss/custom.css'
+import '../components/componentCss/backgroundImage.css'
 
 // Import the background image properly
 import background from '../images/background-image.jpg'; // Ensure the correct path to the image
