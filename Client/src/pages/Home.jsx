@@ -3,7 +3,7 @@ import './pagesCss/Home.css'
 import "bootstrap/dist/css/bootstrap.min.css"
 import Navbar from '../components/Navbar';
 import BackgroundImage from '../components/backgroundImage';
-
+import HowItWorks from '../components/howItWorks'
 
 export default function Home() {
   return (
@@ -15,10 +15,12 @@ export default function Home() {
             <b>Report Public Infrastructure Issues</b>
           </div>
         </div>
+
         <div style={{ margin: 0, padding: 0 }}>
         <BackgroundImage />
         {/* Other components or content */}
       </div>
+
         </div>
         {/* Main Container for Navbar*/}
         <div className="container"> {/* Bootstrap container for alignment */}
@@ -27,6 +29,13 @@ export default function Home() {
               <Navbar />
           </div>
         </div>
+       
+       <div>
+        <HowItWorks/>
+       </div>
+
+   
+            
       </div>
     </div>
   )
