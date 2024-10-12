@@ -43,7 +43,12 @@ const app = express();
 
 // Configure CORS options
 const corsOptions = {
-  origin: ["http://localhost:5173"],  // Allowing requests from your frontend running on Vite
+  origin: [
+    "http://localhost:5173", // Allowing requests from your *local* frontend running on Vite
+    process.env.PUBLIC_IP, 
+    process.env.PUBLIC_DNS    
+  ], 
+  optionsSuccessStatus: 200
 };
 
 app.use(cors(corsOptions));
@@ -54,6 +59,8 @@ app.get("/api", (req, res) => {
 });
 
 // Start the server
-app.listen(8080, () => {
-  console.log("Server started on port 8080");
+const port = process.env.PORT;
+
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Server started on port ${port}`);
 });
