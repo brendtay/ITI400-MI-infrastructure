@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const queries = require('../db/queries');
+const { getAllUsers, isEmailTaken, getUserByEmail, createUser } = require('../db/queries');
 const { authenticateToken, isRole } = require('../middleware/auth');
 
 const router = express.Router();
@@ -9,7 +9,7 @@ const router = express.Router();
 // Route: Get all users (admin-only)
 router.get('/', authenticateToken, isRole('Admin'), async (req, res) => {
     try {
-        const users = await queries.getAllUsers();
+        const users = await getAllUsers();
         res.json(users);
     } catch (error) {
         console.error('Error fetching users:', error); // Improved error handling
@@ -22,12 +22,12 @@ router.post('/register', async (req, res) => {
     const { name, email, password } = req.body;
 
     try {
-        if (await queries.isEmailTaken(email)) {
+        if (await isEmailTaken(email)) {
             return res.status(400).json({ error: 'Email is already in use.' });
         }
 
         const password_hash = await bcrypt.hash(password, 10);
-        const newUser = await queries.createUser({ name, email, password_hash });
+        const newUser = await createUser({ name, email, password_hash });
 
         res.status(201).json(newUser);
     } catch (error) {
@@ -41,7 +41,7 @@ router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const user = await queries.getUserByEmail(email);
+        const user = await getUserByEmail(email);
         if (!user) {
             return res.status(400).json({ error: 'Invalid email or password.' });
         }

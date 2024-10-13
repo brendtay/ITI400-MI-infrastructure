@@ -1,5 +1,5 @@
 const express = require('express');
-const queries = require('../db/queries');
+const { addNewIssue, updateIssueStatus, getAllIssueTypes } = require('../db/queries');
 const { authenticateToken, isRole } = require('../middleware/auth');
 
 const router = express.Router();
@@ -7,7 +7,7 @@ const router = express.Router();
 // Route: Get all issue types (public access)
 router.get('/types', async (req, res) => {
     try {
-        const issueTypes = await queries.getAllIssueTypes();
+        const issueTypes = await getAllIssueTypes();
         res.json(issueTypes);
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch issue types.' });
@@ -18,7 +18,7 @@ router.get('/types', async (req, res) => {
 router.post('/', authenticateToken, async (req, res) => {
     const issue = { ...req.body, user_id: req.user.user_id };
     try {
-        await queries.addNewIssue(issue);
+        await addNewIssue(issue);
         res.status(201).json({ message: 'Issue created successfully.' });
     } catch (error) {
         res.status(500).json({ error: 'Failed to create issue.' });
@@ -30,7 +30,7 @@ router.put('/:id/status', authenticateToken, isRole('MDOT Employee'), async (req
     const { id } = req.params;
     const { status_type } = req.body;
     try {
-        await queries.updateIssueStatus(id, status_type);
+        await updateIssueStatus(id, status_type);
         res.json({ message: 'Issue status updated successfully.' });
     } catch (error) {
         res.status(500).json({ error: 'Failed to update issue status.' });
