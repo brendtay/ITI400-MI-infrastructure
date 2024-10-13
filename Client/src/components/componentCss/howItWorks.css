@@ -1,0 +1,15 @@
+.img-hover-zoom {
+    transition: transform 0.3s ease; /* Smooth transition for the scaling effect */
+}
+
+.img-hover-zoom:hover {
+    transform: scale(1.1); /* Scale up the image on hover */
+}
+.text-above-image {
+    margin-bottom: 25px; /* Adjust this value as needed */
+}
+
+.container {
+    margin-bottom: 50px; /* Adjust the value as needed */
+  }
+  
