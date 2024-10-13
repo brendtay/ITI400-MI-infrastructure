@@ -2,6 +2,9 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const path = require("path");
+const issuesRouter = require('./routes/issues');
+const usersRouter = require('./routes/users');
 
 // Load environment variables from .env file
 dotenv.config();
@@ -24,10 +27,24 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// Define API route
+// Parse JSON requests
+app.use(express.json());
+
+// Serve static files from the Vite build folder (dist/)
+app.use(express.static(path.join(__dirname, "dist")));
+
+// Test API route
 app.get("/api", (req, res) => {
   res.json({ fruits: ["apple", "ornage", "banana"] });
 });
+
+// Serve index.html for any unknown route (React Router support)
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
+
+app.use('/api/issues', issuesRouter);
+app.use('/api/users', usersRouter);
 
 // Start the server
 const port = process.env.PORT;
