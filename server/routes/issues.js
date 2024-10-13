@@ -1,5 +1,5 @@
 const express = require('express');
-const { addNewIssue, updateIssueStatus, getAllIssueTypes } = require('../db/queries');
+const { addNewIssue, updateIssueStatus, getAllIssueTypes } = require('../db/issueQueries');
 const { authenticateToken, isRole } = require('../middleware/auth');
 
 const router = express.Router();
