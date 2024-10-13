@@ -32,15 +32,12 @@ app.use(express.json()); // Parse JSON requests
 app.use('/api/issues', issuesRouter);
 app.use('/api/users', usersRouter);
 
-// Serve static files from appropriate directories
-app.use('/css', express.static(path.join(__dirname, "../Client/css")));
-app.use('/public', express.static(path.join(__dirname, "../Client/public")));
-app.use('/src/assets', express.static(path.join(__dirname, "../Client/src/assets")));
-app.use('/src/images', express.static(path.join(__dirname, "../Client/src/images")));
+// Serve static assets from the dist folder
+app.use(express.static(path.join(__dirname, "../Client/dist")));
 
-// Serve the React app for all other routes (catch-all route)
+// Catch-all route to serve the React app for any route not matched
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../Client/index.html"));
+  res.sendFile(path.join(__dirname, "../Client/dist/index.html"));
 });
 
 // Test API route
