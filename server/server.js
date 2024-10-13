@@ -7,9 +7,6 @@ const path = require("path");
 // Load environment variables from .env file
 dotenv.config();
 
-// Import the database connection pool
-const pool = require("./db");
-
 // Import route handlers
 const issuesRouter = require('./routes/issues');
 const usersRouter = require('./routes/users');
@@ -20,8 +17,8 @@ const app = express();
 // Configure CORS options
 const corsOptions = {
   origin: [
-    "http://localhost:5173", // Allowing requests from your *local* frontend running on Vite
-    process.env.PUBLIC_IP, 
+    "http://localhost:5173", // Allow requests from your *local* frontend
+    process.env.PUBLIC_IP,
     process.env.PUBLIC_DNS
   ],
   optionsSuccessStatus: 200
@@ -31,30 +28,21 @@ const corsOptions = {
 app.use(cors(corsOptions)); // CORS middleware
 app.use(express.json()); // Parse JSON requests
 
-// Serve static files from the public folder
-app.use(express.static(path.join(__dirname, "../Client/public")));
-
 // Define API routes
 app.use('/api/issues', issuesRouter);
 app.use('/api/users', usersRouter);
 
+// Serve static files from the 'dist' folder
+app.use(express.static(path.join(__dirname, "../Client/dist")));
+
+// Catch-all route: Serve the frontend for any unknown route
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../Client/dist/index.html"));
+});
+
 // Test API route
 app.get("/api", (req, res) => {
-  res.json({ fruits: ["apple", "ornage", "banana"] });
-});
-
-// Serve frontend pages
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../Client/src/pages/Home.jsx"));
-});
-
-app.get("/about", (req, res) => {
-  res.sendFile(path.join(__dirname, "../Client/src/pages/About.jsx"));
-});
-
-// Catch-all route for React Router support
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../Client/src/pages/Home.jsx"));
+  res.json({ fruits: ["apple", "orange", "banana"] });
 });
 
 // Error handling middleware
