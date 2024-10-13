@@ -19,7 +19,7 @@ const corsOptions = {
   origin: [
     "http://localhost:5173", // Allow requests from your *local* frontend
     process.env.PUBLIC_IP,
-    process.env.PUBLIC_DNS
+    process.env.PUBLIC_DNS,
   ],
   optionsSuccessStatus: 200
 };
@@ -32,12 +32,15 @@ app.use(express.json()); // Parse JSON requests
 app.use('/api/issues', issuesRouter);
 app.use('/api/users', usersRouter);
 
-// Serve static files from the 'dist' folder
-app.use(express.static(path.join(__dirname, "../Client/dist")));
+// Serve static files from appropriate directories
+app.use('/css', express.static(path.join(__dirname, "../Client/css")));
+app.use('/public', express.static(path.join(__dirname, "../Client/public")));
+app.use('/src/assets', express.static(path.join(__dirname, "../Client/src/assets")));
+app.use('/src/images', express.static(path.join(__dirname, "../Client/src/images")));
 
-// Catch-all route: Serve the frontend for any unknown route
+// Serve the React app for all other routes (catch-all route)
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../Client/dist/index.html"));
+  res.sendFile(path.join(__dirname, "../Client/index.html"));
 });
 
 // Test API route
