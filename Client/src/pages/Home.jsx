@@ -2,8 +2,9 @@ import React from 'react'
 import './pagesCss/Home.css'
 import "bootstrap/dist/css/bootstrap.min.css"
 import Navbar from '../components/Navbar';
-import BackgroundImage from '../components/backgroundImage';
-import HowItWorks from '../components/howItWorks'
+import BackgroundImage from '../components/BackgroundImage';
+import HowItWorks from '../components/HowItWorks'
+import GoogleMapInt from "../components/GoogleMapsIntergration"
 
 export default function Home() {
   return (
@@ -34,7 +35,10 @@ export default function Home() {
         <HowItWorks/>
        </div>
 
-   
+       <div className="container text-center my-5">
+      <h1>Check Reports Near You</h1>
+        <GoogleMapInt/>
+    </div>
             
       </div>
     </div>

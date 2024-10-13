@@ -10,8 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@eslint/core": "7.32.0",
+    "@eslint/core": "latest",
     "@eslint/eslintrc": "^1.0.0",
+    "@react-google-maps/api": "^2.20.3",
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "eslint": "^7.32.0",

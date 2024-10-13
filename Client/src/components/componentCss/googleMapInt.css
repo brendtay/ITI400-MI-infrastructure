@@ -1,0 +1,7 @@
+.map-container {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 40vh; /* Set height to full viewport height or adjust as needed */
+  }
+  
