@@ -30,9 +30,6 @@ app.use(cors(corsOptions));
 // Parse JSON requests
 app.use(express.json());
 
-// Serve static files from the Vite build folder (dist/)
-app.use(express.static(path.join(__dirname, "dist")));
-
 // Test API route
 app.get("/api", (req, res) => {
   res.json({ fruits: ["apple", "ornage", "banana"] });
@@ -46,8 +43,17 @@ app.get("*", (req, res) => {
 app.use('/api/issues', issuesRouter);
 app.use('/api/users', usersRouter);
 
+// Serve static files from the Vite build folder (dist/)
+app.use(express.static(path.join(__dirname, "dist")));
+
 // Start the server
 const port = process.env.PORT;
+
+// Error handling
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: "Internal Server Error" });
+});
 
 app.listen(port, "0.0.0.0", () => {
   console.log(`Server started on port ${port}`);
