@@ -6,7 +6,7 @@ import '../components/componentCss/googleMapInt.css';
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 const containerStyle = {
-  width: '800px',
+  width: '100%', // Make it responsive
   height: '400px',
 };
 
@@ -36,33 +36,49 @@ export default function GoogleMapsIntegration() {
     });
   };
 
+  const handleGetLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setLocation({ lat: latitude, lng: longitude });
+        },
+        (error) => {
+          alert('Unable to retrieve your location: ' + error.message);
+        }
+      );
+    } else {
+      alert('Geolocation is not supported by this browser.');
+    }
+  };
+
   return (
-    <div className="map-container" style={{ position: 'relative', textAlign: 'center' }}>
-      {/* Search Bar */}
-      <div className="search-bar" style={{ position: 'absolute', top: '10px', left: '50%', bottom: '50px', transform: 'translateX(-50%)', zIndex: 10 }}>
+    <div className="map-container" style={{ textAlign: 'center' }}>
+      {/* Search Bar Container */}
+      <div className="search-bar" style={{ marginBottom: '10px', padding: '10px' }}>
         <input
           type="text"
           value={address}
           onChange={handleAddressChange}
           placeholder="Enter an address"
           className="form-control"
-          style={{ display: 'inline-block', width: '300px', marginRight: '10px' }} // Add margin-right for spacing
+          style={{ display: 'inline-block', width: '300px', marginRight: '10px' }} // Margin right for spacing
         />
         <button onClick={handleSearch} className="btn btn-primary">Search</button>
+        <button onClick={handleGetLocation} className="btn btn-secondary" style={{ marginLeft: '10px' }}>Use My Location</button>
       </div>
-      
-      {/* Gap Between Search Bar and Map */}
-      <div style={{ height: '70px' }} /> {/* Adjust height for desired gap */}
-      
-      {/* Google Map */}
+
+      {/* Google Map Container */}
       <LoadScript googleMapsApiKey={apiKey}>
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={location}
-          zoom={13}
-        >
-          <Marker position={location} />
-        </GoogleMap>
+        <div style={containerStyle}>
+          <GoogleMap
+            mapContainerStyle={containerStyle}
+            center={location}
+            zoom={13}
+          >
+            <Marker position={location} />
+          </GoogleMap>
+        </div>
       </LoadScript>
     </div>
   );
