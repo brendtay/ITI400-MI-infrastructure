@@ -1,0 +1,17 @@
+h1, h2 {
+    color: #343a40; /* Dark gray text */
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+.custom-margin {
+    margin-top: 100px; /* Adjust this value as needed */
+}
+.about-us{
+    margin-top: 100px;
+}
+.about-heading {
+    margin-bottom: 40px; /* Adjust this value as needed */
+}
