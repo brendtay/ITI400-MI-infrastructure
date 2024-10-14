@@ -1,20 +1,19 @@
-// src/components/GoogleMapsIntegration.jsx
 import React, { useState } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../components/componentCss/googleMapInt.css';
-import SearchBar from './SearchBar.jsx'; // Import the SearchBar component
+import SearchBar from './SearchBar';
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 const containerStyle = {
   width: '100%', // Make it responsive
-  height: '410px',
+  height: '100%', // Use full height of parent
 };
 
 const defaultCenter = {
   lat: 40.7128,
-  lng: -74.0060, // New York City coordinates
+  lng: -74.0060,
 };
 
 export default function GoogleMapsIntegration() {
@@ -55,8 +54,9 @@ export default function GoogleMapsIntegration() {
   };
 
   return (
-    <div className="map-container" style={{ textAlign: 'center' }}>    
-      {/* Google Map Container */}
+    <div className="map-container" style={{ textAlign: 'center', height: '100%' }}>
+      <div className="flex-fill">
+      </div>
       <LoadScript googleMapsApiKey={apiKey}>
         <div style={containerStyle}>
           <GoogleMap
