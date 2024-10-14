@@ -1,13 +1,15 @@
+// src/components/GoogleMapsIntegration.jsx
 import React, { useState } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../components/componentCss/googleMapInt.css';
+import SearchBar from './SearchBar.jsx'; // Import the SearchBar component
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 const containerStyle = {
   width: '100%', // Make it responsive
-  height: '400px',
+  height: '410px',
 };
 
 const defaultCenter = {
@@ -53,21 +55,7 @@ export default function GoogleMapsIntegration() {
   };
 
   return (
-    <div className="map-container" style={{ textAlign: 'center' }}>
-      {/* Search Bar Container */}
-      <div className="search-bar" style={{ marginBottom: '10px', padding: '10px' }}>
-        <input
-          type="text"
-          value={address}
-          onChange={handleAddressChange}
-          placeholder="Enter an address"
-          className="form-control"
-          style={{ display: 'inline-block', width: '300px', marginRight: '10px' }} // Margin right for spacing
-        />
-        <button onClick={handleSearch} className="btn btn-primary">Search</button>
-        <button onClick={handleGetLocation} className="btn btn-secondary" style={{ marginLeft: '10px' }}>Use My Location</button>
-      </div>
-
+    <div className="map-container" style={{ textAlign: 'center' }}>    
       {/* Google Map Container */}
       <LoadScript googleMapsApiKey={apiKey}>
         <div style={containerStyle}>
