@@ -30,3 +30,20 @@
   transform: translate(-50%, -50%); /* Perfectly centers the button */
 }
 
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensures the container takes at least the full height of the viewport */
+}
+
+.content {
+  flex: 1; /* Allows the content to grow and fill the available space */
+}
+
+/* Your footer styles */
+footer {
+  background-color: #f1f1f1; /* Example background color */
+  padding: 20px;
+  text-align: center;
+}

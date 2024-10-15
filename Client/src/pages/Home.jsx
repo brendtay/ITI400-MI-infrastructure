@@ -60,13 +60,7 @@ export default function Home() {
   return (
     <div>
       {/* Main Container for the Title */}
-      <div className="container text-center my-4">
-        <div style={{ color: 'white', fontSize: '40px' }}>
-          <b>Report Public Infrastructure Issues</b>
-        </div>
-      </div>
-
-      <div style={{ margin: 0, padding: 0 }}>
+      <div>
         <BackgroundImage />
       </div>
 
@@ -74,7 +68,7 @@ export default function Home() {
       <div className="container"> 
         <div className="row justify-content-center">
           <div className="col-auto">
-            <Navbar />
+         
           </div>
         </div>
 

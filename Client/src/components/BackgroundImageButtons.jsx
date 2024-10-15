@@ -1,8 +1,10 @@
 // BackgroundImageButtons.jsx
 import React from 'react';
 import { Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 const BackgroundImageButtons = () => {
+    const navigate = useNavigate();
     return (
         <div className='text-center'>
             <h1 className="text-white mb-4">Report Public Infrastructure Issues</h1>
@@ -12,7 +14,9 @@ const BackgroundImageButtons = () => {
                 </h3>
             </div>
             <div className="button-container d-flex justify-content-center">
-                <Button className="btn btn-primary btn-lg mx-2">Report An Issue Now</Button>
+            <Button className="btn btn-primary btn-lg mx-2" onClick={() => navigate('/form')}>
+                Report An Issue Now
+            </Button>
                 <Button className="btn btn-secondary btn-lg mx-2">Check In On A Report</Button>
             </div>
         </div>

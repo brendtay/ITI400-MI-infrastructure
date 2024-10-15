@@ -6,7 +6,7 @@ import groupImage from '../images/groupPage.jpg';
 
 export default function About() {
   return (
-    <div className="container custom-margin pt-5">
+    <div className="container custom-margin pt-2">
       <div className="row">
         <div className="col-md-6">
           <h2 className="mb-4">Our Mission</h2> {/* Added bottom margin */}

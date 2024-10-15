@@ -24,13 +24,14 @@ export default function BackgroundImage() {
     const backgroundStyle = {
         backgroundImage: `url(${background})`,
         backgroundSize: 'cover',
-        backgroundPosition: `center ${scrollY * 0.5}px`, // Parallax effect
+        backgroundPosition: 'center', // Set this to center for consistent centering
         width: '100vw',
         height: '80vh',
         position: 'relative',
-        top: 0,
+        top: -50,
         zIndex: 1,
     };
+    
 
     return (
         <div className="masthead" style={backgroundStyle}>
