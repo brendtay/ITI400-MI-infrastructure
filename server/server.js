@@ -3,9 +3,6 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const path = require("path");
-const fs = require("fs");
-const https = require("https");
-const http = require("http");
 
 // Load environment variables from .env file
 dotenv.config();
@@ -62,21 +59,8 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Internal Server Error" });
 });
 
-// Load SSL certificate and private key
-const options = {
-  key: fs.readFileSync(process.env.SSL_KEY_PATH),
-  cert: fs.readFileSync(process.env.SSL_CERT_PATH),
-};
-
-// Serve the app over HTTPS
-https.createServer(options, app).listen(443, "0.0.0.0", () => {
-  console.log("HTTPS server started on https://mi-infrastructure.com");
-});
-
-// Redirect HTTP traffic to HTTPS
-http.createServer((req, res) => {
-  res.writeHead(301, { Location: `https://${req.headers.host}${req.url}` });
-  res.end();
-}).listen(80, "0.0.0.0", () => {
-  console.log("Redirecting HTTP traffic to HTTPS");
+// Run server on port 8080
+const PORT = process.env.PORT || 8080; // Default to port 3000 if not specified in environment variables
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
