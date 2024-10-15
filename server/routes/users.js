@@ -57,11 +57,35 @@ router.post('/login', async (req, res) => {
             { expiresIn: '1h' }
         );
 
-        res.json({ token });
+        // Store the token in an HTTP-only, secure cookie
+        res.cookie('token', token, {
+            httpOnly: true, // Prevent client-side JS access to the cookie
+            secure: process.env.SECURE_COOKIES === 'true', // Send over HTTPS only in production
+            sameSite: 'Strict', 
+            maxAge: 3600000 // 1 hour (in ms)
+        });
+
+        res.json({ message: 'Login successful.' });
     } catch (error) {
         console.error('Error during login:', error);
         res.status(500).json({ error: 'Failed to login.' });
     }
 });
+
+// Route: User logout (clear the token cookie)
+router.post('/logout', (req, res) => {
+    try {
+        res.clearCookie('token', {
+            httpOnly: true,
+            secure: process.env.SECURE_COOKIES === 'true',
+            sameSite: 'Strict',
+        });
+        res.json({ message: 'Logout successful.' });
+    } catch (error) {
+        console.error('Error during logout:', error);
+        res.status(500).json({ error: 'Failed to logout.' });
+    }
+});
+
 
 module.exports = router;

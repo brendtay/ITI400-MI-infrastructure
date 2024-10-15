@@ -3,6 +3,9 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const path = require("path");
+const fs = require("fs");
+const https = require("https");
+const http = require("http");
 
 // Load environment variables from .env file
 dotenv.config();
@@ -16,12 +19,20 @@ const app = express();
 
 // Configure CORS options
 const corsOptions = {
-  origin: [
-    "http://localhost:5173", // Allow requests from your *local* frontend
-    process.env.PUBLIC_IP,
-    process.env.PUBLIC_DNS,
-  ],
-  optionsSuccessStatus: 200
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      "http://localhost:5173", // Allow requests from your *local* frontend
+      process.env.FRONTEND_URL, 
+      process.env.PUBLIC_DNS,   
+    ];
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true, 
+  optionsSuccessStatus: 200,
 };
 
 // Apply middlewares
@@ -51,8 +62,21 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Internal Server Error" });
 });
 
-// Start the server
-const port = process.env.PORT || 8080;
-app.listen(port, "0.0.0.0", () => {
-  console.log(`Server started on port ${port}`);
+// Load SSL certificate and private key
+const options = {
+  key: fs.readFileSync("/etc/letsencrypt/live/mi-infrastructure.com/privkey.pem"),
+  cert: fs.readFileSync("/etc/letsencrypt/live/mi-infrastructure.com/fullchain.pem"),
+};
+
+// Serve the app over HTTPS
+https.createServer(options, app).listen(443, "0.0.0.0", () => {
+  console.log("HTTPS server started on https://mi-infrastructure.com");
+});
+
+// Redirect HTTP traffic to HTTPS
+http.createServer((req, res) => {
+  res.writeHead(301, { Location: `https://${req.headers.host}${req.url}` });
+  res.end();
+}).listen(80, "0.0.0.0", () => {
+  console.log("Redirecting HTTP traffic to HTTPS");
 });
