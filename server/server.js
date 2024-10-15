@@ -64,8 +64,8 @@ app.use((err, req, res, next) => {
 
 // Load SSL certificate and private key
 const options = {
-  key: fs.readFileSync("/etc/letsencrypt/live/mi-infrastructure.com/privkey.pem"),
-  cert: fs.readFileSync("/etc/letsencrypt/live/mi-infrastructure.com/fullchain.pem"),
+  key: fs.readFileSync(process.env.SSL_KEY_PATH),
+  cert: fs.readFileSync(process.env.SSL_CERT_PATH),
 };
 
 // Serve the app over HTTPS
