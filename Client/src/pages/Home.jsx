@@ -76,9 +76,9 @@ export default function Home() {
           <HowItWorks />
         </div>
 
-{/* Flexbox layout to ensure GoogleMap and SearchBar occupy 60% and 40% of the container */}
-<div className="d-flex justify-content-between align-items-center" style={{ margin: '1rem 0' }}>
-  <div className="flex-fill" style={{ flex: '0 0 60%', height: '400px' }}>
+{/* Flexbox layout to ensure GoogleMap is above the SearchBar */}
+<div className="d-flex flex-column" style={{ margin: '1rem 0' }}>
+  <div className="flex-fill" style={{ height: '400px', marginBottom: '1rem' }}>
     {/* Google Map Container */}
     <LoadScript googleMapsApiKey={apiKey}>
       <div style={containerStyle}>
@@ -92,7 +92,8 @@ export default function Home() {
       </div>
     </LoadScript>
   </div>
-  <div className="flex-fill" style={{ flex: '0 0 40%', maxWidth: '400px' }}> {/* Set a max width here too */}
+  
+  <div className="flex-fill">
     <SearchBar
       address={address}
       onAddressChange={handleAddressChange}

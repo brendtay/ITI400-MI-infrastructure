@@ -29,7 +29,7 @@ const ReportIssueForm = () => {
 
   return (
     <div className="container custom-margin pt-2">
-      <h1 className="about-heading text-center mb-4">Report an Issue - YYY Infrastructure</h1>
+      <h1 className="about-heading text-center mb-4">Report an Issue - MI Infrastructure</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="issue-type" className="form-label">Issue Type:</label>

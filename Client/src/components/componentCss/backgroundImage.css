@@ -1,57 +1,35 @@
-
-button {
-    padding: 0.5rem 1rem; /* Adjust padding for smaller screens */
-    font-size: 1rem; /* Font size will be responsive */
-    flex: 1 1 auto; /* Allow buttons to grow/shrink based on available space */
-    max-width: 100%; /* Ensure buttons don’t overflow */
-}
-
-/* Media queries to adjust for smaller screens */
-@media (max-width: 768px) {
-    button {
-        padding: 0.4rem 0.8rem; /* Reduce padding on smaller screens */
-        font-size: 0.9rem; /* Slightly smaller font */
-        width: 100%; /* Make buttons take full width on smaller screens */
-        margin-bottom: 0.5rem; /* Add some margin between buttons when stacked */
-    }
-}
-
-@media (max-width: 480px) {
-    button {
-        padding: 0.3rem 0.7rem; /* Further reduce padding for phone screens */
-        font-size: 0.8rem; /* Even smaller font for phones */
-        width: 100%; /* Make buttons full width on very small screens */
-        margin-bottom: 0.5rem;
-    }
-}
 .masthead {
     display: block;
+    width: 100%;
+    height: 80vh;
+    background-size: cover; /* Make sure the image scales to cover the entire area */
+    background-position: center; /* Keep the image centered */
+    background-attachment: fixed; /* Keeps the background image fixed when scrolling */
 }
+
 html, body {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
-    left: 0; right: 0; margin: 0 auto;
 }
 
-/* If you have a wrapper div in App.jsx, add the following: */
 .wrapper {
     margin: 0;
     padding: 0;
     overflow-x: hidden; /* Prevent horizontal overflow */
 }
 
-/* Add this to your custom.css */
 .color-overlay {
-    position: absolute; /* To cover the entire background */
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5); /* Optional dark overlay */
-    color: white; /* Ensure buttons or text contrast well */
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
     display: flex;
     justify-content: center;
     align-items: center;
-} 
+    z-index: 2; /* Ensure it sits above the background */
+}

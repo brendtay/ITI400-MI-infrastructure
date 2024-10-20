@@ -9,7 +9,6 @@ import Footer from  "./components/Footer";
 import ReportIssueForm from './pages/ReportIusseForm';
 
 function App() {
-  const [count, setCount] = useState(0);
   const [array, setArray] = useState([]); // This will store the fetched fruits
 
   const fetchAPI = async () => {
@@ -27,20 +26,20 @@ function App() {
   }, []);
 
   return (
-    <div className="app-container">
-        <Router>
-            <Navbar /> {/* Ensure the Navbar is rendered */}
-            <div className="content">
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/form" element={<ReportIssueForm />} />
-                </Routes>
-            </div>
-            <Footer /> {/* Ensure the Footer is rendered */}
-        </Router>
+    <div className="d-flex flex-column min-vh-100">
+      <Router>
+        <Navbar /> {/* Ensure the Navbar is rendered */}
+        <div className="flex-grow-1"> {/* Main content area */}
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/form" element={<ReportIssueForm />} />
+          </Routes>
+        </div>
+        <Footer /> {/* Ensure the Footer is rendered */}
+      </Router>
     </div>
-);
+  );
 }
 
 export default App;

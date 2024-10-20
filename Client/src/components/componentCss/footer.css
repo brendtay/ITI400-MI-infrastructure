@@ -1,0 +1,11 @@
+footer {
+    position: relative;
+    clear: both; /* Ensures the footer stays below floated elements */
+  }
+  
+  @media (max-width: 576px) {
+    footer {
+      padding-bottom: 20px; /* Increase bottom padding for mobile */
+    }
+  }
+  

@@ -20,23 +20,19 @@ export default function BackgroundImage() {
         };
     }, []);
 
-    // Adjust the background position based on scroll
     const backgroundStyle = {
         backgroundImage: `url(${background})`,
         backgroundSize: 'cover',
-        backgroundPosition: 'center', // Set this to center for consistent centering
+        backgroundPosition: `center ${scrollY * 0.1}px`, // Parallax effect
         width: '100vw',
-        height: '80vh',
+        height: '65vh',
         position: 'relative',
-        top: -50,
         zIndex: 1,
     };
-    
 
     return (
         <div className="masthead" style={backgroundStyle}>
             <div className='color-overlay d-flex flex-column justify-content-center align-items-center'>
-                {/* Use the new BackgroundImageButtons component */}
                 <BackgroundImageButtons />
             </div>
         </div>

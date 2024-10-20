@@ -47,3 +47,12 @@ footer {
   padding: 20px;
   text-align: center;
 }
+
+.footer {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  background-color: #343a40;
+  color: white;
+  padding: 1rem;
+}

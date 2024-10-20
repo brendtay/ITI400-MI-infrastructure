@@ -28,7 +28,7 @@ const Navbar = () => {
               <Link className="nav-link p-2" to="/resources">Resources</Link> {/* Link to Resources */}
             </li>
             <li className="nav-item">
-              <Link className="nav-link p-2" to="/contact">Contact</Link> {/* Link to Contact */}
+              <Link className="nav-link p-2" to="/login">Log In</Link> {/* Link to Contact */}
             </li>
           </ul>
         </div>

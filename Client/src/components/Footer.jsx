@@ -1,5 +1,5 @@
 import React from 'react';
-
+import "./componentCss/footer.css"
 export default function Footer() {
   return (
     <footer className="bg-dark text-white pt-4 mt-4">
@@ -25,11 +25,10 @@ export default function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className="text-center py-3">
-          © 2024 Your Company. All rights reserved.
+        <div className="text-center py-3 border-top">
+          © 2024 Your MI-Infrastructure. All rights reserved.
         </div>
       </div>
     </footer>
   );
 }
-
