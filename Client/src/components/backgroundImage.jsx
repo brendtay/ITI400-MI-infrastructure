@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../components/componentCss/backgroundImage.css';
 import background from '../images/background-image.jpg';
-import { Container } from 'react-bootstrap';
 import BackgroundImageButtons from './BackgroundImageButtons'; // Import the new component
 
 export default function BackgroundImage() {
@@ -25,7 +24,6 @@ export default function BackgroundImage() {
         backgroundSize: 'cover',
         backgroundPosition: `center ${scrollY * 0.1}px`, // Parallax effect
         width: '100vw',
-        height: '65vh',
         position: 'relative',
         zIndex: 1,
     };

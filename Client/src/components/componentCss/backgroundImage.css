@@ -33,3 +33,13 @@ html, body {
     align-items: center;
     z-index: 2; /* Ensure it sits above the background */
 }
+
+.masthead {
+    height: 65vh; /* Default height for larger screens */
+}
+
+@media (max-width: 576px) {
+    .masthead {
+        height: 100vh; /* Increased height for mobile */
+    }
+}
