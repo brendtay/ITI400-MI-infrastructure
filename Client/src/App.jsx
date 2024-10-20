@@ -36,7 +36,7 @@ function App() {
             <Route path="/form" element={<ReportIssueForm />} />
           </Routes>
         </div>
-        <Footer /> {/* Ensure the Footer is rendered */}
+      
       </Router>
     </div>
   );
