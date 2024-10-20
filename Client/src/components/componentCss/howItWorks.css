@@ -14,3 +14,28 @@
     
   }
   
+  /* Base font sizes for larger screens */
+h1 {
+    font-size: 2.5rem; /* Adjust as needed for larger screens */
+}
+
+h3 {
+    font-size: 1.5rem; /* Adjust as needed for larger screens */
+}
+
+/* Media queries for smaller screens */
+@media (max-width: 576px) { /* Adjust the breakpoint as needed */
+    h1 {
+        font-size: 1.8rem; /* Smaller size for mobile */
+    }
+
+    h3 {
+        font-size: 1rem; /* Smaller size for mobile */
+    }
+}
+
+/* Base styles for larger screens */
+.button-container {
+    padding: 20px; /* Adjust as needed for top and bottom */
+}
+
