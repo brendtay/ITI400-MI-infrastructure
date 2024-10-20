@@ -7,11 +7,15 @@ const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization']; 
     const token = authHeader && authHeader.split(' ')[1]; 
 
-    if (!token) {
+    const cookieToken = req.cookies && req.cookies['token'];
+
+    const jwtToken = token || cookieToken;
+
+    if (!jwtToken) {
         return res.status(401).json({ error: 'Access denied. No token provided.' });
     }
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    jwt.verify(jwtToken, process.env.JWT_SECRET, (err, user) => {
         if (err) {
             return res.status(403).json({ error: 'Invalid or expired token.' });
         }

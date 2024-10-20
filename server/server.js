@@ -16,12 +16,20 @@ const app = express();
 
 // Configure CORS options
 const corsOptions = {
-  origin: [
-    "http://localhost:5173", // Allow requests from your *local* frontend
-    process.env.PUBLIC_IP,
-    process.env.PUBLIC_DNS,
-  ],
-  optionsSuccessStatus: 200
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      "http://localhost:5173", // Allow requests from your *local* frontend
+      process.env.FRONTEND_URL, 
+      process.env.PUBLIC_DNS,   
+    ];
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true, 
+  optionsSuccessStatus: 200,
 };
 
 // Apply middlewares
@@ -51,8 +59,8 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Internal Server Error" });
 });
 
-// Start the server
-const port = process.env.PORT || 8080;
-app.listen(port, "0.0.0.0", () => {
-  console.log(`Server started on port ${port}`);
+// Run server on port 8080
+const PORT = process.env.PORT || 8080; // Default to port 3000 if not specified in environment variables
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
