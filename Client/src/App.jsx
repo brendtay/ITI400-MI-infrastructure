@@ -8,17 +8,23 @@ import About from './pages/About';
 import Footer from  "./components/Footer"; 
 import ReportIssueForm from './pages/ReportIusseForm';
 import Login from './pages/Login';
+import "../src/App.css"
+import { FormText } from 'react-bootstrap';
+
 
 function App() {
   const [array, setArray] = useState([]); // This will store the fetched fruits
+  const [loading, setLoading] = useState(true); // Loading state to prevent render until data is fetched
 
   const fetchAPI = async () => {
     try {
       const response = await axios.get("http://localhost:8080/api");
       console.log(response.data.fruits);
       setArray(response.data.fruits); // Update array with the fetched fruits
+      setLoading(false); // Set loading to false once data is fetched
     } catch (error) {
       console.error("Error fetching the API:", error);
+      setLoading(false); // Stop loading in case of error
     }
   };
 
@@ -26,11 +32,13 @@ function App() {
     fetchAPI();
   }, []);
 
-  return (
-    <div className="d-flex flex-column min-vh-100">
+  return loading ? (
+    <div>Loading...</div> // Show a loading state until data is fetched
+  ) : (
+    <div className="d-flex flex-column" style={{ minHeight: '100vh' }}>
       <Router>
-        <Navbar /> {/* Ensure the Navbar is rendered */}
-        <div className="flex-grow-1"> {/* Main content area */}
+        <Navbar/>
+        <div className="flex-grow-1" style={{ overflowY: 'auto' }}> {/* Main content area */}
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
@@ -38,7 +46,7 @@ function App() {
             <Route path="/login" element={<Login />} />
           </Routes>
         </div>
-        <Footer /> {/* Ensure the Footer is rendered */}
+     
       </Router>
     </div>
   );

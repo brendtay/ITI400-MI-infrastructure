@@ -1,6 +1,23 @@
-.about-heading {
-    margin-bottom: 40px; /* Adjust this value as needed */
-}
-.custom-margin {
-    margin-top: 150px; /* Adjust this value as needed */
-}
+/* Main page wrapper to ensure full-screen height */
+.form-page {
+    min-height: 100vh; /* Ensures the page always fills the viewport */
+  }
+  
+  /* Default min height for the form container */
+  .form-container {
+    min-height: 80vh;
+  }
+  
+  /* Adjust min height on smaller screens */
+  @media (max-width: 768px) {
+    .form-container {
+      min-height: 70vh;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .form-container {
+      min-height: 60vh;
+    }
+  }
+  

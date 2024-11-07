@@ -1,52 +1,28 @@
-
-.card {
-  padding: 2em;
+/* Add this to global styles to fix footer issues */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden; /* Prevent horizontal overflow */
 }
 
-.read-the-docs {
-  color: #888;
-}
-
-
-.container-fluid {
-  width: 100%; /* Ensures the container spans the full width of the page */
-  padding: 0;  /* Removes any default padding/margin */
-}
-
-.img-fluid {
-  width: 100%; /* Ensures the image takes the full width of its container */
-  height: auto; /* Keeps the image aspect ratio intact */
-}
-
-.position-absolute {
-  top: 50%; /* Centers the button vertically */
-  left: 50%; /* Centers the button horizontally */
-  transform: translate(-50%, -50%); /* Perfectly centers the button */
-}
-
-
-.app-container {
+#root {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Ensures the container takes at least the full height of the viewport */
 }
 
-.content {
-  flex: 1; /* Allows the content to grow and fill the available space */
+.d-flex {
+  display: flex;
 }
 
-/* Your footer styles */
-footer {
-  background-color: #f1f1f1; /* Example background color */
-  padding: 20px;
-  text-align: center;
+.min-vh-100 {
+  min-height: 100vh;
 }
 
-.footer {
-  position: relative;
-  bottom: 0;
-  width: 100%;
-  background-color: #343a40;
-  color: white;
-  padding: 1rem;
+.flex-grow-1 {
+  flex-grow: 1;
+  overflow-y: auto; /* Allow scrolling of main content */
 }
+
