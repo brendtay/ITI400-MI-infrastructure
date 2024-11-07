@@ -7,6 +7,7 @@ import Home from './pages/Home'; // Use correct relative paths
 import About from './pages/About';
 import Footer from  "./components/Footer"; 
 import ReportIssueForm from './pages/ReportIusseForm';
+import Login from './pages/Login';
 
 function App() {
   const [array, setArray] = useState([]); // This will store the fetched fruits
@@ -34,6 +35,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/form" element={<ReportIssueForm />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </div>
         <Footer /> {/* Ensure the Footer is rendered */}
