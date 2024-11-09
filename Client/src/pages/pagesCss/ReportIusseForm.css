@@ -1,23 +1,26 @@
-/* Main page wrapper to ensure full-screen height */
-.form-page {
-    min-height: 100vh; /* Ensures the page always fills the viewport */
+.report-issue-container {
+  min-height: 110vh;
+}
+
+@media (max-width: 1920px) {
+  .report-issue-container {
+    min-height: 130vh;
   }
-  
-  /* Default min height for the form container */
-  .form-container {
-    min-height: 80vh;
+}
+
+@media (max-width: 768px) {
+  .report-issue-container {
+    min-height: 140vh;
   }
-  
-  /* Adjust min height on smaller screens */
-  @media (max-width: 768px) {
-    .form-container {
-      min-height: 70vh;
-    }
+}
+
+@media (max-width: 576px) {
+  .report-issue-container {
+    min-height: 155vh;
   }
-  
-  @media (max-width: 480px) {
-    .form-container {
-      min-height: 60vh;
-    }
+}
+@media (max-width: 400px) {
+  .report-issue-container {
+    min-height: 200vh;
   }
-  
+}

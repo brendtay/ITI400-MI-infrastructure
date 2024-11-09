@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './pagesCss/Login.css';
+import './pagesCss/ReportIusseForm.css';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api'; // For Google Maps integration
 
@@ -71,18 +71,24 @@ const ReportIssueForm = () => {
               placeholder="Enter address"
               required
             />
-            {/* Google Maps component (just for simplicity, showing map to pick location) */}
-            <LoadScript googleMapsApiKey={apiKey}>
-              <GoogleMap
-                id="example-map"
-                mapContainerStyle={{ height: '300px', width: '100%' }}
-                center={coordinates || { lat: 42.962, lng: -83.687 }}
-                zoom={15}
-              >
-                {coordinates && <Marker position={coordinates} />}
-              </GoogleMap>
-            </LoadScript>
           </div>
+
+          {/* Added space using Bootstrap margin class */}
+          <div className="mb-3"></div> {/* This adds space between location input and map */}
+
+          {/* Google Maps component */}
+          <LoadScript googleMapsApiKey={apiKey}>
+            <GoogleMap
+              id="example-map"
+              mapContainerStyle={{ height: '280px', width: '100%' }}
+              center={coordinates || { lat: 42.962, lng: -83.687 }}
+              zoom={15}
+            >
+              {coordinates && <Marker position={coordinates} />}
+            </GoogleMap>
+          </LoadScript>
+          <div className="mb-3"></div> {/* This adds space between location input and map */}
+
           <div className="mb-3">
             <label htmlFor="description" className="form-label">Description of the Issue</label>
             <textarea
