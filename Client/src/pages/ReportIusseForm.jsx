@@ -3,6 +3,8 @@ import './pagesCss/Login.css';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api'; // For Google Maps integration
 
+const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+
 const ReportIssueForm = () => {
   const [issueType, setIssueType] = useState('');
   const [location, setLocation] = useState('');
@@ -37,7 +39,7 @@ const ReportIssueForm = () => {
   };
 
   return (
-    <div className="d-flex align-items-center justify-content-center" style={{ minHeight: '160vh' }}>
+    <div className="d-flex align-items-center justify-content-center report-issue-container">
       <div className="container p-4 border rounded" style={{ maxWidth: '500px' }}>
         <h2 className="text-center mb-4">Report an Issue</h2>
         <form onSubmit={handleSubmit}>
@@ -70,7 +72,7 @@ const ReportIssueForm = () => {
               required
             />
             {/* Google Maps component (just for simplicity, showing map to pick location) */}
-            <LoadScript googleMapsApiKey="YOUR_GOOGLE_MAPS_API_KEY">
+            <LoadScript googleMapsApiKey={apiKey}>
               <GoogleMap
                 id="example-map"
                 mapContainerStyle={{ height: '300px', width: '100%' }}

@@ -6,10 +6,10 @@ import groupImage from '../images/groupPage.jpg';
 
 export default function About() {
   return (
-    <div className="container custom-margin pt-2">
+    <div className="container custom-margin" style={{ paddingTop: '120px' }}> {/* Increased padding top */}
       <div className="row">
         <div className="col-md-6">
-          <h2 className="mb-4">Our Mission</h2> {/* Added bottom margin */}
+          <h2 className="mb-4">Our Mission</h2>
           <p>
             At MI-Infrastructure, our mission is to empower residents to enhance their communities by providing an easy-to-use platform for reporting infrastructure issues. 
             We strive to simplify the process of submitting reports, allowing users to include GPS locations and photos, describe problems, and track the progress of their submissions. 
@@ -19,8 +19,8 @@ export default function About() {
         </div>
 
         <div className="col-md-6 d-flex flex-column align-items-start"> 
-          <h2 className="mb-4">Our Team</h2> {/* Added bottom margin */}
-          <div className="d-flex justify-content-center"> {/* Flexbox container to center the image */}
+          <h2 className="mb-4">Our Team</h2>
+          <div className="d-flex justify-content-center">
             <img 
               src={groupImage} 
               alt="Description of the image" 
@@ -31,9 +31,9 @@ export default function About() {
         </div>
       </div>
 
-      <div className="row mt-5"> {/* Added margin to the row */}
+      <div className="row mt-5">
         <div className="col-md-6">
-          <h2 className="mb-4">Our Vision</h2> {/* Added bottom margin */}
+          <h2 className="mb-4">Our Vision</h2>
           <p>
             At MI-Infrastructure, we envision a community where every resident can easily report issues with public infrastructure, contributing to a safer and more efficient environment. 
             Our platform will empower users to submit detailed reports by providing photos and descriptions of issues, while automatically capturing GPS locations or allowing for manual entry to ensure accuracy. 
@@ -43,7 +43,7 @@ export default function About() {
         </div>
 
         <div className="col-md-6">
-          <h2 className="mb-4">Our History</h2> {/* Added bottom margin */}
+          <h2 className="mb-4">Our History</h2>
           <p>
             Founded in 2024, MI-Infrastructure emerged from a pressing need to enhance public infrastructure reporting and management within Michigan. 
             Recognizing the challenges faced by citizens in reporting issues such as potholes, broken sidewalks, and damaged street lights, a group of college students came together to create a user-friendly platform that streamlines the reporting process.
@@ -52,7 +52,7 @@ export default function About() {
       </div>
 
       <h2 className="text-center mb-3 mt-5">About Our Team</h2>
-      <div className="row mt-5">  {/* Added margin to the row */}
+      <div className="row mt-5">
         <div className="col-md-6">
           <div className="card">
             <div className="card-body">
