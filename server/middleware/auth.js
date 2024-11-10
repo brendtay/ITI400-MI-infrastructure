@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config(); // Load environment variables
 
-//Middleware to authenticate JWT tokens.
+// Middleware to authenticate JWT tokens.
 
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization']; 
@@ -24,8 +24,7 @@ const authenticateToken = (req, res, next) => {
     });
 };
 
-//Authorize users based on role
-
+// Authorize users based on role
 const isRole = (requiredRole) => (req, res, next) => {
     try {
         // Check if the user's role matches the required role

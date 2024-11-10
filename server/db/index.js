@@ -1,4 +1,5 @@
 const { Pool } = require("pg");
+const AWS = require('aws-sdk');
 require("dotenv").config(); // Load environment variables
 
 // Create PostgreSQL connection pool using environment variables
@@ -9,6 +10,13 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
   ssl: { rejectUnauthorized: false }, 
+});
+
+// Configure AWS S3 connection
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID, 
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY, 
+  region: 'us-east-2' 
 });
 
 // Test the connection
@@ -27,5 +35,6 @@ pool.connect((err, client, release) => {
   }
 });
 
-// Export the pool to use it in other parts of the app
+// Export the pool and s3 to use it in other parts of the app
 module.exports = pool;
+module.exports = { s3 };

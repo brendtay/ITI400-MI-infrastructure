@@ -10,6 +10,7 @@ dotenv.config();
 // Import route handlers
 const issuesRouter = require('./routes/issues');
 const usersRouter = require('./routes/users');
+const s3Router = require('./routes/s3');
 
 // Initialize the Express app
 const app = express();
@@ -39,6 +40,7 @@ app.use(express.json()); // Parse JSON requests
 // Define API routes
 app.use('/api/issues', issuesRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/s3', s3Router);
 
 // Serve static assets from the dist folder
 app.use(express.static(path.join(__dirname, "../Client/dist")));
