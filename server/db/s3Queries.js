@@ -1,5 +1,4 @@
-const { s3 } = require('./index');
-const { pool } = require('./db'); 
+const { s3, pool } = require('./index');
 
 // Upload images to S3
 const uploadImageToS3 = async (file, userId, issueId) => {
