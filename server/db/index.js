@@ -36,5 +36,4 @@ pool.connect((err, client, release) => {
 });
 
 // Export the pool and s3 to use it in other parts of the app
-module.exports = pool;
-module.exports = { s3 };
+module.exports = { pool, s3 };

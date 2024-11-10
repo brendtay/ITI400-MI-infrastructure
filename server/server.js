@@ -62,7 +62,7 @@ app.use((err, req, res, next) => {
 });
 
 // Run server on port 8080
-const PORT = process.env.PORT || 8080; // Default to port 3000 if not specified in environment variables
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
