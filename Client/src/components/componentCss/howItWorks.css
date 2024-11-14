@@ -39,3 +39,17 @@ h3 {
     padding: 20px; /* Adjust as needed for top and bottom */
 }
 
+/* Default styling for images */
+img {
+    width: 100%; /* Full width by default to make images responsive */
+    height: auto; /* Maintains aspect ratio */
+  }
+  
+  /* Smaller images on screens less than 768px */
+  @media (max-width: 768px) {
+    img {
+      max-width: 90%; /* Scale down to 90% of the container width */
+      margin: 0 auto; /* Center-align the images */
+      display: block;
+    }
+  }

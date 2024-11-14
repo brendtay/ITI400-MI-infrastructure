@@ -3,6 +3,7 @@ import './pagesCss/ReportIusseForm.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
+
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 const ReportIssueForm = () => {
@@ -14,7 +15,6 @@ const ReportIssueForm = () => {
   const [email, setEmail] = useState('');
   const [coordinates, setCoordinates] = useState(null);
 
-  // Set --min-height dynamically based on viewport height
   useEffect(() => {
     const setMinHeight = () => {
       const vh = window.innerHeight * 0.01;
@@ -45,8 +45,21 @@ const ReportIssueForm = () => {
     console.log('Email:', email);
   };
 
-  const handleLocationSelection = (lat, lng) => {
-    setCoordinates({ lat, lng });
+  const useDeviceLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setCoordinates({ lat: latitude, lng: longitude });
+          setLocation(''); // Clear manual location entry if device location is used
+        },
+        (error) => {
+          console.error("Error obtaining location:", error);
+        }
+      );
+    } else {
+      alert("Geolocation is not supported by your browser.");
+    }
   };
 
   return (
@@ -71,20 +84,43 @@ const ReportIssueForm = () => {
               <option value="other">Other</option>
             </select>
           </div>
-          <div className="mb-3">
-            <label htmlFor="location" className="form-label">Location</label>
-            <input
-              type="text"
-              id="location"
-              className="form-control"
-              value={location}
-              onChange={handleLocationChange}
-              placeholder="Enter address"
-              required
-            />
-          </div>
 
-          <div className="mb-3"></div>
+          <div className="container-fluid mb-3">
+            {/* Card for Enter Address */}
+            <div className="card bg-light p-3 mb-3">
+              <div className="card-body">
+                <h5 className="card-title">Enter Address</h5>
+                <input
+                  type="text"
+                  id="location"
+                  className="form-control form-control-lg mb-2"
+                  value={location}
+                  onChange={handleLocationChange}
+                  placeholder="Enter address"
+                  required
+                />
+                <button type="button" className="btn btn-primary w-100">
+                  Search
+                </button>
+              </div>
+            </div>
+
+            {/* "or" Text */}
+            <div className="text-center mb-3">
+              <strong>or</strong>
+            </div>
+
+            {/* Card for Use My Location */}
+            <div className="card bg-light p-3">
+              <div className="card-body text-center">
+                <h5 className="card-title">Use My Location</h5>
+                <p>Press the button below to use your device's current location.</p>
+                <button type="button" className="btn btn-outline-secondary w-100" onClick={useDeviceLocation}>
+                  Use My Location
+                </button>
+              </div>
+            </div>
+          </div>
 
           <LoadScript googleMapsApiKey={apiKey}>
             <GoogleMap
@@ -96,7 +132,6 @@ const ReportIssueForm = () => {
               {coordinates && <Marker position={coordinates} />}
             </GoogleMap>
           </LoadScript>
-          <div className="mb-3"></div>
 
           <div className="mb-3">
             <label htmlFor="description" className="form-label">Description of the Issue</label>

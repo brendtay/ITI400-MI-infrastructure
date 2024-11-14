@@ -6,8 +6,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-lg bg-dark navbar-dark fixed-top">
-      <div className="container-fluid px-2"> {/* Adjust padding as needed */}
-        <Link className="navbar-brand p-2" to="/">MI-Infrastructure</Link> {/* Smaller padding */}
+      <div className="container-fluid px-3"> {/* Adjust padding as needed */}
+        <Link className="navbar-brand p-3" to="/">MI-Infrastructure</Link> {/* Smaller padding */}
         <button 
           className="navbar-toggler" 
           type="button" 
