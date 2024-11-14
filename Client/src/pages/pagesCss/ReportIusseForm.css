@@ -1,16 +1,24 @@
+/* Base style using dynamic min-height */
 .report-issue-container {
-  min-height: 110vh;
+  min-height: var(--min-height, 120vh); /* Uses JS variable or defaults to 110vh */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 80px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
+/* Specific adjustments for each screen size, applied as fallbacks */
 @media (max-width: 1920px) {
   .report-issue-container {
-    min-height: 130vh;
+    min-height: 150vh; /* Fallback in case JS isn't available */
   }
 }
 
 @media (max-width: 768px) {
   .report-issue-container {
-    min-height: 140vh;
+    min-height: 160vh;
   }
 }
 
@@ -19,6 +27,7 @@
     min-height: 155vh;
   }
 }
+
 @media (max-width: 400px) {
   .report-issue-container {
     min-height: 200vh;

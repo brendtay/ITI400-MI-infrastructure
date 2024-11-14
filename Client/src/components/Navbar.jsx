@@ -6,8 +6,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-lg bg-dark navbar-dark fixed-top">
-      <div className="container-fluid px-4"> {/* Added horizontal padding */}
-        <Link className="navbar-brand p-4" to="/">MI-Infrastructure</Link>
+      <div className="container-fluid px-2"> {/* Adjust padding as needed */}
+        <Link className="navbar-brand p-2" to="/">MI-Infrastructure</Link> {/* Smaller padding */}
         <button 
           className="navbar-toggler" 
           type="button" 
@@ -21,16 +21,16 @@ const Navbar = () => {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <Link className="nav-link active p-2" aria-current="page" to="/form">Report An Issue</Link>
+              <Link className="nav-link active p-1" aria-current="page" to="/form">Report An Issue</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link p-2" to="/about">About Us</Link>
+              <Link className="nav-link p-1" to="/about">About Us</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link p-2" to="/resources">Resources</Link>
+              <Link className="nav-link p-1" to="/resources">Resources</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link p-2" to="/login">Log In</Link>
+              <Link className="nav-link p-1" to="/login">Log In</Link>
             </li>
           </ul>
         </div>
@@ -38,5 +38,6 @@ const Navbar = () => {
     </nav>
   );
 }
+
 
 export default Navbar;

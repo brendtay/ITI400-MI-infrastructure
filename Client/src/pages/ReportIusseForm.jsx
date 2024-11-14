@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './pagesCss/ReportIusseForm.css';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api'; // For Google Maps integration
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -12,7 +12,19 @@ const ReportIssueForm = () => {
   const [photo, setPhoto] = useState(null);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [coordinates, setCoordinates] = useState(null); // For storing coordinates
+  const [coordinates, setCoordinates] = useState(null);
+
+  // Set --min-height dynamically based on viewport height
+  useEffect(() => {
+    const setMinHeight = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--min-height', `${vh * 110}px`);
+    };
+
+    setMinHeight();
+    window.addEventListener('resize', setMinHeight);
+    return () => window.removeEventListener('resize', setMinHeight);
+  }, []);
 
   const handleLocationChange = (e) => {
     setLocation(e.target.value);
@@ -24,7 +36,6 @@ const ReportIssueForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission here
     console.log('Issue Type:', issueType);
     console.log('Location:', location);
     console.log('Coordinates:', coordinates);
@@ -39,8 +50,8 @@ const ReportIssueForm = () => {
   };
 
   return (
-    <div className="d-flex align-items-center justify-content-center report-issue-container">
-      <div className="container p-4 border rounded" style={{ maxWidth: '500px' }}>
+    <div className="d-flex align-items-center justify-content-center report-issue-container" style={{ minHeight: 'var(--min-height)' }}>
+      <div className="container p-4 border rounded" style={{ maxWidth: '600px' }}>
         <h2 className="text-center mb-4">Report an Issue</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
@@ -73,10 +84,8 @@ const ReportIssueForm = () => {
             />
           </div>
 
-          {/* Added space using Bootstrap margin class */}
-          <div className="mb-3"></div> {/* This adds space between location input and map */}
+          <div className="mb-3"></div>
 
-          {/* Google Maps component */}
           <LoadScript googleMapsApiKey={apiKey}>
             <GoogleMap
               id="example-map"
@@ -87,7 +96,7 @@ const ReportIssueForm = () => {
               {coordinates && <Marker position={coordinates} />}
             </GoogleMap>
           </LoadScript>
-          <div className="mb-3"></div> {/* This adds space between location input and map */}
+          <div className="mb-3"></div>
 
           <div className="mb-3">
             <label htmlFor="description" className="form-label">Description of the Issue</label>
