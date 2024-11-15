@@ -7,23 +7,25 @@ import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 const ReportIssueForm = () => {
-  const [issueType, setIssueType] = useState('');
-  const [location, setLocation] = useState('');
-  const [description, setDescription] = useState('');
+  const [issueType, setIssueType] = useState("");
+  const [location, setLocation] = useState("");
+  const [description, setDescription] = useState("");
   const [photo, setPhoto] = useState(null);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [coordinates, setCoordinates] = useState(null);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   useEffect(() => {
     const setMinHeight = () => {
       const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--min-height', `${vh * 110}px`);
+      document.documentElement.style.setProperty("--min-height", `${vh * 110}px`);
     };
 
     setMinHeight();
-    window.addEventListener('resize', setMinHeight);
-    return () => window.removeEventListener('resize', setMinHeight);
+    window.addEventListener("resize", setMinHeight);
+    return () => window.removeEventListener("resize", setMinHeight);
   }, []);
 
   const handleLocationChange = (e) => {
@@ -34,15 +36,63 @@ const ReportIssueForm = () => {
     setPhoto(e.target.files[0]);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Issue Type:', issueType);
-    console.log('Location:', location);
-    console.log('Coordinates:', coordinates);
-    console.log('Description:', description);
-    console.log('Photo:', photo);
-    console.log('Name:', name);
-    console.log('Email:', email);
+
+    const issueData = {
+      issueType,
+      description,
+      gpsCoords: coordinates ? `${coordinates.lat},${coordinates.lng}` : null,
+      location,
+    };
+
+    try {
+      // Submit issue data to the backend
+      const issueResponse = await fetch("/api/issues", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(issueData),
+      });
+
+      if (!issueResponse.ok) {
+        throw new Error("Failed to report issue");
+      }
+
+      const issueResult = await issueResponse.json();
+      const issueId = issueResult.issue.issue_id;
+
+      // Upload photo if provided
+      if (photo) {
+        const formData = new FormData();
+        formData.append("image", photo);
+
+        const photoResponse = await fetch(`/api/s3/upload/${issueId}`, {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!photoResponse.ok) {
+          throw new Error("Failed to upload photo");
+        }
+      }
+
+      setSuccess("Issue reported successfully!");
+      setError(null);
+      // Reset form
+      setIssueType("");
+      setLocation("");
+      setDescription("");
+      setPhoto(null);
+      setCoordinates(null);
+      setName("");
+      setEmail("");
+    } catch (err) {
+      console.error(err);
+      setError(err.message || "An error occurred. Please try again.");
+      setSuccess(null);
+    }
   };
 
   const useDeviceLocation = () => {
@@ -51,7 +101,7 @@ const ReportIssueForm = () => {
         (position) => {
           const { latitude, longitude } = position.coords;
           setCoordinates({ lat: latitude, lng: longitude });
-          setLocation(''); // Clear manual location entry if device location is used
+          setLocation(""); // Clear manual location entry if device location is used
         },
         (error) => {
           console.error("Error obtaining location:", error);
@@ -63,9 +113,11 @@ const ReportIssueForm = () => {
   };
 
   return (
-    <div className="d-flex align-items-center justify-content-center report-issue-container" style={{ minHeight: 'var(--min-height)' }}>
-      <div className="container p-4 border rounded" style={{ maxWidth: '600px' }}>
+    <div className="d-flex align-items-center justify-content-center report-issue-container" style={{ minHeight: "var(--min-height)" }}>
+      <div className="container p-4 border rounded" style={{ maxWidth: "600px" }}>
         <h2 className="text-center mb-4">Report an Issue</h2>
+        {error && <p className="text-danger">{error}</p>}
+        {success && <p className="text-success">{success}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="issueType" className="form-label">Issue Type</label>
@@ -86,7 +138,6 @@ const ReportIssueForm = () => {
           </div>
 
           <div className="container-fluid mb-3">
-            {/* Card for Enter Address */}
             <div className="card bg-light p-3 mb-3">
               <div className="card-body">
                 <h5 className="card-title">Enter Address</h5>
@@ -104,13 +155,9 @@ const ReportIssueForm = () => {
                 </button>
               </div>
             </div>
-
-            {/* "or" Text */}
             <div className="text-center mb-3">
               <strong>or</strong>
             </div>
-
-            {/* Card for Use My Location */}
             <div className="card bg-light p-3">
               <div className="card-body text-center">
                 <h5 className="card-title">Use My Location</h5>
@@ -125,7 +172,7 @@ const ReportIssueForm = () => {
           <LoadScript googleMapsApiKey={apiKey}>
             <GoogleMap
               id="example-map"
-              mapContainerStyle={{ height: '280px', width: '100%' }}
+              mapContainerStyle={{ height: "280px", width: "100%" }}
               center={coordinates || { lat: 42.962, lng: -83.687 }}
               zoom={15}
             >

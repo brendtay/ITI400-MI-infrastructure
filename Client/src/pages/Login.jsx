@@ -1,33 +1,77 @@
-import React, { useState } from 'react';
-import './pagesCss/Login.css';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
-
-
+import React, { useState } from "react";
+import "./pagesCss/Login.css";
+import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [isRegistering, setIsRegistering] = useState(false); // Toggle between login and registration
+  const [name, setName] = useState(""); // For registration
+  const [email, setEmail] = useState(""); // Common for login and registration
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic here (e.g., API call)
-    console.log('Username:', username);
-    console.log('Password:', password);
+    const endpoint = isRegistering ? "/api/users/register" : "/api/users/login";
+    const payload = isRegistering
+      ? { name, email, password }
+      : { email, password };
+
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const { error } = await response.json();
+        throw new Error(error || "Something went wrong");
+      }
+
+      if (isRegistering) {
+        setSuccess("Registration successful! You can now log in.");
+      } else {
+        setSuccess("Login successful!");
+        // Add logic for handling successful login (e.g., storing token, redirecting)
+      }
+      setError(null);
+    } catch (err) {
+      setError(err.message);
+      setSuccess(null);
+    }
   };
 
   return (
-    <div className="d-flex align-items-center justify-content-center login-background" style={{ minHeight: '100vh' }}>
-      <div className="container p-4 border rounded" style={{ maxWidth: '400px' }}>
-        <h2 className="text-center mb-4">Login</h2>
+    <div className="d-flex align-items-center justify-content-center login-background" style={{ minHeight: "100vh" }}>
+      <div className="container p-4 border rounded" style={{ maxWidth: "400px" }}>
+        <h2 className="text-center mb-4">{isRegistering ? "Register" : "Login"}</h2>
+        {error && <p className="text-danger">{error}</p>}
+        {success && <p className="text-success">{success}</p>}
         <form onSubmit={handleSubmit}>
+          {isRegistering && (
+            <div className="mb-3">
+              <label htmlFor="name" className="form-label">Name</label>
+              <input
+                type="text"
+                id="name"
+                className="form-control"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+          )}
           <div className="mb-3">
-            <label htmlFor="username" className="form-label">Username</label>
+            <label htmlFor="email" className="form-label">Email</label>
             <input
-              type="text"
-              id="username"
+              type="email"
+              id="email"
               className="form-control"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
@@ -42,8 +86,21 @@ const Login = () => {
               required
             />
           </div>
-          <button type="submit" className="btn btn-primary w-100">Login</button>
+          <button type="submit" className="btn btn-primary w-100">
+            {isRegistering ? "Register" : "Login"}
+          </button>
         </form>
+        <div className="text-center mt-3">
+          <button
+            type="button"
+            className="btn btn-link"
+            onClick={() => setIsRegistering(!isRegistering)}
+          >
+            {isRegistering
+              ? "Already have an account? Login here."
+              : "Don't have an account? Register here."}
+          </button>
+        </div>
       </div>
     </div>
   );
