@@ -8,6 +8,7 @@ import GoogleMapInt from "../components/GoogleMapsIntergration";
 import SearchBar from '../components/SearchBar'; 
 import { LoadScript, GoogleMap, Marker } from '@react-google-maps/api';
 
+
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 const containerStyle = {
