@@ -23,5 +23,3 @@ dist-ssr
 *.sw?
 
 # Config Files
-client/.env
-.env
