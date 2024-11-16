@@ -173,4 +173,18 @@ router.delete('/:id', authenticateToken, isRole('Admin'), async (req, res) => {
     }
 });
 
+// Route: Get the logged-in user's information
+router.get('/me', authenticateToken, async (req, res) => {
+    try {
+        const user = req.user; // User information is added by the `authenticateToken` middleware
+        if (!user) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        res.status(500).json({ error: 'Failed to fetch user data.' });
+    }
+});
+
 module.exports = router;
