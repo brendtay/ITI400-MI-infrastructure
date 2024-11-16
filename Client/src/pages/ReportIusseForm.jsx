@@ -9,12 +9,12 @@ const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 const ReportIssueForm = () => {
   const [issueType, setIssueType] = useState("");
-  const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
-  const [photo, setPhoto] = useState(null);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [location, setLocation] = useState("");
   const [coordinates, setCoordinates] = useState(null);
+  const [photo, setPhoto] = useState(null);
+  const [issueTypes, setIssueTypes] = useState([]); // To dynamically load issue types from the database
+  const [userId, setUserId] = useState(null); // Holds the logged-in user's ID
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
@@ -29,6 +29,8 @@ const ReportIssueForm = () => {
     return () => window.removeEventListener("resize", setMinHeight);
   }, []);
 
+
+  // Fetch issue types and current user info on component mount
   useEffect(() => {
     const fetchIssueTypes = async () => {
       try {
@@ -42,7 +44,24 @@ const ReportIssueForm = () => {
         console.error(err);
       }
     };
+
+    const fetchCurrentUser = async () => {
+      try {
+        const response = await fetch("/api/users/me", { credentials: "include" });
+        if (response.ok) {
+          const user = await response.json();
+          setUserId(user.user_id); // Set the user ID if logged in
+        } else {
+          setUserId(null); // If not logged in, set user ID to null
+        }
+      } catch (err) {
+        console.error("Failed to fetch user info:", err);
+        setUserId(null); // Ensure user ID is null on failure
+      }
+    };
+
     fetchIssueTypes();
+    fetchCurrentUser();
   }, []);
 
   const handleLocationChange = (e) => {
@@ -71,6 +90,7 @@ const ReportIssueForm = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(issueData),
+        credentials: "include",
       });
 
       if (!issueResponse.ok) {
@@ -104,7 +124,6 @@ const ReportIssueForm = () => {
       setPhoto(null);
       setCoordinates(null);
       setName("");
-      setEmail("");
     } catch (err) {
       console.error(err);
       setError(err.message || "An error occurred. Please try again.");
