@@ -1,8 +1,4 @@
 import axios from "axios";
-// Configure Axios defaults and initialize Google Maps API key
-axios.defaults.baseURL = import.meta.env.VITE_API_URL; // Set the base API URL from .env
-axios.defaults.withCredentials = true; // Ensure cookies are sent with requests
-
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Import Router and Routes
 import { LoadScript } from '@react-google-maps/api';
@@ -20,6 +16,10 @@ import { FormText } from 'react-bootstrap';
 function App() {
   const [loading, setLoading] = useState(true); // For loading state
   const key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+
+  // Configure Axios defaults and initialize Google Maps API key
+  axios.defaults.baseURL = import.meta.env.VITE_API_URL; // Set the base API URL from .env
+  axios.defaults.withCredentials = true; // Ensure cookies are sent with requests
 
   // Fetch API Status
   const fetchAPIStatus = async () => {
