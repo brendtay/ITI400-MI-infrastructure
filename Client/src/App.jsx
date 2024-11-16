@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Import Router and Routes
-
 import axios from "axios";
 // Configure Axios defaults
 axios.defaults.baseURL = import.meta.env.VITE_API_URL; // Set the base API URL from .env
 axios.defaults.withCredentials = true; // Ensure cookies are sent with requests
 
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Import Router and Routes
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from './components/Navbar'; // Assuming Navbar is a separate component
 import Home from './pages/Home'; // Use correct relative paths
