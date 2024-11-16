@@ -18,6 +18,8 @@ import GoogleMapsIntegration from './components/GoogleMapsIntegration';
 import "../src/App.css"
 import { FormText } from 'react-bootstrap';
 
+console.log("Environment Variables:", import.meta.env);
+
 function App() {
   const [loading, setLoading] = useState(true); // For loading state
 
