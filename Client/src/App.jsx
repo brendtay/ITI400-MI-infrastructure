@@ -21,6 +21,8 @@ function App() {
   const [loading, setLoading] = useState(true); // For loading state
   const key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
+  console.log("Google Maps API Key:", key);
+
   // Fetch API Status
   const fetchAPIStatus = async () => {
     try {
