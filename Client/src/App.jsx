@@ -15,7 +15,7 @@ import { FormText } from 'react-bootstrap';
 
 function App() {
   const [loading, setLoading] = useState(true); // For loading state
-  const key = AIzaSyDrYVGzRQt3czjGIx34-J74amFDDRmI6vY //import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+  const key = "AIzaSyDrYVGzRQt3czjGIx34-J74amFDDRmI6vY" //import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
   // Configure Axios defaults and initialize Google Maps API key
   axios.defaults.baseURL = "https://www.mi-infrastructure.com"
