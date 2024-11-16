@@ -12,7 +12,10 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const endpoint = isRegistering ? "/api/users/register" : "/api/users/login";
+    const apiUrl = "https://mi-infrastructure.com";
+    const endpoint = isRegistering
+      ? `${apiUrl}/api/users/register`
+      : `${apiUrl}/api/users/login`;
     const payload = isRegistering
       ? { name, email, password }
       : { email, password };
@@ -24,6 +27,7 @@ const Login = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
+        credentials: "include",
       });
 
       if (!response.ok) {
