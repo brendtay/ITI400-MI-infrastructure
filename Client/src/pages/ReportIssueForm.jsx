@@ -33,9 +33,11 @@ const ReportIssueForm = () => {
     const fetchIssueTypes = async () => {
       try {
         const response = await axios.get(`/issues/types`);
+        console.log("API Response:", response);
         setIssueTypes(response.data);
       } catch (err) {
         console.error("Error fetching issue types:", err);
+        setIssueTypes([]); // Default to an empty array on error
       }
     };
 
