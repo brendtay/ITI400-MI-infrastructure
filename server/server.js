@@ -15,7 +15,7 @@ const imagesRouter = require('./routes/images');
 // Initialize the Express app
 const app = express();
 
-/*/ Configure CORS options
+// Configure CORS options
 const allowedOrigins = [
   "http://localhost:5173",                // Local development frontend URL
   process.env.FRONTEND_URL,               // Production frontend URL
@@ -35,22 +35,6 @@ const corsOptions = {
   },
   credentials: true,
   optionsSuccessStatus: 200,
-};
-*/
-const corsOptions = {
-  origin: (origin, callback) => {
-    const allowedOrigins = [
-      "http://localhost:5173",
-      "https://mi-infrastructure.com",
-      "https://www.mi-infrastructure.com",
-    ];
-    if (allowedOrigins.includes(origin) || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
 };
 
 // Apply global middlewares
