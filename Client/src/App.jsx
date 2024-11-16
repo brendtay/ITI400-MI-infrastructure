@@ -11,13 +11,12 @@ import Login from './pages/Login';
 import "../src/App.css"
 import { FormText } from 'react-bootstrap';
 
+// Configure Axios defaults
+axios.defaults.baseURL = import.meta.env.VITE_API_URL; // Set the base API URL from .env
+axios.defaults.withCredentials = true; // Ensure cookies are sent with requests
 
 function App() {
   const [loading, setLoading] = useState(true); // For loading state
-
-  // Configure Axios defaults
-  axios.defaults.baseURL = import.meta.env.VITE_API_URL; // Set the base API URL from .env
-  axios.defaults.withCredentials = true; // Ensure cookies are sent with requests
 
   // Fetch API Status (For internal check only)
   const fetchAPIStatus = async () => {
