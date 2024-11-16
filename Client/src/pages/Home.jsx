@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './pagesCss/Home.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from '../components/Navbar';
-import BackgroundImage from '../components/BackgroundImage';
+import BackgroundImage from '../components/BackgroundImage2';
 import HowItWorks from '../components/HowItWorks';
 import GoogleMapInt from "../components/GoogleMapsIntegration"; 
 import SearchBar from '../components/SearchBar'; 
