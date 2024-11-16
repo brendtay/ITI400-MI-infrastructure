@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from '../components/Navbar';
 import BackgroundImage from '../components/BackgroundImage';
 import HowItWorks from '../components/HowItWorks';
-import GoogleMapInt from "../components/GoogleMapsIntergration"; 
+import GoogleMapInt from "../components/GoogleMapsIntegration"; 
 import SearchBar from '../components/SearchBar'; 
 import { LoadScript, GoogleMap, Marker } from '@react-google-maps/api';
 

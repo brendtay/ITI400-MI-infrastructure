@@ -23,7 +23,7 @@ function App() {
   const fetchAPIStatus = async () => {
     try {
       const response = await axios.get('/status');
-      const message = response.data?.message
+      const message = response.data?.message;
       console.log("API connection successful:", message);
     } catch (error) {
       console.error("Error connecting to the API:", error);
