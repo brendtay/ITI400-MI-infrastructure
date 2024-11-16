@@ -8,7 +8,7 @@ const {
     getIssuesByLocation,
     addImageToIssue
 } = require('../db/issueQueries');
-const { uploadImageToS3 } = require('../db/s3Queries');
+const { uploadImageToS3 } = require('../db/imageQueries');
 const { authenticateToken, isRole } = require('../middleware/auth');
 
 const router = express.Router();

@@ -6,7 +6,7 @@ const {
   getImagesByUserId,
   getImageById,
   deleteImageFromS3
-} = require('../db/s3Queries');
+} = require('../db/imageQueries');
 const { authenticateToken, isRole } = require('../middleware/auth');
 
 const router = express.Router();
