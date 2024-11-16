@@ -63,16 +63,12 @@ app.use('/api/images', imagesRouter);
 app.use(express.static(path.join(__dirname, "../Client/dist")));
 
 // Test API route
-app.get("/api", (req, res) => {
-  res.json({
-    status: "success",
-    message: "API is working properly",
-    timestamp: new Date().toISOString(),
-  });
-});
-
 app.get("/status", (req, res) => {
-  res.json({ message: "API is up and running!" });
+  res.json({
+      status: "success",
+      message: "API is working properly",
+      timestamp: new Date().toISOString(),
+  });
 });
 
 // Catch-all route to serve the React app for any route not matched

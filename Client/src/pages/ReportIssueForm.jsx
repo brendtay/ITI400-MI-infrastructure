@@ -32,7 +32,7 @@ const ReportIssueForm = () => {
   useEffect(() => {
     const fetchIssueTypes = async () => {
       try {
-        const response = await axios.get(`/issues/types`);
+        const response = await axios.get('/api/issues/types');
         console.log("URL called:", response.config.url);
         console.log("API Response:", response);
         setIssueTypes(response.data);
@@ -65,7 +65,7 @@ const ReportIssueForm = () => {
 
     try {
       // Submit issue data to the backend
-      const issueResponse = await axios.post(`/issues`, issueData, {
+      const issueResponse = await axios.post('/api/issues', issueData, {
         withCredentials: true,
       });
 
@@ -76,7 +76,7 @@ const ReportIssueForm = () => {
         const formData = new FormData();
         formData.append("image", photo);
 
-        await axios.post(`/images/upload/${issueId}`, formData, {
+        await axios.post('/api/images/upload/${issueId}', formData, {
           withCredentials: true,
         });
       }

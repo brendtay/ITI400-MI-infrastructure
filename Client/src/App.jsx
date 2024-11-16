@@ -18,22 +18,21 @@ import { FormText } from 'react-bootstrap';
 function App() {
   const [loading, setLoading] = useState(true); // For loading state
 
-  // Fetch API Status (For internal check only)
+  // Fetch API Status
   const fetchAPIStatus = async () => {
     try {
-      const response = await axios.get('/status');
-      console.log("URL called:", response.config.url);
-      const message = response.data?.message;
-      console.log("API connection successful:", message);
+        const response = await axios.get('/status'); 
+        const { status, message, timestamp } = response.data; 
+        console.log(`API connection successful: Status - ${status}, Message - ${message}, Timestamp - ${timestamp}`);
     } catch (error) {
-      console.error("Error connecting to the API:", error);
+        console.error("Error connecting to the API:", error);
     } finally {
-      setLoading(false); // Set loading to false regardless of success or failure
+        setLoading(false); // Set loading to false regardless of success or failure
     }
   };
 
   useEffect(() => {
-    fetchAPIStatus(); // Check API connection on load
+      fetchAPIStatus(); // Check API connection on load
   }, []);
 
   return loading ? (
