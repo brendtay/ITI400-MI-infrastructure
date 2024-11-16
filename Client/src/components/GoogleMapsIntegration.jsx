@@ -12,8 +12,8 @@ const containerStyle = {
 };
 
 const defaultCenter = {
-  lat: 40.7128,
-  lng: -74.0060,
+  lat: 43.019387852838754,
+  lng: -83.6894584432078,
 };
 
 export default function GoogleMapsIntegration() {

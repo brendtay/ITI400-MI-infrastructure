@@ -182,7 +182,7 @@ const ReportIssueForm = () => {
           {/* Map */}
           <GoogleMap
             mapContainerStyle={{ height: "280px", width: "100%" }}
-            center={coordinates || { lat: 42.962, lng: -83.687 }}
+            center={coordinates || { lat: 43.019387852838754, lng: -83.6894584432078 }}
             zoom={15}
           >
             {coordinates && <Marker position={coordinates} />}

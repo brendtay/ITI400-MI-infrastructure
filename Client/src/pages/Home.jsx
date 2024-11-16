@@ -15,33 +15,13 @@ const containerStyle = {
 };
 
 const defaultCenter = {
-  lat: 40.7128,
-  lng: -74.0060,
+  lat: 43.019387852838754,
+  lng: 43.019387852838754
 };
 
 export default function Home() {
   const [address, setAddress] = useState('');
-  const [location, setLocation] = useState(null);
-
-  useEffect(() => {
-    const fetchLocationFromIP = async () => {
-      try {
-        const response = await fetch('/api/ip-location');
-        const data = await response.json();
-        if (data.lat && data.lon) {
-          setLocation({ lat: data.lat, lng: data.lon });
-        } else {
-          console.error("Failed to retrieve location from IP.");
-          setLocation({ lat: 40.7128, lng: -74.0060 }); // Fallback to default
-        }
-      } catch (error) {
-        console.error("Error fetching location from IP:", error);
-        setLocation({ lat: 40.7128, lng: -74.0060 }); // Fallback to default
-      }
-    };
-  
-    fetchLocationFromIP();
-  }, []);
+  const [location, setLocation] = useState(defaultCenter);
 
   const handleAddressChange = (e) => {
     setAddress(e.target.value);
