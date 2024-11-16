@@ -23,6 +23,12 @@ const allowedOrigins = [
 ];
 
 const corsOptions = {
+  origin: "*", // Temporarily allow all origins
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+
+/*const corsOptions = {
   origin: (origin, callback) => {
     if (allowedOrigins.includes(origin) || !origin) {
       callback(null, true);
@@ -34,6 +40,14 @@ const corsOptions = {
   credentials: true,
   optionsSuccessStatus: 200,
 };
+*/
+
+// Middleware to log origins
+app.use((req, res, next) => {
+  const origin = req.headers.origin || "No Origin Header";
+  console.log(`Request Origin: ${origin}`);
+  next();
+});
 
 // Apply middlewares
 app.use(cors(corsOptions)); // CORS middleware
