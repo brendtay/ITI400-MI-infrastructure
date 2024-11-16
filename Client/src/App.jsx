@@ -60,7 +60,6 @@ function App() {
               <Route path="/maps" element={<GoogleMapsIntegration />} />
             </Routes>
           </div>
-          <Footer />
         </Router>
       </div>
     </LoadScript>
