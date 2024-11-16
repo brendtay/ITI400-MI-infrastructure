@@ -24,6 +24,7 @@ function App() {
   const [loading, setLoading] = useState(true); // For loading state
 
   console.log("Google Maps API Key:", key);
+  console.log("Axios base URL", axios.defaults.baseURL);
 
   // Fetch API Status
   const fetchAPIStatus = async () => {
