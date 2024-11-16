@@ -33,6 +33,7 @@ const ReportIssueForm = () => {
     const fetchIssueTypes = async () => {
       try {
         const response = await axios.get(`/issues/types`);
+        console.log("URL called:", response.config.url);
         console.log("API Response:", response);
         setIssueTypes(response.data);
       } catch (err) {

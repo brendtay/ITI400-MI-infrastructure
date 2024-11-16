@@ -62,11 +62,6 @@ app.use('/api/images', imagesRouter);
 // Serve static assets from the dist folder
 app.use(express.static(path.join(__dirname, "../Client/dist")));
 
-// Catch-all route to serve the React app for any route not matched
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../Client/dist/index.html"));
-});
-
 // Test API route
 app.get("/api", (req, res) => {
   res.json({
@@ -76,8 +71,13 @@ app.get("/api", (req, res) => {
   });
 });
 
-app.get("/api/status", (req, res) => {
+app.get("/status", (req, res) => {
   res.json({ message: "API is up and running!" });
+});
+
+// Catch-all route to serve the React app for any route not matched
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../Client/dist/index.html"));
 });
 
 // Error handling middleware
