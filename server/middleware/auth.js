@@ -2,42 +2,51 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config(); // Load environment variables
 
 // Middleware to authenticate JWT tokens.
-
 const authenticateToken = (req, res, next) => {
-    const authHeader = req.headers['authorization']; 
-    const token = authHeader && authHeader.split(' ')[1]; 
+    try {
+        // Retrieve the token from cookies or Authorization header
+        const authHeader = req.headers['authorization']; 
+        const headerToken = authHeader && authHeader.split(' ')[1]; 
+        const cookieToken = req.cookies && req.cookies['token'];
 
-    const cookieToken = req.cookies && req.cookies['token'];
+        const jwtToken = headerToken || cookieToken;
 
-    const jwtToken = token || cookieToken;
-
-    if (!jwtToken) {
-        return res.status(401).json({ error: 'Access denied. No token provided.' });
-    }
-
-    jwt.verify(jwtToken, process.env.JWT_SECRET, (err, user) => {
-        if (err) {
-            return res.status(403).json({ error: 'Invalid or expired token.' });
+        if (!jwtToken) {
+            console.error("No token provided in request.");
+            return res.status(401).json({ error: 'Access denied. No token provided.' });
         }
-        req.user = user;
-        next(); 
-    });
+
+        // Verify the token
+        jwt.verify(jwtToken, process.env.JWT_SECRET, (err, user) => {
+            if (err) {
+                console.error("Invalid or expired token:", err.message);
+                return res.status(403).json({ error: 'Invalid or expired token.' });
+            }
+            req.user = user; // Attach user data to the request object
+            next(); // Proceed to the next middleware or route handler
+        });
+    } catch (error) {
+        console.error("Error in authenticateToken middleware:", error.message);
+        res.status(500).json({ error: 'Internal server error during authentication.' });
+    }
 };
 
-// Authorize users based on role
+// Middleware to authorize users based on role
 const isRole = (requiredRole) => (req, res, next) => {
     try {
-        // Check if the user's role matches the required role
-        if (req.user.role !== requiredRole) {
+        // Ensure the user's role matches the required role
+        if (!req.user || req.user.role !== requiredRole) {
+            console.error(`Access denied. User role: ${req.user?.role}, Required role: ${requiredRole}`);
             return res.status(403).json({ error: `Access denied. ${requiredRole} only.` });
         }
         next(); // Proceed to the next middleware or route handler
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred during role verification.' });
+        console.error("Error in isRole middleware:", error.message);
+        res.status(500).json({ error: 'Internal server error during role verification.' });
     }
 };
 
 module.exports = {
     authenticateToken,
-    isRole
+    isRole,
 };
