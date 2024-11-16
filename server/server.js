@@ -71,6 +71,16 @@ app.get("/status", (req, res) => {
   });
 });
 
+app.get('/api/ip-location', async (req, res) => {
+  try {
+    const response = await axios.get('http://ip-api.com/json/');
+    res.json(response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Unable to fetch IP location' });
+  }
+});
+
 // Catch-all route to serve the React app for any route not matched
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../Client/dist/index.html"));

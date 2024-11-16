@@ -24,12 +24,11 @@ export default function Home() {
   const [location, setLocation] = useState(null);
 
   useEffect(() => {
-    // Fetch geolocation data based on IP address
     const fetchLocationFromIP = async () => {
       try {
-        const response = await fetch('https://ip-api.com/json/');
+        const response = await fetch('/api/ip-location');
         const data = await response.json();
-        if (data.status === "success") {
+        if (data.lat && data.lon) {
           setLocation({ lat: data.lat, lng: data.lon });
         } else {
           console.error("Failed to retrieve location from IP.");
@@ -40,7 +39,7 @@ export default function Home() {
         setLocation({ lat: 40.7128, lng: -74.0060 }); // Fallback to default
       }
     };
-
+  
     fetchLocationFromIP();
   }, []);
 
