@@ -6,7 +6,7 @@ import BackgroundImage from '../components/BackgroundImage';
 import HowItWorks from '../components/HowItWorks';
 import GoogleMapInt from "../components/GoogleMapsIntegration"; 
 import SearchBar from '../components/SearchBar'; 
-import { LoadScript, GoogleMap, Marker } from '@react-google-maps/api';
+import { GoogleMap, Marker } from '@react-google-maps/api';
 
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -76,15 +76,13 @@ export default function Home() {
 
         <div className="d-flex flex-column" style={{ margin: '1rem 0' }}>
           <div className="flex-fill google-map-container">
-            <LoadScript googleMapsApiKey={apiKey}>
-              <GoogleMap
-                mapContainerStyle={containerStyle}
-                center={location}
-                zoom={13}
-              >
-                <Marker position={location} />
-              </GoogleMap>
-            </LoadScript>
+            <GoogleMap
+              mapContainerStyle={containerStyle}
+              center={location}
+              zoom={13}
+            >
+              <Marker position={location} />
+            </GoogleMap>
           </div>
           
           <div className="flex-fill search-bar-container">

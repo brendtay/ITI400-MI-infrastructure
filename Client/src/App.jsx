@@ -13,6 +13,7 @@ import About from './pages/About';
 import Footer from  "./components/Footer"; 
 import ReportIssueForm from './pages/ReportIssueForm';
 import Login from './pages/Login';
+import GoogleMapsIntegration from './components/GoogleMapsIntegration';
 import "../src/App.css"
 import { FormText } from 'react-bootstrap';
 
