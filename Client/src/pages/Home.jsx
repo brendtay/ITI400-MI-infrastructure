@@ -3,7 +3,7 @@ import './pagesCss/Home.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from '../components/Navbar';
 import BackgroundImage from '../components/BackgroundImage';
-import HowItWorks from '../components/HowItWorks';
+import HowItWorks from '../components/HowItWorks1';
 import GoogleMapInt from "../components/GoogleMapsIntegration"; 
 import SearchBar from '../components/SearchBar'; 
 import { GoogleMap, Marker } from '@react-google-maps/api';
