@@ -9,8 +9,6 @@ import SearchBar from '../components/SearchBar';
 import { GoogleMap, Marker } from '@react-google-maps/api';
 
 
-const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-
 const containerStyle = {
   width: '100%',
   height: '100%',
@@ -23,7 +21,7 @@ const defaultCenter = {
 
 export default function Home() {
   const [address, setAddress] = useState('');
-  const [location, setLocation] = useState(defaultCenter);
+  const [location, setLocation] = useState("");
 
   const handleAddressChange = (e) => {
     setAddress(e.target.value);
