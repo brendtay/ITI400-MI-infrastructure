@@ -18,7 +18,6 @@ const app = express();
 // Configure CORS options
 const allowedOrigins = [
   "http://localhost:5173",                // Local development frontend URL
-
   process.env.FRONTEND_URL,               // Production frontend URL
   process.env.FRONTEND_URL_ALT,           // Alternate frontend URL
 ];
@@ -45,15 +44,6 @@ app.use(express.json()); // Parse JSON requests
 app.use((req, res, next) => {
   const origin = req.headers.origin || "No Origin Header";
   console.log(`Request Origin: ${origin}`);
-  next();
-});
-
-// Add custom CORS headers (optional, can combine with `cors`)
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin); // Dynamically allow origin
-  res.header("Access-Control-Allow-Credentials", "true"); // Allow cookies/auth headers
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE"); // Allowed methods
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization"); // Allowed headers
   next();
 });
 
