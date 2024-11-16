@@ -29,6 +29,22 @@ const ReportIssueForm = () => {
     return () => window.removeEventListener("resize", setMinHeight);
   }, []);
 
+  useEffect(() => {
+    const fetchIssueTypes = async () => {
+      try {
+        const response = await fetch("/api/issues/types");
+        if (!response.ok) {
+          throw new Error("Failed to fetch issue types");
+        }
+        const data = await response.json();
+        setIssueTypes(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchIssueTypes();
+  }, []);
+
   const handleLocationChange = (e) => {
     setLocation(e.target.value);
   };
