@@ -21,7 +21,28 @@ const defaultCenter = {
 
 export default function Home() {
   const [address, setAddress] = useState('');
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState(null);
+
+  useEffect(() => {
+    // Fetch geolocation data based on IP address
+    const fetchLocationFromIP = async () => {
+      try {
+        const response = await fetch('https://ip-api.com/json/');
+        const data = await response.json();
+        if (data.status === "success") {
+          setLocation({ lat: data.lat, lng: data.lon });
+        } else {
+          console.error("Failed to retrieve location from IP.");
+          setLocation({ lat: 40.7128, lng: -74.0060 }); // Fallback to default
+        }
+      } catch (error) {
+        console.error("Error fetching location from IP:", error);
+        setLocation({ lat: 40.7128, lng: -74.0060 }); // Fallback to default
+      }
+    };
+
+    fetchLocationFromIP();
+  }, []);
 
   const handleAddressChange = (e) => {
     setAddress(e.target.value);
