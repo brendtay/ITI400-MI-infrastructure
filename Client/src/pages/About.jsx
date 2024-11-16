@@ -1,7 +1,7 @@
 import React from 'react';
 import '../pages/pagesCss/About.css';
 import "bootstrap/dist/css/bootstrap.min.css";
-import BackgroundImage from '../components/BackgroundImage2';
+import BackgroundImage from '../components/BackgroundImage';
 import groupImage from '../images/groupPage.jpg';
 
 export default function About() {
