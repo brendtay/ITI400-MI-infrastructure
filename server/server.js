@@ -18,8 +18,8 @@ const app = express();
 // Configure CORS options
 const allowedOrigins = [
   "http://localhost:5173",                // Local development frontend URL
-  process.env.FRONTEND_URL,               // Production frontend URL (e.g., https://mi-infrastructure.com)
-  process.env.PUBLIC_DNS,                 // AWS public DNS if applicable
+  process.env.FRONTEND_URL,               // Production frontend URL
+  process.env.FRONTEND_URL_ALT,           // Alternate frontend URL
 ];
 
 const corsOptions = {
