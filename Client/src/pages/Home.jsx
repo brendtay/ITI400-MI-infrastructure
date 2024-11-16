@@ -16,7 +16,7 @@ const containerStyle = {
 
 const defaultCenter = {
   lat: 43.019387852838754,
-  lng: 43.019387852838754
+  lng: -83.6894584432078
 };
 
 export default function Home() {
