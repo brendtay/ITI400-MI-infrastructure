@@ -19,7 +19,7 @@ import { FormText } from 'react-bootstrap';
 
 function App() {
   const [loading, setLoading] = useState(true); // For loading state
-  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+  const key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
   // Fetch API Status
   const fetchAPIStatus = async () => {
@@ -43,7 +43,7 @@ function App() {
     <div>Loading...</div> // Show a loading state until data is fetched
   ) : (
     <LoadScript
-      googleMapsApiKey={apiKey} // Inject Google Maps API key globally
+      googleMapsApiKey={key} // Inject Google Maps API key globally
       onLoad={() => console.log('Google Maps API Loaded Successfully')}
       onError={(error) => console.error('Error loading Google Maps API:', error)}
     >
