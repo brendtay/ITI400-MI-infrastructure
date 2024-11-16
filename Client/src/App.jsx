@@ -15,11 +15,11 @@ import { FormText } from 'react-bootstrap';
 
 function App() {
   const [loading, setLoading] = useState(true); // For loading state
-  const key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+  const key = AIzaSyDrYVGzRQt3czjGIx34-J74amFDDRmI6vY //import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
   // Configure Axios defaults and initialize Google Maps API key
-  axios.defaults.baseURL = import.meta.env.VITE_API_URL; // Set the base API URL from .env
-  //axios.defaults.withCredentials = true; // Ensure cookies are sent with requests
+  axios.defaults.baseURL = "https://www.mi-infrastructure.com"
+  axios.defaults.withCredentials = true; // Ensure cookies are sent with requests
 
   // Fetch API Status
   const fetchAPIStatus = async () => {
