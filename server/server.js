@@ -57,7 +57,7 @@ app.use('/api/images', imagesRouter);
 app.use(express.static(path.join(__dirname, "../Client/dist")));
 
 // Define utility/test routes
-app.get("/status", (req, res) => {
+app.get("/api/status", (req, res) => {
   res.json({
     status: "success",
     message: "API is working properly",
