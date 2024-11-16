@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { GoogleMap, Marker } from '@react-google-maps/api';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../components/componentCss/googleMapInt.css';
 import SearchBar from './SearchBar';
@@ -72,21 +72,15 @@ export default function GoogleMapsIntegration() {
 
   return (
     <div className="map-container" style={{ textAlign: 'center', height: '100%' }}>
-      <LoadScript
-        googleMapsApiKey={apiKey}
-        onLoad={() => console.log('Google Maps API Loaded Successfully')}
-        onError={(e) => console.error('Error loading Google Maps API:', e)}
-      >
-        <div style={containerStyle}>
-          <GoogleMap
-            mapContainerStyle={containerStyle}
-            center={location}
-            zoom={13}
-          >
-            <Marker position={location} />
-          </GoogleMap>
-        </div>
-      </LoadScript>
+      <div style={containerStyle}>
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={location}
+          zoom={13}
+        >
+          <Marker position={location} />
+        </GoogleMap>
+      </div>
     </div>
   );
 }

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './pagesCss/ReportIssueForm.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { GoogleMap, Marker } from '@react-google-maps/api';
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -180,15 +180,13 @@ const ReportIssueForm = () => {
           </div>
 
           {/* Map */}
-          <LoadScript googleMapsApiKey={apiKey}>
-            <GoogleMap
-              mapContainerStyle={{ height: "280px", width: "100%" }}
-              center={coordinates || { lat: 42.962, lng: -83.687 }}
-              zoom={15}
-            >
-              {coordinates && <Marker position={coordinates} />}
-            </GoogleMap>
-          </LoadScript>
+          <GoogleMap
+            mapContainerStyle={{ height: "280px", width: "100%" }}
+            center={coordinates || { lat: 42.962, lng: -83.687 }}
+            zoom={15}
+          >
+            {coordinates && <Marker position={coordinates} />}
+          </GoogleMap>
 
           {/* Photo Upload */}
           <div className="mb-3">

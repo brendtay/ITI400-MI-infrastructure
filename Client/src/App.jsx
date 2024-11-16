@@ -5,6 +5,7 @@ axios.defaults.withCredentials = true; // Ensure cookies are sent with requests
 
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Import Router and Routes
+import { LoadScript } from '@react-google-maps/api';
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from './components/Navbar'; // Assuming Navbar is a separate component
 import Home from './pages/Home'; // Use correct relative paths
@@ -17,6 +18,7 @@ import { FormText } from 'react-bootstrap';
 
 function App() {
   const [loading, setLoading] = useState(true); // For loading state
+  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
   // Fetch API Status
   const fetchAPIStatus = async () => {
@@ -35,24 +37,33 @@ function App() {
       fetchAPIStatus(); // Check API connection on load
   }, []);
 
+
   return loading ? (
     <div>Loading...</div> // Show a loading state until data is fetched
   ) : (
-    <div className="d-flex flex-column" style={{ minHeight: '100vh' }}>
-      <Router>
-        <Navbar/>
-        <div className="flex-grow-1" style={{ overflowY: 'auto' }}> {/* Main content area */}
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/form" element={<ReportIssueForm />} />
-            <Route path="/login" element={<Login />} />
-          </Routes>
-        </div>
-     
-      </Router>
-    </div>
+    <LoadScript
+      googleMapsApiKey={apiKey} // Inject Google Maps API key globally
+      onLoad={() => console.log('Google Maps API Loaded Successfully')}
+      onError={(error) => console.error('Error loading Google Maps API:', error)}
+    >
+      <div className="d-flex flex-column" style={{ minHeight: '100vh' }}>
+        <Router>
+          <Navbar />
+          <div className="flex-grow-1" style={{ overflowY: 'auto' }}>
+            {/* Main content area */}
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/form" element={<ReportIssueForm />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/maps" element={<GoogleMapsIntegration />} />
+            </Routes>
+          </div>
+          <Footer />
+        </Router>
+      </div>
+    </LoadScript>
   );
-}
+};
 
 export default App;
