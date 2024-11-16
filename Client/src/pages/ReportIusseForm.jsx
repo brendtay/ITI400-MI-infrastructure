@@ -114,12 +114,13 @@ const ReportIssueForm = () => {
   };
 
   return (
-    <div className="d-flex align-items-center justify-content-center report-issue-container" style={{ minHeight: "var(--min-height)" }}>
+    <div className="d-flex align-items-center justify-content-center report-issue-container" style={{ minHeight: "100vh" }}>
       <div className="container p-4 border rounded" style={{ maxWidth: "600px" }}>
         <h2 className="text-center mb-4">Report an Issue</h2>
         {error && <p className="text-danger">{error}</p>}
         {success && <p className="text-success">{success}</p>}
         <form onSubmit={handleSubmit}>
+          {/* Issue Type Dropdown */}
           <div className="mb-3">
             <label htmlFor="issueType" className="form-label">Issue Type</label>
             <select
@@ -130,59 +131,17 @@ const ReportIssueForm = () => {
               required
             >
               <option value="">Select Issue</option>
-              <option value="pothole">Pothole</option>
-              <option value="broken sidewalk">Broken Sidewalk</option>
-              <option value="street light issue">Street Light Issue</option>
-              <option value="drainage problem">Drainage Problem</option>
-              <option value="other">Other</option>
+              {issueTypes.map((type) => (
+                <option key={type.issue_id} value={type.issue_id}>
+                  {type.issue_name}
+                </option>
+              ))}
             </select>
           </div>
 
-          <div className="container-fluid mb-3">
-            <div className="card bg-light p-3 mb-3">
-              <div className="card-body">
-                <h5 className="card-title">Enter Address</h5>
-                <input
-                  type="text"
-                  id="location"
-                  className="form-control form-control-lg mb-2"
-                  value={location}
-                  onChange={handleLocationChange}
-                  placeholder="Enter address"
-                  required
-                />
-                <button type="button" className="btn btn-primary w-100">
-                  Search
-                </button>
-              </div>
-            </div>
-            <div className="text-center mb-3">
-              <strong>or</strong>
-            </div>
-            <div className="card bg-light p-3">
-              <div className="card-body text-center">
-                <h5 className="card-title">Use My Location</h5>
-                <p>Press the button below to use your device's current location.</p>
-                <button type="button" className="btn btn-outline-secondary w-100" onClick={useDeviceLocation}>
-                  Use My Location
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <LoadScript googleMapsApiKey={apiKey}>
-            <GoogleMap
-              id="example-map"
-              mapContainerStyle={{ height: "280px", width: "100%" }}
-              center={coordinates || { lat: 42.962, lng: -83.687 }}
-              zoom={15}
-            >
-              {coordinates && <Marker position={coordinates} />}
-            </GoogleMap>
-          </LoadScript>
-
+          {/* Description */}
           <div className="mb-3">
-            <label htmlFor="description" className="form-label">Description of the Issue</label>
+            <label htmlFor="description" className="form-label">Description</label>
             <textarea
               id="description"
               className="form-control"
@@ -192,6 +151,47 @@ const ReportIssueForm = () => {
               required
             ></textarea>
           </div>
+
+          {/* Location Section */}
+          <div className="container-fluid mb-3">
+            <div className="card bg-light p-3 mb-3">
+              <div className="card-body">
+                <h5 className="card-title">Enter Address</h5>
+                <input
+                  type="text"
+                  id="location"
+                  className="form-control form-control-lg mb-2"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  placeholder="Enter address"
+                />
+              </div>
+            </div>
+            <div className="text-center mb-3">
+              <strong>or</strong>
+            </div>
+            <div className="card bg-light p-3">
+              <div className="card-body text-center">
+                <h5 className="card-title">Use My Location</h5>
+                <button type="button" className="btn btn-outline-secondary w-100" onClick={useDeviceLocation}>
+                  Use My Location
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Map */}
+          <LoadScript googleMapsApiKey={apiKey}>
+            <GoogleMap
+              mapContainerStyle={{ height: "280px", width: "100%" }}
+              center={coordinates || { lat: 42.962, lng: -83.687 }}
+              zoom={15}
+            >
+              {coordinates && <Marker position={coordinates} />}
+            </GoogleMap>
+          </LoadScript>
+
+          {/* Photo Upload */}
           <div className="mb-3">
             <label htmlFor="photo" className="form-label">Upload Photo</label>
             <input
@@ -202,26 +202,8 @@ const ReportIssueForm = () => {
               accept="image/*"
             />
           </div>
-          <div className="mb-3">
-            <label htmlFor="name" className="form-label">Name (Optional)</label>
-            <input
-              type="text"
-              id="name"
-              className="form-control"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="email" className="form-label">Email (Optional)</label>
-            <input
-              type="email"
-              id="email"
-              className="form-control"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
+
+          {/* Submit Button */}
           <button type="submit" className="btn btn-primary w-100">Submit</button>
         </form>
       </div>
