@@ -20,13 +20,30 @@ export default function GoogleMapsIntegration() {
   const [address, setAddress] = useState('');
   const [location, setLocation] = useState(defaultCenter);
 
+  useEffect(() => {
+    // Attempt to set user's current location on load
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setLocation({ lat: latitude, lng: longitude });
+        },
+        () => console.warn('Geolocation unavailable, using default center.')
+      );
+    }
+  }, []);
+
   const handleAddressChange = (e) => {
     setAddress(e.target.value);
   };
 
   const handleSearch = () => {
-    const geocoder = new window.google.maps.Geocoder();
+    if (!window.google?.maps) {
+      alert('Google Maps API not loaded');
+      return;
+    }
 
+    const geocoder = new window.google.maps.Geocoder();
     geocoder.geocode({ address }, (results, status) => {
       if (status === 'OK') {
         const { lat, lng } = results[0].geometry.location;
@@ -55,9 +72,11 @@ export default function GoogleMapsIntegration() {
 
   return (
     <div className="map-container" style={{ textAlign: 'center', height: '100%' }}>
-      <div className="flex-fill">
-      </div>
-      <LoadScript googleMapsApiKey={apiKey}>
+      <LoadScript
+        googleMapsApiKey={apiKey}
+        onLoad={() => console.log('Google Maps API Loaded Successfully')}
+        onError={(e) => console.error('Error loading Google Maps API:', e)}
+      >
         <div style={containerStyle}>
           <GoogleMap
             mapContainerStyle={containerStyle}
