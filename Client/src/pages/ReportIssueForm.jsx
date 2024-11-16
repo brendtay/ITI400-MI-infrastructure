@@ -6,6 +6,8 @@ import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
+console.log("Axios Base URL:", axios.defaults.baseURL);
+
 const ReportIssueForm = () => {
   const [issueType, setIssueType] = useState("");
   const [description, setDescription] = useState("");
