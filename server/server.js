@@ -18,23 +18,25 @@ const app = express();
 // Configure CORS options
 const allowedOrigins = [
   "http://localhost:5173",                // Local development frontend URL
+
   process.env.FRONTEND_URL,               // Production frontend URL
   process.env.FRONTEND_URL_ALT,           // Alternate frontend URL
 ];
 
+const normalizeOrigin = (origin) => (origin ? origin.replace(/\/$/, "") : origin);
+
 const corsOptions = {
   origin: (origin, callback) => {
-    if (allowedOrigins.includes(origin) || !origin) {
+    if (allowedOrigins.map(normalizeOrigin).includes(normalizeOrigin(origin)) || !origin) {
       callback(null, true);
     } else {
-      console.error(`Blocked by CORS: ${origin}`); // Log blocked origins for debugging
+      console.error(`Blocked by CORS: ${origin}`);
       callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true,
   optionsSuccessStatus: 200,
 };
-
 // Apply global middlewares
 app.use(cors(corsOptions)); // CORS middleware
 app.use(express.json()); // Parse JSON requests
