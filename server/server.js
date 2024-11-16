@@ -22,13 +22,15 @@ const allowedOrigins = [
   process.env.PUBLIC_DNS,                 // AWS public DNS if applicable
 ];
 
+/*
 const corsOptions = {
   origin: "*", // Temporarily allow all origins
   credentials: true,
   optionsSuccessStatus: 200,
 };
+*/
 
-/*const corsOptions = {
+const corsOptions = {
   origin: (origin, callback) => {
     if (allowedOrigins.includes(origin) || !origin) {
       callback(null, true);
@@ -40,7 +42,6 @@ const corsOptions = {
   credentials: true,
   optionsSuccessStatus: 200,
 };
-*/
 
 // Middleware to log origins
 app.use((req, res, next) => {
@@ -68,7 +69,15 @@ app.get("*", (req, res) => {
 
 // Test API route
 app.get("/api", (req, res) => {
-  res.json({ fruits: ["apple", "orange", "banana"] });
+  res.json({
+    status: "success",
+    message: "API is working properly",
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.get("/api/status", (req, res) => {
+  res.json({ message: "API is up and running!" });
 });
 
 // Error handling middleware

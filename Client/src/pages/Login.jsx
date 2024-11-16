@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import "./pagesCss/Login.css";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 
@@ -12,41 +13,28 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const apiUrl = "https://mi-infrastructure.com";
     const endpoint = isRegistering
-      ? `${apiUrl}/api/users/register`
-      : `${apiUrl}/api/users/login`;
+      ? `/users/register`
+      : `/users/login`;
     const payload = isRegistering
       ? { name, email, password }
       : { email, password };
 
-    try {
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        const { error } = await response.json();
-        throw new Error(error || "Something went wrong");
+      try {
+        const response = await axios.post(endpoint, payload, { withCredentials: true });
+  
+        if (isRegistering) {
+          setSuccess("Registration successful! You can now log in.");
+        } else {
+          setSuccess("Login successful!");
+          // Add logic for handling successful login (e.g., storing token, redirecting)
+        }
+        setError(null);
+      } catch (err) {
+        setError(err.response?.data?.error || "Something went wrong");
+        setSuccess(null);
       }
-
-      if (isRegistering) {
-        setSuccess("Registration successful! You can now log in.");
-      } else {
-        setSuccess("Login successful!");
-        // Add logic for handling successful login (e.g., storing token, redirecting)
-      }
-      setError(null);
-    } catch (err) {
-      setError(err.message);
-      setSuccess(null);
-    }
-  };
+    };
 
   return (
     <div className="d-flex align-items-center justify-content-center login-background" style={{ minHeight: "100vh" }}>

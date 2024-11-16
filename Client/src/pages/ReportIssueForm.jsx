@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import './pagesCss/ReportIusseForm.css';
+import axios from 'axios';
+import './pagesCss/ReportIssueForm.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
-
-
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -14,7 +13,6 @@ const ReportIssueForm = () => {
   const [coordinates, setCoordinates] = useState(null);
   const [photo, setPhoto] = useState(null);
   const [issueTypes, setIssueTypes] = useState([]); // To dynamically load issue types from the database
-  const [userId, setUserId] = useState(null); // Holds the logged-in user's ID
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
@@ -34,34 +32,14 @@ const ReportIssueForm = () => {
   useEffect(() => {
     const fetchIssueTypes = async () => {
       try {
-        const response = await fetch("/api/issues/types");
-        if (!response.ok) {
-          throw new Error("Failed to fetch issue types");
-        }
-        const data = await response.json();
-        setIssueTypes(data);
+        const response = await axios.get(`/issues/types`);
+        setIssueTypes(response.data);
       } catch (err) {
-        console.error(err);
-      }
-    };
-
-    const fetchCurrentUser = async () => {
-      try {
-        const response = await fetch("/api/users/me", { credentials: "include" });
-        if (response.ok) {
-          const user = await response.json();
-          setUserId(user.user_id); // Set the user ID if logged in
-        } else {
-          setUserId(null); // If not logged in, set user ID to null
-        }
-      } catch (err) {
-        console.error("Failed to fetch user info:", err);
-        setUserId(null); // Ensure user ID is null on failure
+        console.error("Error fetching issue types:", err);
       }
     };
 
     fetchIssueTypes();
-    fetchCurrentUser();
   }, []);
 
   const handleLocationChange = (e) => {
@@ -84,49 +62,34 @@ const ReportIssueForm = () => {
 
     try {
       // Submit issue data to the backend
-      const issueResponse = await fetch("/api/issues", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(issueData),
-        credentials: "include",
+      const issueResponse = await axios.post(`/issues`, issueData, {
+        withCredentials: true,
       });
 
-      if (!issueResponse.ok) {
-        throw new Error("Failed to report issue");
-      }
-
-      const issueResult = await issueResponse.json();
-      const issueId = issueResult.issue.issue_id;
+      const issueId = issueResponse.data.issue.issue_id;
 
       // Upload photo if provided
       if (photo) {
         const formData = new FormData();
         formData.append("image", photo);
 
-        const photoResponse = await fetch(`/api/s3/upload/${issueId}`, {
-          method: "POST",
-          body: formData,
+        await axios.post(`/images/upload/${issueId}`, formData, {
+          withCredentials: true,
         });
-
-        if (!photoResponse.ok) {
-          throw new Error("Failed to upload photo");
-        }
       }
 
       setSuccess("Issue reported successfully!");
       setError(null);
+
       // Reset form
       setIssueType("");
       setLocation("");
       setDescription("");
       setPhoto(null);
       setCoordinates(null);
-      setName("");
     } catch (err) {
-      console.error(err);
-      setError(err.message || "An error occurred. Please try again.");
+      console.error("Error reporting issue:", err);
+      setError(err.response?.data?.error || "An error occurred. Please try again.");
       setSuccess(null);
     }
   };

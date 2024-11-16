@@ -27,7 +27,7 @@ router.get('/types', async (req, res) => {
 // Route: Add a new issue (requires login)
 router.post('/', authenticateToken, async (req, res) => {
     const { issueType, description, gpsCoords, city, county, photo } = req.body;
-    const userId = req.user.user_id;
+    const userId = req.user.user_id || null; // Set userID to null if not logged in
 
     try {
         // Step 1: Insert location if location data is provided
