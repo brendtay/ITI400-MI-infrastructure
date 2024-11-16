@@ -22,14 +22,6 @@ const allowedOrigins = [
   process.env.PUBLIC_DNS,                 // AWS public DNS if applicable
 ];
 
-/*
-const corsOptions = {
-  origin: "*", // Temporarily allow all origins
-  credentials: true,
-  optionsSuccessStatus: 200,
-};
-*/
-
 const corsOptions = {
   origin: (origin, callback) => {
     if (allowedOrigins.includes(origin) || !origin) {
@@ -43,6 +35,10 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
+// Apply global middlewares
+app.use(cors(corsOptions)); // CORS middleware
+app.use(express.json()); // Parse JSON requests
+
 // Middleware to log origins
 app.use((req, res, next) => {
   const origin = req.headers.origin || "No Origin Header";
@@ -50,28 +46,33 @@ app.use((req, res, next) => {
   next();
 });
 
-// Apply middlewares
-app.use(cors(corsOptions)); // CORS middleware
-app.use(express.json()); // Parse JSON requests
+// Add custom CORS headers (optional, can combine with `cors`)
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin); // Dynamically allow origin
+  res.header("Access-Control-Allow-Credentials", "true"); // Allow cookies/auth headers
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE"); // Allowed methods
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization"); // Allowed headers
+  next();
+});
 
 // Define API routes
 app.use('/api/issues', issuesRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/images', imagesRouter);
 
-// Serve static assets from the dist folder
+// Serve static assets from the `dist` folder (React build)
 app.use(express.static(path.join(__dirname, "../Client/dist")));
 
-// Test API route
+// Define utility/test routes
 app.get("/status", (req, res) => {
   res.json({
-      status: "success",
-      message: "API is working properly",
-      timestamp: new Date().toISOString(),
+    status: "success",
+    message: "API is working properly",
+    timestamp: new Date().toISOString(),
   });
 });
 
-// Catch-all route to serve the React app for any route not matched
+// Catch-all route to serve the React app for any unmatched routes
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../Client/dist/index.html"));
 });
@@ -82,7 +83,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Internal Server Error" });
 });
 
-// Run server on port 8080
+// Start the server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
