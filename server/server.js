@@ -16,20 +16,22 @@ const s3Router = require('./routes/s3');
 const app = express();
 
 // Configure CORS options
+const allowedOrigins = [
+  "http://localhost:5173",                // Local development frontend URL
+  process.env.FRONTEND_URL,               // Production frontend URL (e.g., https://mi-infrastructure.com)
+  process.env.PUBLIC_DNS,                 // AWS public DNS if applicable
+];
+
 const corsOptions = {
   origin: (origin, callback) => {
-    const allowedOrigins = [
-      "http://localhost:5173", // Allow requests from your *local* frontend
-      process.env.FRONTEND_URL, 
-      process.env.PUBLIC_DNS,   
-    ];
     if (allowedOrigins.includes(origin) || !origin) {
       callback(null, true);
     } else {
+      console.error(`Blocked by CORS: ${origin}`); // Log blocked origins for debugging
       callback(new Error("Not allowed by CORS"));
     }
   },
-  credentials: true, 
+  credentials: true,
   optionsSuccessStatus: 200,
 };
 
