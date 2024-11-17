@@ -1,13 +1,69 @@
+/* General Footer Styling */
 footer {
-  padding-top: 0.25rem; /* Adjust for desired thinness */
-  padding-bottom: 0.25rem;
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+  width: 100%;
+  background-color: #343a40; /* Match bg-dark class color */
+  color: #fff; /* Match text-white class color */
+  text-align: center;
 }
 
+/* Footer Heading and List Styling */
 .footer-heading {
-  font-size: 0.85rem; /* Reduce font size for thin appearance */
+  font-size: 0.8rem;
 }
 
 .footer-list li {
-  font-size: 0.8rem;
-  margin-bottom: 0.1rem; /* Smaller spacing between items */
+  font-size: 0.75rem;
+  margin-bottom: 0.1rem;
+  list-style: none;
+}
+
+/* Copyright Styling */
+.footer-copyright {
+  font-size: 0.7rem; /* Default font size */
+}
+
+/* Media Query for Screens 768px and Smaller */
+@media (max-width: 768px) {
+  footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0.1rem; /* Smaller padding for 768px and below */
+    padding-bottom: 0.1rem;
+  }
+
+  .footer-heading {
+    font-size: 0.7rem;
+  }
+
+  .footer-list li {
+    font-size: 0.65rem;
+  }
+
+  /* Smaller copyright text */
+  .footer-copyright {
+    font-size: 0.6rem;
+  }
+}
+
+/* Media Query for Screens 580px and Smaller */
+@media (max-width: 580px) {
+  footer {
+    padding-top: 0.01rem; /* Minimal padding for 580px and below */
+    padding-bottom: 0.01rem;
+  }
+
+  .footer-heading {
+    font-size: 0.4rem; /* Further reduced heading font */
+  }
+
+  .footer-list li {
+    font-size: 0.3rem; /* Further reduced list item font */
+  }
 }

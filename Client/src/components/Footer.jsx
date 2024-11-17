@@ -1,6 +1,3 @@
-import React from 'react';
-import "./componentCss/footer.css";
-
 export default function Footer() {
   return (
     <footer className="bg-dark text-white py-0 position-relative">
@@ -18,11 +15,6 @@ export default function Footer() {
               <li className="mb-0"><i className="bi bi-phone"></i> (810) 867-5309</li>
             </ul>
           </div>
-        </div>
-
-        {/* Copyright - Positioned Bottom Left */}
-        <div className="position-absolute bottom-0 start-0 p-1 small">
-          © 2024 MI-Infrastructure. All rights reserved.
         </div>
       </div>
     </footer>
