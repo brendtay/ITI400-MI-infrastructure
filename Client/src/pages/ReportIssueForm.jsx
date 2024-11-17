@@ -9,6 +9,7 @@ const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
 const ReportIssueForm = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // State for login status
   const [issueType, setIssueType] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
@@ -18,9 +19,21 @@ const ReportIssueForm = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [captchaToken, setCaptchaToken] = useState(null);
-  const autocompleteRef = useRef(null); // Reference to the autocomplete instance
+  const autocompleteRef = useRef(null);
 
   useEffect(() => {
+    // Check if the user is logged in
+    const checkLoginStatus = async () => {
+      try {
+        const response = await axios.get('/api/check-login', { withCredentials: true });
+        setIsLoggedIn(response.data.status === 'logged_in');
+      } catch (err) {
+        console.error("Error checking login status:", err);
+      }
+    };
+
+    checkLoginStatus();
+
     const setMinHeight = () => {
       const vh = window.innerHeight * 0.01;
       document.documentElement.style.setProperty("--min-height", `${vh * 110}px`);
@@ -149,6 +162,11 @@ const ReportIssueForm = () => {
   return (
     <div className="d-flex align-items-center justify-content-center report-issue-container" style={{ minHeight: "100vh" }}>
       <div className="container p-4 border rounded" style={{ maxWidth: "600px" }}>
+        {!isLoggedIn && (
+          <div className="alert alert-warning text-center mb-4">
+            <p>You are not logged in. <a href="/login">Log in</a> to track your reports or <strong>continue as a guest</strong>.</p>
+          </div>
+        )}
         <h2 className="text-center mb-4">Report an Issue</h2>
         {error && <p className="text-danger">{error}</p>}
         {success && <p className="text-success">{success}</p>}
@@ -186,36 +204,29 @@ const ReportIssueForm = () => {
           </div>
 
           {/* Location Section */}
-          <div className="container-fluid mb-3">
-            <div className="card bg-light p-3 mb-3">
-              <div className="card-body">
-                <h5 className="card-title">Enter Address</h5>
-                <Autocomplete
-                  onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
-                  onPlaceChanged={onPlaceSelected}
-                >
-                  <input
-                    type="text"
-                    id="location"
-                    className="form-control form-control-lg mb-2"
-                    value={location}
-                    onChange={handleLocationChange}
-                    placeholder="Enter address"
-                  />
-                </Autocomplete>
-              </div>
-            </div>
-            <div className="text-center mb-3">
-              <strong>or</strong>
-            </div>
-            <div className="card bg-light p-3">
-              <div className="card-body text-center">
-                <h5 className="card-title">Use My Location</h5>
-                <button type="button" className="btn btn-outline-secondary w-100" onClick={useDeviceLocation}>
-                  Use My Location
-                </button>
-              </div>
-            </div>
+          <div className="mb-3">
+            <label htmlFor="location" className="form-label">Location</label>
+            <Autocomplete
+              onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
+              onPlaceChanged={onPlaceSelected}
+            >
+              <input
+                type="text"
+                id="location"
+                className="form-control"
+                value={location}
+                onChange={handleLocationChange}
+                placeholder="Enter address"
+              />
+            </Autocomplete>
+          </div>
+          <div className="text-center my-3">
+            <strong>or</strong>
+          </div>
+          <div className="mb-3">
+            <button type="button" className="btn btn-outline-secondary w-100" onClick={useDeviceLocation}>
+              Use My Location
+            </button>
           </div>
 
           {/* Map */}
