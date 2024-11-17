@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './pagesCss/ReportIssueForm.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { GoogleMap, Marker } from '@react-google-maps/api';
+import { GoogleMap, Marker, Autocomplete } from '@react-google-maps/api';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
 const ReportIssueForm = () => {
   const [issueType, setIssueType] = useState("");
@@ -12,9 +14,11 @@ const ReportIssueForm = () => {
   const [location, setLocation] = useState("");
   const [coordinates, setCoordinates] = useState(null);
   const [photo, setPhoto] = useState(null);
-  const [issueTypes, setIssueTypes] = useState([]); // To dynamically load issue types from the database
+  const [issueTypes, setIssueTypes] = useState([]);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [captchaToken, setCaptchaToken] = useState(null);
+  const autocompleteRef = useRef(null); // Reference to the autocomplete instance
 
   useEffect(() => {
     const setMinHeight = () => {
@@ -27,8 +31,6 @@ const ReportIssueForm = () => {
     return () => window.removeEventListener("resize", setMinHeight);
   }, []);
 
-
-  // Fetch issue types and current user info on component mount
   useEffect(() => {
     const fetchIssueTypes = async () => {
       try {
@@ -36,7 +38,7 @@ const ReportIssueForm = () => {
         setIssueTypes(response.data);
       } catch (err) {
         console.error("Error fetching issue types:", err);
-        setIssueTypes([]); // Default to an empty array on error
+        setIssueTypes([]);
       }
     };
 
@@ -51,30 +53,38 @@ const ReportIssueForm = () => {
     setPhoto(e.target.files[0]);
   };
 
+  const handleCaptchaChange = (token) => {
+    setCaptchaToken(token);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!captchaToken) {
+      setError("Please complete the CAPTCHA to submit the form.");
+      return;
+    }
 
     const issueData = {
       issueType,
       description,
       gpsCoords: coordinates ? `${coordinates.lat},${coordinates.lng}` : null,
       location,
+      captchaToken,
     };
 
     try {
-      // Submit issue data to the backend
       const issueResponse = await axios.post('/api/issues', issueData, {
         withCredentials: true,
       });
 
       const issueId = issueResponse.data.issue.issue_id;
 
-      // Upload photo if provided
       if (photo) {
         const formData = new FormData();
         formData.append("image", photo);
 
-        await axios.post('/api/images/upload/${issueId}', formData, {
+        await axios.post(`/api/images/upload/${issueId}`, formData, {
           withCredentials: true,
         });
       }
@@ -82,12 +92,12 @@ const ReportIssueForm = () => {
       setSuccess("Issue reported successfully!");
       setError(null);
 
-      // Reset form
       setIssueType("");
       setLocation("");
       setDescription("");
       setPhoto(null);
       setCoordinates(null);
+      setCaptchaToken(null);
     } catch (err) {
       console.error("Error reporting issue:", err);
       setError(err.response?.data?.error || "An error occurred. Please try again.");
@@ -101,14 +111,38 @@ const ReportIssueForm = () => {
         (position) => {
           const { latitude, longitude } = position.coords;
           setCoordinates({ lat: latitude, lng: longitude });
-          setLocation(""); // Clear manual location entry if device location is used
+          setLocation("");
+          console.log("Location obtained:", latitude, longitude);
         },
         (error) => {
-          console.error("Error obtaining location:", error);
+          console.error("Error obtaining location:", error.message);
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              alert("Location access was denied. Please enable it in your browser settings.");
+              break;
+            case error.POSITION_UNAVAILABLE:
+              alert("Location information is unavailable.");
+              break;
+            case error.TIMEOUT:
+              alert("The request to get your location timed out.");
+              break;
+            default:
+              alert("An unknown error occurred.");
+              break;
+          }
         }
       );
     } else {
       alert("Geolocation is not supported by your browser.");
+    }
+  };
+
+  const onPlaceSelected = () => {
+    const place = autocompleteRef.current.getPlace();
+    if (place.geometry) {
+      const { lat, lng } = place.geometry.location;
+      setCoordinates({ lat: lat(), lng: lng() });
+      setLocation(place.formatted_address);
     }
   };
 
@@ -156,14 +190,19 @@ const ReportIssueForm = () => {
             <div className="card bg-light p-3 mb-3">
               <div className="card-body">
                 <h5 className="card-title">Enter Address</h5>
-                <input
-                  type="text"
-                  id="location"
-                  className="form-control form-control-lg mb-2"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  placeholder="Enter address"
-                />
+                <Autocomplete
+                  onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
+                  onPlaceChanged={onPlaceSelected}
+                >
+                  <input
+                    type="text"
+                    id="location"
+                    className="form-control form-control-lg mb-2"
+                    value={location}
+                    onChange={handleLocationChange}
+                    placeholder="Enter address"
+                  />
+                </Autocomplete>
               </div>
             </div>
             <div className="text-center mb-3">
@@ -197,6 +236,14 @@ const ReportIssueForm = () => {
               className="form-control"
               onChange={handlePhotoChange}
               accept="image/*"
+            />
+          </div>
+
+          {/* reCAPTCHA */}
+          <div className="mb-3 d-flex justify-content-center">
+            <ReCAPTCHA
+              sitekey={siteKey}
+              onChange={handleCaptchaChange}
             />
           </div>
 

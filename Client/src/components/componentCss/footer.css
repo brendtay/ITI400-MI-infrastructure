@@ -1,33 +1,13 @@
 footer {
-  padding-top: 10px;  /* Reduced top padding */
-  padding-bottom: 15px;  /* Reduced bottom padding */
-  margin-top: 20px;  /* Reduced margin-top */
+  padding-top: 0.25rem; /* Adjust for desired thinness */
+  padding-bottom: 0.25rem;
 }
 
-footer .footer-heading {
-  font-size: 1.2rem; /* Slightly smaller heading font size */
-  margin-bottom: 5px; /* Reduced margin for headings */
+.footer-heading {
+  font-size: 0.85rem; /* Reduce font size for thin appearance */
 }
 
-footer .footer-text {
-  font-size: 0.875rem; /* Smaller font size for text */
-}
-
-footer .footer-list li {
-  font-size: 0.875rem; /* Smaller font size for list items */
-  margin-bottom: 5px; /* Reduced space between list items */
-}
-
-footer .footer-list i {
-  margin-right: 8px; /* Added space between icons and text */
-}
-
-footer .border-top {
-  border-top: 1px solid #ccc; /* Lighter border for separation */
-  padding-top: 8px; /* Reduced padding on top of the copyright section */
-}
-
-footer .text-center {
-  font-size: 0.875rem; /* Reduced font size for the copyright section */
-  padding-bottom: 8px; /* Reduced padding on bottom */
+.footer-list li {
+  font-size: 0.8rem;
+  margin-bottom: 0.1rem; /* Smaller spacing between items */
 }
