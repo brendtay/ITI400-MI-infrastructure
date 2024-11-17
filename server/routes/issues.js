@@ -26,9 +26,34 @@ router.get('/types', async (req, res) => {
 
 // Route: Add a new issue (requires login)
 router.post('/', authenticateToken, async (req, res) => {
-    const { issueType, description, gpsCoords, city, county, photo } = req.body;
+    const { captchaToken, issueType, description, gpsCoords, city, county, photo } = req.body;
     const userId = req.user.user_id || null; // Set userID to null if not logged in
+      // Step 1: Verify reCAPTCHA token
+      try {
+        const response = await axios.post(`https://www.google.com/recaptcha/api/siteverify`, null, {
+            params: {
+                secret: process.env.RECAPTCHA_SECRET_KEY,
+                response: captchaToken,
+            },
+        });
 
+        if (!response.data.success) {
+            return res.status(400).json({ error: 'reCAPTCHA verification failed. Please try again.' });
+        }
+    } catch (error) {
+        console.error('Error verifying reCAPTCHA:', error);
+        return res.status(500).json({ error: 'reCAPTCHA verification failed.' });
+    }
+
+    // Continue with the existing issue handling logic...
+    try {
+        // Insert issue, upload photo if present, etc.
+        // (Existing code for handling the issue creation)
+    } catch (error) {
+        console.error('Error creating issue:', error);
+        res.status(500).json({ error: 'Failed to create issue.' });
+    }
+    
     try {
         // Step 1: Insert location if location data is provided
         let locationId = null;
