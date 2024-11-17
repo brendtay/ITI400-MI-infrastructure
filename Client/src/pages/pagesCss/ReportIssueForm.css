@@ -33,3 +33,20 @@
     min-height: 200vh;
   }
 }
+
+/* In your ReportIssueForm.css */
+
+.recaptcha-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+@media (max-width: 576px) {
+  .recaptcha-container {
+    /* Additional styling for small screens */
+    padding: 0 10px; /* Optional padding to avoid overflow on small screens */
+  }
+}
+

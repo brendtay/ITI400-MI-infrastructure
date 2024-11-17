@@ -43,11 +43,12 @@ const Navbar = () => {
               <Link className="nav-link active p-1" aria-current="page" to="/form">Report An Issue</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link p-1" to="/about">About Us</Link>
+              <Link className="nav-link p-1" to="/viewreports">Veiw Reports</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link p-1" to="/resources">Resources</Link>
+              <Link className="nav-link p-1" to="/about">About Us</Link>
             </li>
+            
             {username ? (
               <li className="nav-item dropdown">
                 <Link className="nav-link dropdown-toggle p-1" to="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

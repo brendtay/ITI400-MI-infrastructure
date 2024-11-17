@@ -121,6 +121,72 @@ const addImageToIssue = async (imageUrl, issueId, userId) => {
     }
 };
 
+// 9. Get an issue by its ID
+const getIssueById = async (issueId) => {
+    try {
+        const query = `
+            SELECT ii.*, lt.*, it.issue_name, st.status_name
+            FROM infrastructure_issue ii
+            LEFT JOIN location lt ON ii.location_id = lt.location_id
+            LEFT JOIN issue_types it ON ii.issue_type = it.issue_id
+            LEFT JOIN status st ON ii.status_type = st.status_id
+            WHERE ii.issue_id = $1;
+        `;
+        const result = await pool.query(query, [issueId]);
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error fetching issue by ID:', error);
+        throw new Error('Failed to fetch issue by ID');
+    }
+};
+
+// 10. Get issues near a location
+const getIssuesNearLocation = async (latitude, longitude, radius) => {
+    try {
+        const query = `
+            SELECT ii.*, lt.*, it.issue_name, st.status_name
+            FROM infrastructure_issue ii
+            LEFT JOIN location lt ON ii.location_id = lt.location_id
+            LEFT JOIN issue_types it ON ii.issue_type = it.issue_id
+            LEFT JOIN status st ON ii.status_type = st.status_id
+            WHERE lt.gps_coords IS NOT NULL;
+        `;
+        const result = await pool.query(query);
+
+        // Filter the issues to only include those within the radius
+        const issues = result.rows.filter(issue => {
+            if (issue.gps_coords) {
+                const [lat, lng] = issue.gps_coords.split(',').map(Number);
+                const distance = getDistanceFromLatLonInKm(latitude, longitude, lat, lng);
+                return distance <= radius;
+            }
+            return false;
+        });
+
+        return issues;
+    } catch (error) {
+        console.error('Error fetching issues near location:', error);
+        throw new Error('Failed to fetch issues near location');
+    }
+};
+
+// Helper function to calculate distance between two coordinates
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+    function deg2rad(deg) {
+        return deg * (Math.PI/180);
+    }
+    const R = 6371; // Radius of the earth in km
+    const dLat = deg2rad(lat2-lat1);
+    const dLon = deg2rad(lon2-lon1); 
+    const a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+        Math.sin(dLon/2) * Math.sin(dLon/2)
+        ; 
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    const d = R * c; // Distance in km
+    return d;
+}
 
 module.exports = {
     getAllIssueTypes,

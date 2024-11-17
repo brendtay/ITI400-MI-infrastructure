@@ -1,0 +1,156 @@
+/* ViewIssues.css */
+
+/* Main container styling */
+.view-issues-container {
+    padding: 20px;
+  }
+  
+  /* Page heading */
+  .view-issues-container h2 {
+    margin-bottom: 30px;
+  }
+  
+  /* Tab buttons */
+  .tab-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+  }
+  
+  .tab-buttons .btn {
+    margin: 0 5px;
+    min-width: 150px;
+  }
+  
+  .tab-buttons .btn.active,
+  .tab-buttons .btn:hover {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  /* Map container */
+  .map-container {
+    height: 400px;
+    width: 100%;
+    margin-bottom: 20px;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  /* Issue list */
+  .issue-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .issue-item {
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #f8f9fa;
+  }
+  
+  .issue-item h5 {
+    margin-bottom: 10px;
+  }
+  
+  .issue-item p {
+    margin-bottom: 5px;
+  }
+  
+  /* Form inputs */
+  .form-label {
+    font-weight: bold;
+  }
+  
+  .form-control {
+    margin-bottom: 10px;
+  }
+  
+  #issueId {
+    max-width: 300px;
+  }
+  
+  /* Error and success messages */
+  .text-danger {
+    color: #dc3545;
+    font-weight: bold;
+  }
+  
+  .text-success {
+    color: #28a745;
+    font-weight: bold;
+  }
+  
+  /* Centered content */
+  .text-center {
+    text-align: center;
+  }
+  
+  /* Adjust margins */
+  .my-3 {
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  .my-4 {
+    margin-top: 1.5rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+  
+  /* Adjust button styles */
+  .btn {
+    min-width: 150px;
+  }
+  
+  .btn-primary,
+  .btn-primary:hover,
+  .btn-primary:focus {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+  
+  .btn-outline-primary.active,
+  .btn-outline-primary:active,
+  .btn-outline-primary:hover {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+  }
+  
+  /* InfoWindow content */
+  .info-window {
+    max-width: 250px;
+  }
+  
+  .info-window h6 {
+    margin-bottom: 5px;
+  }
+  
+  .info-window p {
+    margin-bottom: 5px;
+  }
+  
+  /* Loader */
+  .loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 400px;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 576px) {
+    .btn {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  
+    .tab-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+  

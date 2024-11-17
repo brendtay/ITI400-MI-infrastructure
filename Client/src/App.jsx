@@ -11,6 +11,7 @@ import ReportIssueForm from './pages/ReportIssueForm';
 import Login from './pages/Login';
 import GoogleMapsIntegration from './components/GoogleMapsIntegration';
 import "../src/App.css";
+import ViewReports from './pages/ViewReports';
 
 // Error Boundary Component to handle and display errors gracefully
 class ErrorBoundary extends React.Component {
@@ -81,6 +82,7 @@ function App() {
                 <Route path="/form" element={<ReportIssueForm />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/maps" element={<GoogleMapsIntegration />} />
+                <Route path="/viewreports" element={<ViewReports />} /> 
               </Routes>
             </div>
            

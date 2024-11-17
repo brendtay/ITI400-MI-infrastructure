@@ -13,6 +13,49 @@ const { authenticateToken, isRole } = require('../middleware/auth');
 
 const router = express.Router();
 
+// Route: Get issues by user (now accessible to authenticated users)
+router.get('/user', authenticateToken, async (req, res) => {
+    const userId = req.user.user_id;
+    try {
+        const issues = await getIssuesByUser(userId);
+        res.json(issues);
+    } catch (error) {
+        console.error('Error fetching user issues:', error);
+        res.status(500).json({ error: 'Failed to fetch user issues.' });
+    }
+});
+
+// Route: Get issues near a location (public access)
+router.get('/nearby', async (req, res) => {
+    const { lat, lng, radius } = req.query;
+    if (!lat || !lng || !radius) {
+        return res.status(400).json({ error: 'Please provide latitude, longitude, and radius in km.' });
+    }
+
+    try {
+        const issues = await getIssuesNearLocation(Number(lat), Number(lng), Number(radius));
+        res.json(issues);
+    } catch (error) {
+        console.error('Error fetching issues near location:', error);
+        res.status(500).json({ error: 'Failed to fetch issues near location.' });
+    }
+});
+
+// Route: Get issue by ID (public access)
+router.get('/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const issue = await getIssueById(id);
+        if (!issue) {
+            return res.status(404).json({ error: 'Issue not found.' });
+        }
+        res.json(issue);
+    } catch (error) {
+        console.error('Error fetching issue by ID:', error);
+        res.status(500).json({ error: 'Failed to fetch issue.' });
+    }
+});
+
 // Route: Get all issue types (public access)
 router.get('/types', async (req, res) => {
     try {
@@ -53,7 +96,7 @@ router.post('/', authenticateToken, async (req, res) => {
         console.error('Error creating issue:', error);
         res.status(500).json({ error: 'Failed to create issue.' });
     }
-    
+
     try {
         // Step 1: Insert location if location data is provided
         let locationId = null;
