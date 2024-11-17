@@ -51,33 +51,48 @@ router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     try {
+        // Check if the user exists
         const user = await getUserByEmail(email);
         if (!user) {
+            console.error("Login failed: Invalid email");
             return res.status(400).json({ error: 'Invalid email or password.' });
         }
 
+        // Check if the provided password matches the stored hash
         const passwordMatch = await bcrypt.compare(password, user.password_hash);
         if (!passwordMatch) {
+            console.error("Login failed: Invalid password");
             return res.status(400).json({ error: 'Invalid email or password.' });
         }
 
+        // Generate a JWT token
         const token = jwt.sign(
             { user_id: user.user_id, email: user.email, role: user.role_name },
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
         );
 
+        // Configure cookie settings
         res.cookie('token', token, {
-            httpOnly: true,
-            secure: process.env.SECURE_COOKIES === 'true',
-            sameSite: 'Strict',
-            maxAge: 3600000
+            httpOnly: true, // Prevent client-side access to the cookie
+            secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+            sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // Cross-origin compatibility
+            maxAge: 3600000, // Set cookie expiration to match token expiration
         });
 
-        res.json({ message: 'Login successful.' });
+        // Respond with a success message and user details (optional)
+        res.status(200).json({
+            message: 'Login successful.',
+            user: {
+                user_id: user.user_id,
+                name: user.name,
+                email: user.email,
+                role: user.role_name,
+            },
+        });
     } catch (error) {
-        console.error('Error during login:', error);
-        res.status(500).json({ error: 'Failed to login.' });
+        console.error('Error during login:', error.message);
+        res.status(500).json({ error: 'Failed to login due to a server error.' });
     }
 });
 
