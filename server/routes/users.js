@@ -118,6 +118,19 @@ router.get('/:id', authenticateToken, async (req, res) => {
     }
 });
 
+// Route to check user authentication status
+router.get('/check-login', authenticateToken, (req, res) => {
+    try {
+        res.json({
+            status: 'logged_in',
+            user: req.user, // Respond with the user data
+        });
+    } catch (error) {
+        console.error("Error checking login status:", error.message);
+        res.status(500).json({ error: 'Internal server error.' });
+    }
+});
+
 // Route: Assign a role to a user (admin-only)
 router.put('/:id/role', authenticateToken, isRole('Admin'), async (req, res) => {
     const { id } = req.params;
@@ -176,11 +189,14 @@ router.delete('/:id', authenticateToken, isRole('Admin'), async (req, res) => {
 // Route: Get the logged-in user's information
 router.get('/me', authenticateToken, async (req, res) => {
     try {
-        const user = req.user; // User information is added by the `authenticateToken` middleware
+        const userId = req.user.user_id; 
+        const user = await getUserById(userId); // Fetch user details from the database
+
         if (!user) {
             return res.status(404).json({ error: 'User not found.' });
         }
-        res.status(200).json(user);
+
+        res.status(200).json(user); // Return user details
     } catch (error) {
         console.error('Error fetching user data:', error);
         res.status(500).json({ error: 'Failed to fetch user data.' });

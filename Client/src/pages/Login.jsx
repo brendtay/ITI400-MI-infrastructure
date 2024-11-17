@@ -21,14 +21,11 @@ const Login = () => {
       : { email, password };
 
       try {
-        const response = await axios.post(endpoint, payload, { withCredentials: true });
+        await axios.post(endpoint, payload, { withCredentials: true });
   
-        if (isRegistering) {
-          setSuccess("Registration successful! You can now log in.");
-        } else {
-          setSuccess("Login successful!");
-          // Add logic for handling successful login (e.g., storing token, redirecting)
-        }
+        const userResponse = await axios.get('/api/users/me', { withCredentials: true });
+        setSuccess(isRegistering ? "Registration successful! Please log in." : "Login successful!");
+        console.log("Logged-in user:", userResponse.data); //temporary
         setError(null);
       } catch (err) {
         setError(err.response?.data?.error || "Something went wrong");

@@ -22,17 +22,21 @@ const ReportIssueForm = () => {
   const autocompleteRef = useRef(null);
 
   useEffect(() => {
-    // Check if the user is logged in
-    const checkLoginStatus = async () => {
+    // Fetch user details from /api/users/me
+    const fetchUserDetails = async () => {
       try {
-        const response = await axios.get('/api/check-login', { withCredentials: true });
-        setIsLoggedIn(response.data.status === 'logged_in');
+        const response = await axios.get('/api/users/me', { withCredentials: true });
+        setIsLoggedIn(true);
+        console.log(response.data) //temporary
+        setUser(response.data); // Set the user details
       } catch (err) {
-        console.error("Error checking login status:", err);
+        console.error('Error checking login status:', err);
+        setIsLoggedIn(false);
+        setUser(null);
       }
     };
 
-    checkLoginStatus();
+    fetchUserDetails();
 
     const setMinHeight = () => {
       const vh = window.innerHeight * 0.01;

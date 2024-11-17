@@ -148,12 +148,27 @@ router.put('/:id/status', authenticateToken, isRole('Admin'), isRole('MDOT Emplo
     }
 });
 
-// Route: Get issues by user (MDOT Employee or Admin only)
-router.get('/user', authenticateToken, isRole('Admin'), isRole('MDOT Employee'), async (req, res) => {
-    const userId = req.user.user_id;
+// Route: Get issues by user (Accessible to the user themselves, Admin, or MDOT Employee)
+router.get('/user', authenticateToken, async (req, res) => {
+    const userId = req.user.user_id; 
+    const userRole = req.user.role; 
+    const { queryUserId } = req.query; // Allow admins/MDOT employees to query a specific userId
+
     try {
-        const issues = await getIssuesByUser(userId);
-        res.json(issues);
+        // If Admin or MDOT Employee, allow querying other users' issues via query parameter
+        if ((userRole === 'Admin' || userRole === 'MDOT Employee') && queryUserId) {
+            const issues = await getIssuesByUser(queryUserId); // Fetch issues for the specified user
+            return res.json(issues);
+        }
+
+        // Regular users can only fetch their own issues
+        if (userRole === 'User' || !queryUserId) {
+            const issues = await getIssuesByUser(userId);
+            return res.json(issues);
+        }
+
+        // If the user is neither Admin/MDOT Employee nor the owner
+        res.status(403).json({ error: 'Access denied. Insufficient permissions.' });
     } catch (error) {
         console.error('Error fetching user issues:', error);
         res.status(500).json({ error: 'Failed to fetch user issues.' });
