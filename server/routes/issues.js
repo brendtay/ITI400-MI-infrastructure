@@ -41,6 +41,17 @@ router.get('/nearby', async (req, res) => {
     }
 });
 
+// Route: Get all issue types (public access)
+router.get('/types', async (req, res) => {
+    try {
+        const issueTypes = await getAllIssueTypes();
+        res.json(issueTypes);
+    } catch (error) {
+        console.error('Error fetching issue types:', error);
+        res.status(500).json({ error: 'Failed to fetch issue types.' });
+    }
+});
+
 // Route: Get issue by ID (public access)
 router.get('/:id', async (req, res) => {
     const { id } = req.params;
@@ -56,16 +67,6 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// Route: Get all issue types (public access)
-router.get('/types', async (req, res) => {
-    try {
-        const issueTypes = await getAllIssueTypes();
-        res.json(issueTypes);
-    } catch (error) {
-        console.error('Error fetching issue types:', error);
-        res.status(500).json({ error: 'Failed to fetch issue types.' });
-    }
-});
 
 // Route: Add a new issue (requires login)
 router.post('/', authenticateToken, async (req, res) => {
