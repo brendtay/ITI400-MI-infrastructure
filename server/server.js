@@ -3,7 +3,6 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const path = require("path");
-const axios = require("axios"); // Import axios for HTTP requests
 
 // Load environment variables from .env file
 dotenv.config();
@@ -49,43 +48,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// Middleware to verify reCAPTCHA for POST requests to /api/issues
-const verifyCaptcha = async (req, res, next) => {
-  const { captchaToken } = req.body;
-  
-  if (!captchaToken) {
-    return res.status(400).json({ error: 'CAPTCHA token is missing' });
-  }
-
-  try {
-    // Verify CAPTCHA token with Google
-    const response = await axios.post(
-      `https://www.google.com/recaptcha/api/siteverify`,
-      null,
-      {
-        params: {
-          secret: process.env.RECAPTCHA_SECRET_KEY,
-          response: captchaToken,
-        },
-      }
-    );
-
-    const { success } = response.data;
-
-    if (!success) {
-      return res.status(400).json({ error: 'CAPTCHA verification failed' });
-    }
-
-    // Proceed to the next middleware if CAPTCHA is verified
-    next();
-  } catch (error) {
-    console.error("Error verifying CAPTCHA:", error);
-    res.status(500).json({ error: 'An error occurred while verifying CAPTCHA' });
-  }
-};
-
 // Define API routes
-app.use('/api/issues', issuesRouter); // Issues route without CAPTCHA middleware
+app.use('/api/issues', issuesRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/images', imagesRouter);
 
@@ -117,4 +81,3 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
-

@@ -10,7 +10,6 @@ const {
 } = require('../db/issueQueries');
 const { uploadImageToS3 } = require('../db/imageQueries');
 const { authenticateToken, isRole } = require('../middleware/auth');
-const verifyCaptcha = require('../middleware/verifyCaptcha'); // Import the verifyCaptcha middleware
 
 const router = express.Router();
 
@@ -25,8 +24,8 @@ router.get('/types', async (req, res) => {
     }
 });
 
-// Route: Add a new issue (requires login and CAPTCHA verification)
-router.post('/', authenticateToken, verifyCaptcha, async (req, res) => {
+// Route: Add a new issue (requires login)
+router.post('/', authenticateToken, async (req, res) => {
     const { issueType, description, gpsCoords, city, county, photo } = req.body;
     const userId = req.user.user_id || null; // Set userID to null if not logged in
 
