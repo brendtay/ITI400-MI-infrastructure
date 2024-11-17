@@ -23,26 +23,17 @@ const Login = () => {
   
     try {
       // Login or register the user
-      await axios.post(endpoint, payload, { withCredentials: true });
+      const response = await axios.post(endpoint, payload, { withCredentials: true });
   
-      // Delay the /me call slightly to ensure the token is set
-      setTimeout(async () => {
-        try {
-          // Fetch user details after successful login
-          const userResponse = await axios.get("/api/users/me", { withCredentials: true });
-          const user = userResponse.data;
+      setSuccess(
+        isRegistering
+          ? "Registration successful! You can now log in."
+          : "Login successful! Redirecting..."
+      );
+      setError(null);
   
-          setSuccess(isRegistering ? "Registration successful! You can now log in." : `Welcome back, ${user.name}!`);
-          setError(null);
-  
-          // Perform post-login actions like redirection or storing user data
-          console.log("Logged-in user:", user);
-        } catch (fetchError) {
-          console.error("Error fetching user details:", fetchError);
-          setError("Login successful, but failed to fetch user details.");
-          setSuccess(null);
-        }
-      }, 100); // Adjust delay as needed (e.g., 50-200ms)
+      // Perform any post-login or registration actions here (e.g., redirect)
+      console.log("Server response:", response.data);
   
     } catch (err) {
       console.error("Error during login or registration:", err);
