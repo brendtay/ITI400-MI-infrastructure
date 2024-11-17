@@ -3,8 +3,8 @@ footer {
   padding-top: 0.2rem;
   padding-bottom: 0.2rem;
   width: 100%;
-  background-color: #343a40; /* Match bg-dark class color */
-  color: #fff; /* Match text-white class color */
+  background-color: #343a40;
+  color: #fff;
   text-align: center;
 }
 
@@ -19,11 +19,6 @@ footer {
   list-style: none;
 }
 
-/* Copyright Styling */
-.footer-copyright {
-  font-size: 0.7rem; /* Default font size */
-}
-
 /* Media Query for Screens 768px and Smaller */
 @media (max-width: 768px) {
   footer {
@@ -34,7 +29,7 @@ footer {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding-top: 0.1rem; /* Smaller padding for 768px and below */
+    padding-top: 0.1rem;
     padding-bottom: 0.1rem;
   }
 
@@ -45,25 +40,28 @@ footer {
   .footer-list li {
     font-size: 0.65rem;
   }
-
-  /* Smaller copyright text */
-  .footer-copyright {
-    font-size: 0.6rem;
-  }
 }
 
 /* Media Query for Screens 580px and Smaller */
 @media (max-width: 580px) {
   footer {
-    padding-top: 0.01rem; /* Minimal padding for 580px and below */
-    padding-bottom: 0.01rem;
+    padding-top: 0.01rem !important;
+    padding-bottom: 0.01rem !important;
   }
 
   .footer-heading {
-    font-size: 0.4rem; /* Further reduced heading font */
+    font-size: 0.35rem !important;
   }
 
   .footer-list li {
-    font-size: 0.3rem; /* Further reduced list item font */
+    font-size: 0.3rem !important;
+    margin-bottom: 0.03rem !important;
   }
 }
+@media (max-width: 600px) { /* Testing a slightly wider range */
+  footer {
+    padding-top: 0.01rem !important;
+    padding-bottom: 0.01rem !important;
+  }
+}
+

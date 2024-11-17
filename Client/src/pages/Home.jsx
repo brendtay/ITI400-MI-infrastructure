@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './pagesCss/Home.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from '../components/Navbar';
@@ -7,7 +7,6 @@ import HowItWorks from '../components/HowItWorksComponent';
 import GoogleMapInt from "../components/GoogleMapsIntegration"; 
 import SearchBar from '../components/SearchBar'; 
 import { GoogleMap, Marker } from '@react-google-maps/api';
-
 
 const containerStyle = {
   width: '100%',
@@ -72,24 +71,36 @@ export default function Home() {
           <HowItWorks />
         </div>
 
-        <div className="d-flex flex-column" style={{ margin: '1rem 0' }}>
-          <div className="flex-fill google-map-container">
-            <GoogleMap
-              mapContainerStyle={containerStyle}
-              center={location}
-              zoom={13}
-            >
-              <Marker position={location} />
-            </GoogleMap>
-          </div>
-          
-          <div className="flex-fill search-bar-container">
-            <SearchBar
-              address={address}
-              onAddressChange={handleAddressChange}
-              onSearch={handleSearch}
-              onGetLocation={handleGetLocation}
-            />
+        <div className="row justify-content-center mt-4">
+          {/* Adjusted column classes for different screen sizes */}
+          <div className="col-12 col-md-12 col-lg-12 col-xl-12">
+            {/* Card for Google Maps and Search Bar */}
+            <div className="card">
+              <div className="card-body">
+                <h5 className="card-title text-center">Search & Map</h5>
+                
+                {/* Google Map Section */}
+                <div className="google-map-container" style={{ height: '300px' }}>
+                  <GoogleMap
+                    mapContainerStyle={containerStyle}
+                    center={location}
+                    zoom={13}
+                  >
+                    <Marker position={location} />
+                  </GoogleMap>
+                </div>
+
+                {/* Search Bar Section */}
+                <div className="search-bar-container mt-3">
+                  <SearchBar
+                    address={address}
+                    onAddressChange={handleAddressChange}
+                    onSearch={handleSearch}
+                    onGetLocation={handleGetLocation}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

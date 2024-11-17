@@ -1,3 +1,4 @@
+/* Image Hover Zoom Effect */
 .img-hover-zoom {
     transition: transform 0.3s ease; /* Smooth transition for the scaling effect */
 }
@@ -5,16 +6,24 @@
 .img-hover-zoom:hover {
     transform: scale(1.1); /* Scale up the image on hover */
 }
+
+/* Styling for text above images */
+.text-above-image {
+    font-size: clamp(1.2rem, 2.5vw, 2rem); /* Scales text based on viewport width with min of 1.2rem and max of 2rem */
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Adjust margins for the cards */
+.container {
+    margin-bottom: 30px; /* Adjust the value as needed */
+}
+
 .text-above-image {
     margin-bottom: 25px; /* Adjust this value as needed */
 }
 
-.container {
-    margin-bottom: 30px; /* Adjust the value as needed */
-    
-  }
-  
-  /* Base font sizes for larger screens */
+/* Heading Styles */
 h1 {
     font-size: 2.5rem; /* Adjust as needed for larger screens */
 }
@@ -23,8 +32,10 @@ h3 {
     font-size: 1.5rem; /* Adjust as needed for larger screens */
 }
 
-/* Media queries for smaller screens */
-@media (max-width: 576px) { /* Adjust the breakpoint as needed */
+/* Media Queries */
+
+/* Smaller screens (max-width: 576px) */
+@media (max-width: 576px) {
     h1 {
         font-size: 1.8rem; /* Smaller size for mobile */
     }
@@ -32,26 +43,30 @@ h3 {
     h3 {
         font-size: 1rem; /* Smaller size for mobile */
     }
+
+    .text-above-image {
+        font-size: clamp(1.2rem, 5vw, 2rem); /* More aggressive scaling for smaller screens */
+    }
 }
 
-/* Base styles for larger screens */
-.button-container {
-    padding: 20px; /* Adjust as needed for top and bottom */
+/* Larger screens (min-width: 1200px) - More controlled scaling */
+@media (min-width: 1200px) {
+    .text-above-image {
+        font-size: clamp(1.5rem, 1.5vw + 1rem, 2rem); /* Moderate scaling with an upper limit */
+    }
 }
 
-/* Default styling for images */
+/* Image Styles */
 img {
     width: 100%; /* Full width by default to make images responsive */
     height: auto; /* Maintains aspect ratio */
-  }
-  
-  /* Smaller images on screens less than 768px */
-  @media (max-width: 768px) {
-    img {
-      max-width: 90%; /* Scale down to 90% of the container width */
-      margin: 0 auto; /* Center-align the images */
-      display: block;
-    }
-  }
+}
 
-  
+/* Smaller images on screens less than 768px */
+@media (max-width: 768px) {
+    img {
+        max-width: 90%; /* Scale down to 90% of the container width */
+        margin: 0 auto; /* Center-align the images */
+        display: block;
+    }
+}

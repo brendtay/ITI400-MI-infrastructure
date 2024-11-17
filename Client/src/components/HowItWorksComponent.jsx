@@ -6,14 +6,14 @@ import examplePhoto3 from "../images/userTrackingProgress.jpg";
 
 export default function HowItWorks() {
   return (
-    <div className="container text-center my-5">
+    <div className="container text-center my-3">
       <h1>How It Works</h1>
-      <div className="row align-items-start my-5">
+      <div className="row align-items-start my-3">
         {/* Responsive columns for each step */}
         <div className="col-12 col-md-4 my-3">
           <div className="card shadow-sm h-100"> {/* Card container */}
             <div className="card-body">
-              <p className="text-above-image"><b>1. Upload A Photo</b></p>
+              <p className="text-above-image"><b>1. Upload A Photo From Device</b></p>
               <img 
                 src={examplePhoto1}
                 alt="User taking photo of pothole" 
@@ -25,7 +25,7 @@ export default function HowItWorks() {
         <div className="col-12 col-md-4 my-3">
           <div className="card shadow-sm h-100">
             <div className="card-body">
-              <p className="text-above-image"><b>2. Add Description And Location</b></p>
+              <p className="text-above-image"><b>2. Add Description / Location</b></p>
               <img 
                 src={examplePhoto2}
                 alt="User uploading data" 
