@@ -25,7 +25,8 @@ const BackgroundImageButtons = () => {
                 <Button className="btn btn-primary btn-lg mx-2 mb-2 mb-md-0" onClick={() => navigate('/form')}>
                     Report An Issue Now
                 </Button>
-                <Button className="btn btn-secondary btn-lg mx-2">Check In On A Report</Button>
+                <Button className="btn btn-secondary btn-lg mx-2" onClick={() => navigate('/viewreports')}>
+                    Check In On A Report</Button>
             </div>
         </div>
     );
