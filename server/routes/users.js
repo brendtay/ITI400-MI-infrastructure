@@ -16,6 +16,7 @@ const { authenticateToken, isRole, generateToken, sendTokenAsCookie } = require(
 
 const router = express.Router();
 
+// SPECIFIC ROUTES FIRST
 // Route: Get all users (admin-only)
 router.get('/', authenticateToken, isRole('Admin'), async (req, res) => {
     try {
@@ -46,6 +47,7 @@ router.post('/register', async (req, res) => {
     }
 });
 
+// Route: Login
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
@@ -85,29 +87,7 @@ router.post('/logout', (req, res) => {
     }
 });
 
-// Route: Get user by ID (admin or the user themselves)
-router.get('/:id', authenticateToken, async (req, res) => {
-    const { id } = req.params;
-
-    try {
-        // Allow users to fetch their own data or admins to fetch any user's data
-        if (req.user.user_id !== parseInt(id) || req.user.role !== 'Admin') {
-            return res.status(403).json({ error: 'Access denied. Admins only or the user themselves.' });
-        }
-
-        const user = await getUserById(id);
-        if (!user) {
-            return res.status(404).json({ error: 'User not found.' });
-        }
-
-        res.json(user);
-    } catch (error) {
-        console.error('Error fetching user by ID:', error);
-        res.status(500).json({ error: 'Failed to fetch user.' });
-    }
-});
-
-// Route to check user authentication status
+// Route: Check login status
 router.get('/checklogin', authenticateToken, (req, res) => {
     console.log("Calling /api/users/checklogin");
     try {
@@ -115,7 +95,7 @@ router.get('/checklogin', authenticateToken, (req, res) => {
 
         res.json({
             status: 'logged_in',
-            user: req.user, // Respond with the user data
+            user: req.user,
         });
     } catch (error) {
         console.error("Error checking login status:", error.message);
@@ -123,17 +103,20 @@ router.get('/checklogin', authenticateToken, (req, res) => {
     }
 });
 
-// Route: Assign a role to a user (admin-only)
-router.put('/:id/role', authenticateToken, isRole('Admin'), async (req, res) => {
-    const { id } = req.params;
-    const { role } = req.body;
-
+// Route: Get logged-in user's information
+router.get('/me', authenticateToken, async (req, res) => {
     try {
-        const updatedUser = await assignRoleToUser(id, role);
-        res.json({ message: 'Role updated successfully.', updatedUser });
+        const userId = req.user.user_id; 
+        const user = await getUserById(userId); // Fetch user details from the database
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
+
+        res.status(200).json(user); // Return user details
     } catch (error) {
-        console.error('Error assigning role:', error);
-        res.status(500).json({ error: 'Failed to assign role.' });
+        console.error('Error fetching user data:', error);
+        res.status(500).json({ error: 'Failed to fetch user data.' });
     }
 });
 
@@ -165,6 +148,42 @@ router.get('/search', authenticateToken, isRole('Admin'), async (req, res) => {
     }
 });
 
+// WILDCARD ROUTES AFTER SPECIFIC ROUTES
+// Route: Assign a role to a user (admin-only)
+router.put('/:id/role', authenticateToken, isRole('Admin'), async (req, res) => {
+    const { id } = req.params;
+    const { role } = req.body;
+
+    try {
+        const updatedUser = await assignRoleToUser(id, role);
+        res.json({ message: 'Role updated successfully.', updatedUser });
+    } catch (error) {
+        console.error('Error assigning role:', error);
+        res.status(500).json({ error: 'Failed to assign role.' });
+    }
+});
+
+// Route: Get user by ID (admin or the user themselves)
+router.get('/:id', authenticateToken, async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        if (req.user.user_id !== parseInt(id) && req.user.role !== 'Admin') {
+            return res.status(403).json({ error: 'Access denied. Admins only or the user themselves.' });
+        }
+
+        const user = await getUserById(id);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
+
+        res.json(user);
+    } catch (error) {
+        console.error('Error fetching user by ID:', error);
+        res.status(500).json({ error: 'Failed to fetch user.' });
+    }
+});
+
 // Route: Delete a user (admin-only)
 router.delete('/:id', authenticateToken, isRole('Admin'), async (req, res) => {
     const { id } = req.params;
@@ -175,23 +194,6 @@ router.delete('/:id', authenticateToken, isRole('Admin'), async (req, res) => {
     } catch (error) {
         console.error('Error deleting user:', error);
         res.status(500).json({ error: 'Failed to delete user.' });
-    }
-});
-
-// Route: Get the logged-in user's information
-router.get('/me', authenticateToken, async (req, res) => {
-    try {
-        const userId = req.user.user_id; 
-        const user = await getUserById(userId); // Fetch user details from the database
-
-        if (!user) {
-            return res.status(404).json({ error: 'User not found.' });
-        }
-
-        res.status(200).json(user); // Return user details
-    } catch (error) {
-        console.error('Error fetching user data:', error);
-        res.status(500).json({ error: 'Failed to fetch user data.' });
     }
 });
 
