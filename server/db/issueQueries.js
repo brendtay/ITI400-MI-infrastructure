@@ -25,11 +25,10 @@ const getAllStatuses = async () => {
 };
 
 // 3. Add a new issue (only for logged-in users)
-const insertIssue = async ({ userId, issueType, statusType, description, locationId, createdTime, updatedTime }) => {
+const insertIssue = async ({ userId, issueType, description, locationId, createdTime, updatedTime }) => {
     console.log('Inserting issue with data:', {
         userId,
         issueType,
-        statusType,
         description,
         locationId,
         createdTime,
@@ -38,10 +37,10 @@ const insertIssue = async ({ userId, issueType, statusType, description, locatio
     
     try {
         const query = `
-            INSERT INTO infrastructure_issue (user_id, issue_type, status_type, description, location_id, created_time, updated_time)
-            VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *;
+            INSERT INTO infrastructure_issue (user_id, issue_type, description, location_id, created_time, updated_time)
+            VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;
         `;
-        const values = [userId, issueType, statusType, description, locationId, createdTime, updatedTime];
+        const values = [userId, issueType, description, locationId, createdTime, updatedTime];
         const result = await pool.query(query, values);
         return result.rows[0];
     } catch (error) {
