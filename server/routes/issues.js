@@ -88,7 +88,7 @@ router.post('/', authenticateToken, async (req, res) => {
         const issueData = {
             userId,
             issueType,
-            statusType: 'Pending', // Default status
+            //statusType: Defaults to 0 (Pending) automatically in database
             description,
             locationId,
             createdTime: new Date(),
