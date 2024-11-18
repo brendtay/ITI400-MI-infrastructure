@@ -68,7 +68,10 @@ app.get("/api/status", (req, res) => {
 });
 
 // Catch-all route to serve the React app for any unmatched routes
-app.get("*", (req, res) => {
+app.get("*", (req, res, next) => {
+  if (req.path.startsWith("/api/")) {
+    return next(); // Skip React app serving for API requests
+  }
   res.sendFile(path.join(__dirname, "../Client/dist/index.html"));
 });
 
