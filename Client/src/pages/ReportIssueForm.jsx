@@ -14,6 +14,7 @@ const ReportIssueForm = () => {
   const [issueType, setIssueType] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
+  const [locationData, setLocationData] = useState({ city: null, zip: null });
   const [coordinates, setCoordinates] = useState(null);
   const [photo, setPhoto] = useState(null);
   const [issueTypes, setIssueTypes] = useState([]);
@@ -195,6 +196,7 @@ const ReportIssueForm = () => {
       setLocationData({ city, zip });
     }
   };
+
   return (
     <div className="d-flex align-items-center justify-content-center report-issue-container" style={{ minHeight: "100vh" }}>
       <div className="container p-4 border rounded" style={{ maxWidth: "600px" }}>
