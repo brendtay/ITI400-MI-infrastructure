@@ -3,6 +3,7 @@ const {
     getIssuesByZipCode,
     getIssuesNearLocation, 
 } = require('../db/locationQueries');
+const router = express.Router();
 
 // Route: Get issues near a location (public access)
 router.get('/nearby', async (req, res) => {
