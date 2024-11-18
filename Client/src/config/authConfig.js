@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Function to log in a user
 export const loginUser = async (email, password) => {
-  const endpoint = `/api/users/login`;
+  const endpoint = "/api/users/login";
   const payload = { email, password };
 
   try {
@@ -16,7 +16,7 @@ export const loginUser = async (email, password) => {
 
 // Function to register a user
 export const registerUser = async (name, email, password) => {
-  const endpoint = `/api/users/register`;
+  const endpoint = "/api/users/register";
   const payload = { name, email, password };
 
   try {
@@ -30,7 +30,7 @@ export const registerUser = async (name, email, password) => {
 
 // Function to log out a user
 export const logoutUser = async () => {
-  const endpoint = `/api/users/logout`;
+  const endpoint = "/api/users/logout";
 
   try {
     await axios.post(endpoint, {}, { withCredentials: true });
@@ -43,7 +43,7 @@ export const logoutUser = async () => {
 
 // Function to check if a user is logged in
 export const isUserLoggedIn = async () => {
-  const endpoint = `/api/check-login`;
+  const endpoint = "/api/check-login";
 
   try {
     const response = await axios.get(endpoint, { withCredentials: true });
