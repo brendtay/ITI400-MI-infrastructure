@@ -110,6 +110,8 @@ router.get('/:id', authenticateToken, async (req, res) => {
 // Route to check user authentication status
 router.get('/check-login', authenticateToken, (req, res) => {
     try {
+        console.log("Authenticated user data:", req.user);
+
         res.json({
             status: 'logged_in',
             user: req.user, // Respond with the user data
