@@ -15,7 +15,7 @@ const authenticateToken = (req, res, next) => {
         const jwtToken = cookieToken || headerToken;
 
         // If no token is provided, log and return unauthorized
-        if (!jtwToken) {
+        if (!jwtToken) {
             console.warn("No token provided.");
             return res.status(401).json({ error: "Access denied. No token provided." });
         }
