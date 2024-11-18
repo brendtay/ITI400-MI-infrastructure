@@ -1,4 +1,8 @@
 import axios from "axios";
+// Configure Axios defaults
+axios.defaults.baseURL = "https://www.mi-infrastructure.com";
+axios.defaults.withCredentials = true;
+
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { LoadScript } from '@react-google-maps/api';
@@ -41,10 +45,6 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-
-  // Configure Axios defaults
-  axios.defaults.baseURL = "https://www.mi-infrastructure.com";
-  axios.defaults.withCredentials = true;
 
   // Fetch API Status
   const fetchAPIStatus = async () => {
