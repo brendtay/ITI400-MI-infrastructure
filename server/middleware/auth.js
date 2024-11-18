@@ -15,26 +15,25 @@ const authenticateToken = (req, res, next) => {
         const jwtToken = cookieToken || headerToken;
 
         // If no token is provided, log and return unauthorized
-        if (!jwtToken) {
-            console.warn("No token provided in the request.");
-            return res.status(401).json({ error: 'Access denied. No token provided.' });
+        if (!jtwToken) {
+            console.warn("No token provided.");
+            return res.status(401).json({ error: "Access denied. No token provided." });
         }
 
-        // Verify the token
-        jwt.verify(jwtToken, process.env.JWT_SECRET, (err, user) => {
+        jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
             if (err) {
                 console.error("Token verification failed:", err.message);
-                return res.status(403).json({ error: 'Invalid or expired token.' });
+                return res.status(403).json({ error: "Invalid or expired token." });
             }
 
-            console.log("Verified user payload:", user); // Log the payload for debugging
-            req.user = user; // Attach user data to the request object
-            next(); // Proceed to the next middleware or route handler
-        });
-    } catch (error) {
-        console.error("Error in authenticateToken middleware:", error.message);
-        res.status(500).json({ error: 'Internal server error during authentication.' });
-    }
+        console.log("Token verified. User:", user); // Debug user payload
+        req.user = user;
+        next();
+    });
+} catch (error) {
+    console.error("Error in authenticateToken:", error.message);
+    res.status(500).json({ error: "Internal server error during authentication." });
+}
 };
 
 // Middleware to authorize users based on role
