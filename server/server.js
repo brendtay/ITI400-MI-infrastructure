@@ -43,10 +43,11 @@ app.use(cors(corsOptions)); // CORS middleware
 app.use(express.json()); // Parse JSON requests
 app.use(cookieParser()); // Cookie monster
 
-// Middleware to log origins
+// Middleware to log origins and routes
 app.use((req, res, next) => {
   const origin = req.headers.origin || "No Origin Header";
   console.log(`Request Origin: ${origin}`);
+  console.log(`Incoming Request: Method=${req.method}, URL=${req.url}`);
   next();
 });
 
