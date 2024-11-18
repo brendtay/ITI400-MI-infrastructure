@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
-const cookieParser = require('cookie-parser');
+
 dotenv.config(); // Load environment variables
 
 // Middleware to authenticate JWT tokens.
@@ -8,26 +8,26 @@ const authenticateToken = (req, res, next) => {
     try {
         // Retrieve the token from cookies or Authorization header
         const authHeader = req.headers['authorization'];
-        const headerToken = authHeader && authHeader.split(' ')[1];
-        const cookieToken = req.cookies && req.cookies['auth_token'];
+        const headerToken = authHeader ? authHeader.split(' ')[1] : null;
+        const cookieToken = req.cookies ? req.cookies['auth_token'] : null;
 
-        // Choose token from header or cookie
-        const jwtToken = headerToken || cookieToken;
+        // Prefer token from cookies for better security
+        const jwtToken = cookieToken || headerToken;
 
-        // If no token is provided, return an error
+        // If no token is provided, log and return unauthorized
         if (!jwtToken) {
-            console.error("No token provided in the request.");
+            console.warn("No token provided in the request.");
             return res.status(401).json({ error: 'Access denied. No token provided.' });
         }
 
         // Verify the token
         jwt.verify(jwtToken, process.env.JWT_SECRET, (err, user) => {
             if (err) {
-                console.error("Invalid or expired token:", err.message);
+                console.error("Token verification failed:", err.message);
                 return res.status(403).json({ error: 'Invalid or expired token.' });
             }
 
-            console.log("Verified user payload:", user); // Debugging
+            console.log("Verified user payload:", user); // Log the payload for debugging
             req.user = user; // Attach user data to the request object
             next(); // Proceed to the next middleware or route handler
         });
@@ -40,15 +40,15 @@ const authenticateToken = (req, res, next) => {
 // Middleware to authorize users based on role
 const isRole = (requiredRole) => (req, res, next) => {
     try {
-        // Ensure that the user is authenticated
+        // Ensure the user is authenticated
         if (!req.user) {
-            console.error("No user data in request. Ensure the token is valid.");
+            console.warn("No user data in request. Ensure the token is valid.");
             return res.status(401).json({ error: 'Unauthorized access.' });
         }
 
         // Check if the user's role matches the required role
         if (req.user.role !== requiredRole) {
-            console.error(`Access denied. User role: ${req.user.role}, Required role: ${requiredRole}`);
+            console.warn(`Access denied. User role: ${req.user.role}, Required role: ${requiredRole}`);
             return res.status(403).json({ error: `Access denied. ${requiredRole} only.` });
         }
 
@@ -67,7 +67,7 @@ const generateToken = (user) => {
             email: user.email,
             role: user.role,
         };
-        const options = { expiresIn: '1h' };
+        const options = { expiresIn: '1h' }; // Token expiration set to 1 hour
         const token = jwt.sign(payload, process.env.JWT_SECRET, options);
 
         console.log("Token generated for user:", payload); // Debugging
@@ -82,9 +82,9 @@ const generateToken = (user) => {
 const sendTokenAsCookie = (res, token) => {
     try {
         res.cookie('auth_token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+            httpOnly: true, // Prevent access to the cookie from client-side scripts
+            secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+            sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // Cross-origin compatibility
             maxAge: 3600000, // Token expiration: 1 hour
         });
         console.log("Token sent as cookie.");
