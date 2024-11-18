@@ -27,17 +27,20 @@ const ReportIssueForm = () => {
       const loggedIn = await isUserLoggedIn();
       setIsLoggedIn(loggedIn);
     };
-
+  
     checkLogin();
+  }, []);
 
+  useEffect(() => {
     const setMinHeight = () => {
       const vh = window.innerHeight * 0.01;
       document.documentElement.style.setProperty("--min-height", `${vh * 110}px`);
     };
-
-    setMinHeight();
+  
+    setMinHeight(); // Set height on load
     window.addEventListener("resize", setMinHeight);
-    return () => window.removeEventListener("resize", setMinHeight);
+  
+    return () => window.removeEventListener("resize", setMinHeight); // Cleanup on unmount
   }, []);
 
   useEffect(() => {
