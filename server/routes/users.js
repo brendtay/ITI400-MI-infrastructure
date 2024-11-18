@@ -91,7 +91,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
 
     try {
         // Allow users to fetch their own data or admins to fetch any user's data
-        if (req.user.user_id !== parseInt(id) && req.user.role !== 'Admin') {
+        if (req.user.user_id !== parseInt(id) || req.user.role !== 'Admin') {
             return res.status(403).json({ error: 'Access denied. Admins only or the user themselves.' });
         }
 
