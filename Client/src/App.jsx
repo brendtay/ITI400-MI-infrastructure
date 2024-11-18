@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { LoadScript } from '@react-google-maps/api';
+import { isUserLoggedIn } from './config/authConfig'
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from './components/Navbar';
 import Home from './pages/Home';

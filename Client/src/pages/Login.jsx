@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { loginUser, registerUser } from "../config/authConfig";
 import "./pagesCss/Login.css";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 
-const Login = () => {
+const Login = ({ onLogin }) => {
   const [isRegistering, setIsRegistering] = useState(false); // Toggle between login and registration
   const [name, setName] = useState(""); // For registration
   const [email, setEmail] = useState(""); // Common for login and registration
@@ -21,6 +20,7 @@ const Login = () => {
         setSuccess("Registration successful! You can now log in.");
       } else {
         await loginUser(email, password);
+        onLogin();
         setSuccess("Login successful! Redirecting...");
         window.location.href = "/"; // Redirect to home page
       }
