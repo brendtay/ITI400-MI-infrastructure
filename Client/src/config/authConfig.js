@@ -43,7 +43,7 @@ export const logoutUser = async () => {
 
 // Function to check if a user is logged in
 export const isUserLoggedIn = async () => {
-  const endpoint = "/api/users/check-login";
+  const endpoint = "/api/users/checklogin";
 
   try {
     const response = await axios.get(endpoint, { withCredentials: true });
