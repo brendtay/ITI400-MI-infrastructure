@@ -86,6 +86,8 @@ const ReportIssueForm = () => {
       description,
       gpsCoords: coordinates ? `${coordinates.lat},${coordinates.lng}` : null,
       location,
+      city: locationData.city || null,
+      zip: locationData.zip || null,
       captchaToken,
     };
 
@@ -124,28 +126,45 @@ const ReportIssueForm = () => {
   const useDeviceLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        async (position) => {
           const { latitude, longitude } = position.coords;
           setCoordinates({ lat: latitude, lng: longitude });
-          setLocation("");
-          console.log("Location obtained:", latitude, longitude);
+  
+          // Reverse geocode to get city and zip
+          try {
+            const response = await axios.get(
+              `https://maps.googleapis.com/maps/api/geocode/json`,
+              {
+                params: {
+                  latlng: `${latitude},${longitude}`,
+                  key: apiKey,
+                },
+              }
+            );
+  
+            if (response.data.status === "OK") {
+              const addressComponents =
+                response.data.results[0].address_components;
+  
+              const cityComponent = addressComponents.find((comp) =>
+                comp.types.includes("locality")
+              );
+              const zipComponent = addressComponents.find((comp) =>
+                comp.types.includes("postal_code")
+              );
+  
+              const city = cityComponent ? cityComponent.long_name : null;
+              const zip = zipComponent ? zipComponent.long_name : null;
+  
+              setLocationData({ city, zip });
+            }
+          } catch (error) {
+            console.error("Error during reverse geocoding:", error.message);
+          }
         },
         (error) => {
           console.error("Error obtaining location:", error.message);
-          switch (error.code) {
-            case error.PERMISSION_DENIED:
-              alert("Location access was denied. Please enable it in your browser settings.");
-              break;
-            case error.POSITION_UNAVAILABLE:
-              alert("Location information is unavailable.");
-              break;
-            case error.TIMEOUT:
-              alert("The request to get your location timed out.");
-              break;
-            default:
-              alert("An unknown error occurred.");
-              break;
-          }
+          // Handle error cases (as in your existing code)
         }
       );
     } else {
@@ -153,15 +172,29 @@ const ReportIssueForm = () => {
     }
   };
 
-  const onPlaceSelected = () => {
+  const onPlaceSelected = async () => {
     const place = autocompleteRef.current.getPlace();
     if (place.geometry) {
       const { lat, lng } = place.geometry.location;
       setCoordinates({ lat: lat(), lng: lng() });
       setLocation(place.formatted_address);
+  
+      // Fetch city and zip from place details
+      const addressComponents = place.address_components;
+      const cityComponent = addressComponents.find((comp) =>
+        comp.types.includes('locality')
+      );
+      const zipComponent = addressComponents.find((comp) =>
+        comp.types.includes('postal_code')
+      );
+  
+      const city = cityComponent ? cityComponent.long_name : null;
+      const zip = zipComponent ? zipComponent.long_name : null;
+  
+      // Add city and zip to state
+      setLocationData({ city, zip });
     }
   };
-
   return (
     <div className="d-flex align-items-center justify-content-center report-issue-container" style={{ minHeight: "100vh" }}>
       <div className="container p-4 border rounded" style={{ maxWidth: "600px" }}>

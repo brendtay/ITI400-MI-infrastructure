@@ -55,8 +55,8 @@ router.get('/types', async (req, res) => {
 
 // Route: Add a new issue (requires login)
 router.post('/', authenticateToken, async (req, res) => {
-    const { captchaToken, issueType, description, gpsCoords, city, county, photo } = req.body;
-    const userId = req.user.user_id || null; // Set userId to null if not logged in
+    const { captchaToken, issueType, description, gpsCoords, city, zip, photo } = req.body;
+    const userId = req.user.user_id || null;
 
     // Step 0: Verify reCAPTCHA token
     try {
@@ -76,46 +76,19 @@ router.post('/', authenticateToken, async (req, res) => {
     }
 
     try {
-        // Step 1: Convert address to GPS coordinates if needed
-        let convertedCoords = gpsCoords;
-
-        if (!gpsCoords && (city || county)) {
-            const address = [city, county].filter(Boolean).join(', ');
-            try {
-                const geoResponse = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
-                    params: {
-                        address,
-                        key: process.env.GOOGLE_MAPS_API_KEY,
-                    },
-                });
-
-                if (geoResponse.data.status === 'OK') {
-                    const location = geoResponse.data.results[0].geometry.location;
-                    convertedCoords = `${location.lat},${location.lng}`; // Format as "latitude,longitude"
-                } else {
-                    console.warn(`Geocoding failed: ${geoResponse.data.status}`);
-                }
-            } catch (geoError) {
-                console.error('Error during geocoding:', geoError.message);
-            }
-        }
-
-        // Step 2: Insert location if location data is provided
+        // Step 1: Insert location if location data is provided
         let locationId = null;
-        if (convertedCoords || city || county) {
-            const locationData = {
-                gpsCoords: convertedCoords || null,
-                city: city || null,
-                county: county || null,
-            };
+
+        if (gpsCoords || city || zip) {
+            const locationData = { gpsCoords, city, zip };
             locationId = await insertLocation(locationData);
         }
 
-        // Step 3: Insert the issue in the infrastructure_issue table
+        // Step 2: Insert the issue in the infrastructure_issue table
         const issueData = {
             userId,
             issueType,
-            statusType: 'Pending', // Set default status
+            statusType: 'Pending', // Default status
             description,
             locationId,
             createdTime: new Date(),
@@ -123,7 +96,7 @@ router.post('/', authenticateToken, async (req, res) => {
         };
         const issue = await insertIssue(issueData);
 
-        // Step 4: If a photo is provided, upload to S3 and associate it with the issue
+        // Step 3: Upload image to S3 if a photo is provided
         if (photo) {
             const imageRecord = await uploadImageToS3(photo, userId, issue.issue_id);
             issue.image = imageRecord;

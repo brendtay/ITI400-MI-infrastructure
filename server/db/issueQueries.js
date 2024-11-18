@@ -56,19 +56,15 @@ const updateIssueStatus = async (issueId, statusType) => {
 };
 
 // 5. Insert a new location
-const insertLocation = async ({ gpsCoords, city, county }) => {
-    try {
-        const query = `
-            INSERT INTO location (gps_coords, city, county)
-            VALUES ($1, $2, $3) RETURNING location_id;
-        `;
-        const values = [gpsCoords, city, county];
-        const result = await pool.query(query, values);
-        return result.rows[0].location_id;
-    } catch (error) {
-        console.error('Error inserting location:', error);
-        throw new Error('Failed to create location');
-    }
+const insertLocation = async ({ gpsCoords, city, zip }) => {
+    const query = `
+        INSERT INTO location (gps_coords, city, zip)
+        VALUES ($1, $2, $3)
+        ON CONFLICT (gps_coords) DO NOTHING
+        RETURNING location_id
+    `;
+    const result = await pool.query(query, [gpsCoords, city, zip]);
+    return result.rows[0]?.location_id || null; // Return location_id or null if it already exists
 };
 
 // 6. Get all issues reported by a specific user
