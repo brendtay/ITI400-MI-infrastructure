@@ -53,28 +53,13 @@ router.get('/types', async (req, res) => {
     }
 });
 
-// Route: Get issue by ID (public access)
-router.get('/:id', async (req, res) => {
-    const { id } = req.params;
-    try {
-        const issue = await getIssueById(id);
-        if (!issue) {
-            return res.status(404).json({ error: 'Issue not found.' });
-        }
-        res.json(issue);
-    } catch (error) {
-        console.error('Error fetching issue by ID:', error);
-        res.status(500).json({ error: 'Failed to fetch issue.' });
-    }
-});
-
-
 // Route: Add a new issue (requires login)
 router.post('/', authenticateToken, async (req, res) => {
     const { captchaToken, issueType, description, gpsCoords, city, county, photo } = req.body;
-    const userId = req.user.user_id || null; // Set userID to null if not logged in
-      // Step 0: Verify reCAPTCHA token
-      try {
+    const userId = req.user.user_id || null; // Set userId to null if not logged in
+
+    // Step 0: Verify reCAPTCHA token
+    try {
         const response = await axios.post(`https://www.google.com/recaptcha/api/siteverify`, null, {
             params: {
                 secret: process.env.RECAPTCHA_SECRET_KEY,
@@ -91,18 +76,42 @@ router.post('/', authenticateToken, async (req, res) => {
     }
 
     try {
-        // Step 1: Insert location if location data is provided
+        // Step 1: Convert address to GPS coordinates if needed
+        let convertedCoords = gpsCoords;
+
+        if (!gpsCoords && (city || county)) {
+            const address = [city, county].filter(Boolean).join(', ');
+            try {
+                const geoResponse = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+                    params: {
+                        address,
+                        key: process.env.GOOGLE_MAPS_API_KEY,
+                    },
+                });
+
+                if (geoResponse.data.status === 'OK') {
+                    const location = geoResponse.data.results[0].geometry.location;
+                    convertedCoords = `${location.lat},${location.lng}`; // Format as "latitude,longitude"
+                } else {
+                    console.warn(`Geocoding failed: ${geoResponse.data.status}`);
+                }
+            } catch (geoError) {
+                console.error('Error during geocoding:', geoError.message);
+            }
+        }
+
+        // Step 2: Insert location if location data is provided
         let locationId = null;
-        if (gpsCoords || city || county) {
+        if (convertedCoords || city || county) {
             const locationData = {
-                gpsCoords: gpsCoords || null,
+                gpsCoords: convertedCoords || null,
                 city: city || null,
-                county: county || null
+                county: county || null,
             };
             locationId = await insertLocation(locationData);
         }
 
-        // Step 2: Insert the issue in the infrastructure_issue table
+        // Step 3: Insert the issue in the infrastructure_issue table
         const issueData = {
             userId,
             issueType,
@@ -114,7 +123,7 @@ router.post('/', authenticateToken, async (req, res) => {
         };
         const issue = await insertIssue(issueData);
 
-        // Step 3: If a photo is provided, upload to S3 and associate it with the issue
+        // Step 4: If a photo is provided, upload to S3 and associate it with the issue
         if (photo) {
             const imageRecord = await uploadImageToS3(photo, userId, issue.issue_id);
             issue.image = imageRecord;
@@ -124,19 +133,6 @@ router.post('/', authenticateToken, async (req, res) => {
     } catch (error) {
         console.error('Error creating issue:', error);
         res.status(500).json({ error: 'Failed to create issue.' });
-    }
-});
-
-// Route: Update issue status (MDOT Employee or Admin only)
-router.put('/:id/status', authenticateToken, isRole('Admin'), isRole('MDOT Employee'), async (req, res) => {
-    const { id } = req.params;
-    const { status_type } = req.body;
-    try {
-        await updateIssueStatus(id, status_type);
-        res.json({ message: 'Issue status updated successfully.' });
-    } catch (error) {
-        console.error('Error updating issue status:', error);
-        res.status(500).json({ error: 'Failed to update issue status.' });
     }
 });
 
@@ -176,6 +172,34 @@ router.get('/location/:id', async (req, res) => {
     } catch (error) {
         console.error('Error fetching location issues:', error);
         res.status(500).json({ error: 'Failed to fetch location issues.' });
+    }
+});
+
+// Route: Update issue status (MDOT Employee or Admin only)
+router.put('/:id/status', authenticateToken, isRole('Admin'), isRole('MDOT Employee'), async (req, res) => {
+    const { id } = req.params;
+    const { status_type } = req.body;
+    try {
+        await updateIssueStatus(id, status_type);
+        res.json({ message: 'Issue status updated successfully.' });
+    } catch (error) {
+        console.error('Error updating issue status:', error);
+        res.status(500).json({ error: 'Failed to update issue status.' });
+    }
+});
+
+// Route: Get issue by ID (public access)
+router.get('/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const issue = await getIssueById(id);
+        if (!issue) {
+            return res.status(404).json({ error: 'Issue not found.' });
+        }
+        res.json(issue);
+    } catch (error) {
+        console.error('Error fetching issue by ID:', error);
+        res.status(500).json({ error: 'Failed to fetch issue.' });
     }
 });
 
