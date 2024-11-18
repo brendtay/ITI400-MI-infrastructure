@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { isUserLoggedIn } from '../config/authConfig';
 import axios from 'axios';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -11,15 +12,17 @@ const Navbar = () => {
     // Function to fetch user info
     const fetchUserInfo = async () => {
       try {
-        const response = await axios.get('/api/check-login', { withCredentials: true });
-        if (response.data.status === 'logged_in') {
-          setUsername(response.data.user.username); // Assuming the response has `user` object with `username`
+        const loggedIn = await isUserLoggedIn(); // Use the centralized function to check login status
+        if (loggedIn) {
+          // Retrieve the user object from the response
+          const response = await axios.get('/api/users/me', { withCredentials: true });
+          setUsername(response.data.username); // Assuming the response contains `username`
         }
       } catch (err) {
         console.error("Error fetching user info:", err);
       }
     };
-
+  
     fetchUserInfo();
   }, []);
 
