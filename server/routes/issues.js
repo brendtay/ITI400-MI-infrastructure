@@ -73,7 +73,7 @@ router.get('/:id', async (req, res) => {
 router.post('/', authenticateToken, async (req, res) => {
     const { captchaToken, issueType, description, gpsCoords, city, county, photo } = req.body;
     const userId = req.user.user_id || null; // Set userID to null if not logged in
-      // Step 1: Verify reCAPTCHA token
+      // Step 0: Verify reCAPTCHA token
       try {
         const response = await axios.post(`https://www.google.com/recaptcha/api/siteverify`, null, {
             params: {

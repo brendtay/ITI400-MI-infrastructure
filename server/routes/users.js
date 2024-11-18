@@ -12,7 +12,7 @@ const {
     searchUsers,
     deleteUserById
 } = require('../db/userQueries');
-const { authenticateToken, isRole } = require('../middleware/auth');
+const { authenticateToken, isRole, generateToken, sendTokenAsCookie } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -46,53 +46,27 @@ router.post('/register', async (req, res) => {
     }
 });
 
-// Route: User login and token generation
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        // Check if the user exists
         const user = await getUserByEmail(email);
         if (!user) {
-            console.error("Login failed: Invalid email");
             return res.status(400).json({ error: 'Invalid email or password.' });
         }
 
-        // Check if the provided password matches the stored hash
-        const passwordMatch = await bcrypt.compare(password, user.password_hash);
-        if (!passwordMatch) {
-            console.error("Login failed: Invalid password");
+        const isPasswordValid = await bcrypt.compare(password, user.password_hash);
+        if (!isPasswordValid) {
             return res.status(400).json({ error: 'Invalid email or password.' });
         }
 
-        // Generate a JWT token
-        const token = jwt.sign(
-            { user_id: user.user_id, email: user.email, role: user.role_name },
-            process.env.JWT_SECRET,
-            { expiresIn: '1h' }
-        );
+        const token = generateToken(user); // Generate token
+        sendTokenAsCookie(res, token); // Send token as cookie
 
-        // Configure cookie settings
-        res.cookie('auth_token', token, {
-            httpOnly: true, // Prevent client-side access to the cookie
-            secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-            sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // Cross-origin compatibility
-            maxAge: 3600000, // Set cookie expiration to match token expiration
-        });
-
-        // Respond with a success message and user details (optional)
-        res.status(200).json({
-            message: 'Login successful.',
-            user: {
-                user_id: user.user_id,
-                name: user.name,
-                email: user.email,
-                role: user.role_name,
-            },
-        });
+        res.status(200).json({ message: 'Login successful.' });
     } catch (error) {
-        console.error('Error during login:', error.message);
-        res.status(500).json({ error: 'Failed to login due to a server error.' });
+        console.error("Error during login:", error.message);
+        res.status(500).json({ error: 'Login failed.' });
     }
 });
 

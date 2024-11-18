@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const path = require("path");
+const cookieParser = require('cookie-parser');
 
 // Load environment variables from .env file
 dotenv.config();
@@ -40,6 +41,7 @@ const corsOptions = {
 // Apply global middlewares
 app.use(cors(corsOptions)); // CORS middleware
 app.use(express.json()); // Parse JSON requests
+app.use(cookieParser()); // Cookie monster
 
 // Middleware to log origins
 app.use((req, res, next) => {
