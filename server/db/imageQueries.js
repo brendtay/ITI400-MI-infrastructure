@@ -11,7 +11,6 @@ const uploadImageToS3 = async (file, userId, issueId) => {
     Key: `${Date.now()}_${file.originalname}`,
     Body: file.buffer,
     ContentType: file.mimetype,
-    ACL: 'public-read'
   };
 
   try {
