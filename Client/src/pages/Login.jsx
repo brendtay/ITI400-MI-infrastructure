@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { loginUser, registerUser } from "../config/authConfig";
 import "./pagesCss/Login.css";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 
@@ -13,31 +14,19 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    const endpoint = isRegistering
-      ? '/api/users/register'
-      : '/api/users/login';
-    const payload = isRegistering
-      ? { name, email, password }
-      : { email, password };
-  
+
     try {
-      // Login or register the user
-      const response = await axios.post(endpoint, payload, { withCredentials: true });
-  
-      setSuccess(
-        isRegistering
-          ? "Registration successful! You can now log in."
-          : "Login successful! Redirecting..."
-      );
+      if (isRegistering) {
+        await registerUser(name, email, password);
+        setSuccess("Registration successful! You can now log in.");
+      } else {
+        await loginUser(email, password);
+        setSuccess("Login successful! Redirecting...");
+        window.location.href = "/"; // Redirect to home page
+      }
       setError(null);
-  
-      // Perform any post-login or registration actions here (e.g., redirect)
-      console.log("Server response:", response.data);
-  
     } catch (err) {
-      console.error("Error during login or registration:", err);
-      setError(err.response?.data?.error || "Something went wrong. Please try again.");
+      setError(err.message);
       setSuccess(null);
     }
   };

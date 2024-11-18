@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
+import { isUserLoggedIn } from "../config/authConfig";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './pagesCss/ViewIssues.css';
 
@@ -15,17 +16,14 @@ const ViewIssues = () => {
   const [selectedIssue, setSelectedIssue] = useState(null);
   const [error, setError] = useState(null);
 
+
   useEffect(() => {
-    // Check if the user is logged in
-    const checkLoginStatus = async () => {
-      try {
-        const response = await axios.get('/api/check-login', { withCredentials: true });
-        setIsLoggedIn(response.data.status === 'logged_in');
-      } catch (err) {
-        console.error("Error checking login status:", err);
-      }
+    const checkLogin = async () => {
+      const loggedIn = await isUserLoggedIn();
+      setIsLoggedIn(loggedIn);
     };
-    checkLoginStatus();
+
+    checkLogin();
   }, []);
 
   // Function to get user's device location
