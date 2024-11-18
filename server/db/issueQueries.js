@@ -55,19 +55,8 @@ const updateIssueStatus = async (issueId, statusType) => {
     }
 };
 
-// 5. Insert a new location
-const insertLocation = async ({ gpsCoords, city, zip }) => {
-    const query = `
-        INSERT INTO location (gps_coords, city, zip)
-        VALUES ($1, $2, $3)
-        ON CONFLICT (gps_coords) DO NOTHING
-        RETURNING location_id
-    `;
-    const result = await pool.query(query, [gpsCoords, city, zip]);
-    return result.rows[0]?.location_id || null; // Return location_id or null if it already exists
-};
 
-// 6. Get all issues reported by a specific user
+// 5. Get all issues reported by a specific user
 const getIssuesByUser = async (userId) => {
     try {
         const query = `
@@ -84,24 +73,7 @@ const getIssuesByUser = async (userId) => {
     }
 };
 
-// 7. Get all issues for a specific location
-const getIssuesByLocation = async (locationId) => {
-    try {
-        const query = `
-            SELECT * 
-            FROM infrastructure_issue 
-            WHERE location_id = $1 
-            ORDER BY created_time DESC;
-        `;
-        const result = await pool.query(query, [locationId]);
-        return result.rows;
-    } catch (error) {
-        console.error('Error fetching location issues:', error);
-        throw new Error('Failed to fetch location issues');
-    }
-};
-
-// 8. Link an image to an issue
+// 6. Link an image to an issue
 const addImageToIssue = async (imageUrl, issueId, userId) => {
     try {
         const query = `
@@ -117,7 +89,7 @@ const addImageToIssue = async (imageUrl, issueId, userId) => {
     }
 };
 
-// 9. Get an issue by its ID
+// 7. Get an issue by its ID
 const getIssueById = async (issueId) => {
     try {
         const query = `
@@ -136,62 +108,13 @@ const getIssueById = async (issueId) => {
     }
 };
 
-// 10. Get issues near a location
-const getIssuesNearLocation = async (latitude, longitude, radius) => {
-    try {
-        const query = `
-            SELECT ii.*, lt.*, it.issue_name, st.status_name
-            FROM infrastructure_issue ii
-            LEFT JOIN location lt ON ii.location_id = lt.location_id
-            LEFT JOIN issue_types it ON ii.issue_type = it.issue_id
-            LEFT JOIN status st ON ii.status_type = st.status_id
-            WHERE lt.gps_coords IS NOT NULL;
-        `;
-        const result = await pool.query(query);
-
-        // Filter the issues to only include those within the radius
-        const issues = result.rows.filter(issue => {
-            if (issue.gps_coords) {
-                const [lat, lng] = issue.gps_coords.split(',').map(Number);
-                const distance = getDistanceFromLatLonInKm(latitude, longitude, lat, lng);
-                return distance <= radius;
-            }
-            return false;
-        });
-
-        return issues;
-    } catch (error) {
-        console.error('Error fetching issues near location:', error);
-        throw new Error('Failed to fetch issues near location');
-    }
-};
-
-// Helper function to calculate distance between two coordinates
-function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-    function deg2rad(deg) {
-        return deg * (Math.PI/180);
-    }
-    const R = 6371; // Radius of the earth in km
-    const dLat = deg2rad(lat2-lat1);
-    const dLon = deg2rad(lon2-lon1); 
-    const a = 
-        Math.sin(dLat/2) * Math.sin(dLat/2) +
-        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
-        Math.sin(dLon/2) * Math.sin(dLon/2)
-        ; 
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-    const d = R * c; // Distance in km
-    return d;
-}
 
 module.exports = {
     getAllIssueTypes,
     getAllStatuses,
     insertIssue,
     updateIssueStatus,
-    insertLocation,
     getIssuesByUser,
-    getIssuesByLocation,
-    getIssuesNearLocation,
-    addImageToIssue
+    addImageToIssue,
+    getIssueById
 };

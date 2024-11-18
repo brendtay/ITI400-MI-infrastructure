@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser');
 dotenv.config();
 
 // Import route handlers
+const locationRouter = require('./routes/location');
 const issuesRouter = require('./routes/issues');
 const usersRouter = require('./routes/users');
 const imagesRouter = require('./routes/images');
@@ -53,6 +54,7 @@ app.use((req, res, next) => {
 
 // Define API routes
 app.use('/api/users', usersRouter);
+app.use('/api/location', locationRouter);
 app.use('/api/issues', issuesRouter);
 app.use('/api/images', imagesRouter);
 

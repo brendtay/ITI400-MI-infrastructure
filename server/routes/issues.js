@@ -1,14 +1,14 @@
 const express = require('express');
 const axios = require('axios');
 const {
+    getAllIssueTypes,
     insertIssue,
     updateIssueStatus,
-    getAllIssueTypes,
-    insertLocation,
     getIssuesByUser,
-    getIssuesByLocation,
-    addImageToIssue
+    addImageToIssue,
+    getIssueById
 } = require('../db/issueQueries');
+const { findOrCreateLocation } = require('../db/locationQueries');
 const { uploadImageToS3 } = require('../db/imageQueries');
 const { authenticateToken, isRole } = require('../middleware/auth');
 
@@ -23,33 +23,6 @@ router.get('/user', authenticateToken, async (req, res) => {
     } catch (error) {
         console.error('Error fetching user issues:', error);
         res.status(500).json({ error: 'Failed to fetch user issues.' });
-    }
-});
-
-// Route: Get issues near a location (public access)
-router.get('/nearby', async (req, res) => {
-    const { lat, lng, radius } = req.query;
-    if (!lat || !lng || !radius) {
-        return res.status(400).json({ error: 'Please provide latitude, longitude, and radius in km.' });
-    }
-
-    try {
-        const issues = await getIssuesNearLocation(Number(lat), Number(lng), Number(radius));
-        res.json(issues);
-    } catch (error) {
-        console.error('Error fetching issues near location:', error);
-        res.status(500).json({ error: 'Failed to fetch issues near location.' });
-    }
-});
-
-// Route: Get all issue types (public access)
-router.get('/types', async (req, res) => {
-    try {
-        const issueTypes = await getAllIssueTypes();
-        res.json(issueTypes);
-    } catch (error) {
-        console.error('Error fetching issue types:', error);
-        res.status(500).json({ error: 'Failed to fetch issue types.' });
     }
 });
 
@@ -76,35 +49,36 @@ router.post('/', authenticateToken, async (req, res) => {
     }
 
     try {
-        // Step 1: Insert location if location data is provided
+        // Step 1: Find or create the location
         let locationId = null;
-
         if (gpsCoords || city || zip) {
-            const locationData = { gpsCoords, city, zip };
-            locationId = await insertLocation(locationData);
+            locationId = await findOrCreateLocation({ gpsCoords, city, zip });
         }
 
-        // Step 2: Insert the issue in the infrastructure_issue table
+        // Step 2: Insert the issue into the `infrastructure_issue` table
         const issueData = {
             userId,
             issueType,
-            //statusType: Defaults to 0 (Pending) automatically in database
             description,
             locationId,
             createdTime: new Date(),
             updatedTime: new Date(),
         };
+
         const issue = await insertIssue(issueData);
 
         // Step 3: Upload image to S3 if a photo is provided
         if (photo) {
+            const formData = new FormData();
+            formData.append("image", photo);
             const imageRecord = await uploadImageToS3(photo, userId, issue.issue_id);
             issue.image = imageRecord;
         }
 
+        // Step 4: Return success response
         res.status(201).json({ message: 'Issue created successfully.', issue });
     } catch (error) {
-        console.error('Error creating issue:', error);
+        console.error('Error creating issue:', error.message);
         res.status(500).json({ error: 'Failed to create issue.' });
     }
 });
@@ -136,15 +110,14 @@ router.get('/user', authenticateToken, async (req, res) => {
     }
 });
 
-// Route: Get issues by location (public access)
-router.get('/location/:id', async (req, res) => {
-    const { id } = req.params;
+// Route: Get all issue types (public access)
+router.get('/types', async (req, res) => {
     try {
-        const issues = await getIssuesByLocation(id);
-        res.json(issues);
+        const issueTypes = await getAllIssueTypes();
+        res.json(issueTypes);
     } catch (error) {
-        console.error('Error fetching location issues:', error);
-        res.status(500).json({ error: 'Failed to fetch location issues.' });
+        console.error('Error fetching issue types:', error);
+        res.status(500).json({ error: 'Failed to fetch issue types.' });
     }
 });
 
