@@ -7,7 +7,7 @@ const authenticateToken = (req, res, next) => {
         // Retrieve the token from cookies or Authorization header
         const authHeader = req.headers['authorization']; 
         const headerToken = authHeader && authHeader.split(' ')[1]; 
-        const cookieToken = req.cookies && req.cookies['token'];
+        const cookieToken = req.cookies && req.cookies['auth_token'];
 
         const jwtToken = headerToken || cookieToken;
 

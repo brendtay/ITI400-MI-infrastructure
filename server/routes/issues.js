@@ -1,4 +1,5 @@
 const express = require('express');
+const axios = require('axios');
 const {
     insertIssue,
     updateIssueStatus,
@@ -87,15 +88,6 @@ router.post('/', authenticateToken, async (req, res) => {
     } catch (error) {
         console.error('Error verifying reCAPTCHA:', error);
         return res.status(500).json({ error: 'reCAPTCHA verification failed.' });
-    }
-
-    // Continue with the existing issue handling logic...
-    try {
-        // Insert issue, upload photo if present, etc.
-        // (Existing code for handling the issue creation)
-    } catch (error) {
-        console.error('Error creating issue:', error);
-        res.status(500).json({ error: 'Failed to create issue.' });
     }
 
     try {

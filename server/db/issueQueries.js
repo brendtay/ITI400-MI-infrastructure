@@ -196,5 +196,6 @@ module.exports = {
     insertLocation,
     getIssuesByUser,
     getIssuesByLocation,
+    getIssuesNearLocation,
     addImageToIssue
 };

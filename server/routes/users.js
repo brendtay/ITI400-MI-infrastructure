@@ -73,7 +73,7 @@ router.post('/login', async (req, res) => {
         );
 
         // Configure cookie settings
-        res.cookie('token', token, {
+        res.cookie('auth_token', token, {
             httpOnly: true, // Prevent client-side access to the cookie
             secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
             sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // Cross-origin compatibility
