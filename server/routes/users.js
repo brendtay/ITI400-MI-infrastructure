@@ -73,14 +73,14 @@ router.post('/login', async (req, res) => {
 // Route: User logout (clear the token cookie)
 router.post('/logout', (req, res) => {
     try {
-        res.clearCookie('token', {
+        res.clearCookie('auth_token', {
             httpOnly: true,
-            secure: process.env.SECURE_COOKIES === 'true',
-            sameSite: 'Strict',
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
         });
         res.json({ message: 'Logout successful.' });
     } catch (error) {
-        console.error('Error during logout:', error);
+        console.error('Error during logout:', error.message);
         res.status(500).json({ error: 'Failed to logout.' });
     }
 });

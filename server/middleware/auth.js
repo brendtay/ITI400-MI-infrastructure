@@ -82,12 +82,12 @@ const generateToken = (user) => {
 const sendTokenAsCookie = (res, token) => {
     try {
         res.cookie('auth_token', token, {
-            httpOnly: true, // Prevent access to the cookie from client-side scripts
-            secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-            sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // Cross-origin compatibility
-            maxAge: 3600000, // Token expiration (1 hour)
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+            maxAge: 3600000, // Token expiration: 1 hour
         });
-        console.log("Token sent as cookie."); // Debugging
+        console.log("Token sent as cookie.");
     } catch (error) {
         console.error("Error sending token as cookie:", error.message);
         throw new Error('Failed to set token cookie.');

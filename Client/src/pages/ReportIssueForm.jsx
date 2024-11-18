@@ -25,6 +25,10 @@ const ReportIssueForm = () => {
   useEffect(() => {
     const checkLogin = async () => {
       const loggedIn = await isUserLoggedIn();
+      if (!loggedIn) {
+        alert("You must log in to use this feature.");
+        window.location.href = "/login";
+      }
       setIsLoggedIn(loggedIn);
     };
   

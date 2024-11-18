@@ -38,6 +38,7 @@ class ErrorBoundary extends React.Component {
 
 function App() {
   const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
   // Configure Axios defaults
@@ -60,6 +61,14 @@ function App() {
   useEffect(() => {
     fetchAPIStatus();
   }, []);
+  
+  useEffect(() => {
+    const checkAuth = async () => {
+      const loggedIn = await isUserLoggedIn();
+      setIsAuthenticated(loggedIn);
+    };
+    checkAuth();
+  }, []);
 
   return loading ? (
     <div>Loading...</div>
@@ -73,14 +82,14 @@ function App() {
       >
         <div className="d-flex flex-column" style={{ minHeight: '100vh' }}>
           <Router>
-            <Navbar />
+            <Navbar isAuthenticated={isAuthenticated} />  
             <div className="flex-grow-1" style={{ overflowY: 'auto' }}>
               {/* Main content area */}
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/form" element={<ReportIssueForm />} />
-                <Route path="/login" element={<Login />} />
+                <Route path="/login" element={<Login onLogin={() => setIsAuthenticated(true)} />} />
                 <Route path="/maps" element={<GoogleMapsIntegration />} />
                 <Route path="/viewreports" element={<ViewReports />} /> 
               </Routes>
