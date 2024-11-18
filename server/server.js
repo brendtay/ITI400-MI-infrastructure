@@ -51,8 +51,8 @@ app.use((req, res, next) => {
 });
 
 // Define API routes
-app.use('/api/issues', issuesRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/issues', issuesRouter);
 app.use('/api/images', imagesRouter);
 
 // Serve static assets from the `dist` folder (React build)
