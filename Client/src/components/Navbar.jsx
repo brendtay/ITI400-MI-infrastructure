@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation, useHistory } from 'react-router-dom';
+import { Link, useLocation, useNavigate  } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const Navbar = () => {
   const { username, fetchUserInfo, setUsername } = useContext(AuthContext);
   const location = useLocation();
-  const history = useHistory(); 
+  const navigate = useNavigate (); 
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const Navbar = () => {
     try {
       await axios.post('/api/users/logout', {}, { withCredentials: true });
       setUsername(null); 
-      history.push('/'); 
+      navigate.push('/'); 
     } catch (error) {
       console.error('Logout failed:', error);
       setError('Failed to log out. Please try again.');
