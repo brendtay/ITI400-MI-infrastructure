@@ -1,24 +1,40 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { Link, useLocation, useNavigate  } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { isUserLoggedIn, logoutUser } from '../config/authConfig';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Navbar = () => {
-  const { username, fetchUserInfo, setUsername } = useContext(AuthContext);
-  const location = useLocation();
-  const navigate = useNavigate (); 
+  const [username, setUsername] = useState(null); 
   const [error, setError] = useState(null);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const loggedIn = await isUserLoggedIn();
+        if (loggedIn) {
+          const response = await axios.get('/api/users/me', { withCredentials: true });
+          setUsername(response.data.username);
+        } else {
+          setUsername(null);
+        }
+      } catch (err) {
+        console.error("Error fetching user info:", err);
+        setUsername(null);
+      }
+    };
+
     fetchUserInfo();
   }, [location]);
 
   const handleLogout = async () => {
     try {
-      await axios.post('/api/users/logout', {}, { withCredentials: true });
-      setUsername(null); 
-      navigate.push('/'); 
+      await logoutUser();
+      setUsername(null);
+      navigate('/');
     } catch (error) {
       console.error('Logout failed:', error);
       setError('Failed to log out. Please try again.');
@@ -50,14 +66,18 @@ const Navbar = () => {
             <li className="nav-item">
               <Link className="nav-link p-1" to="/about">About Us</Link>
             </li>
-            
+
             {username ? (
               <>
                 <li className="nav-item">
                   <span className="nav-link p-1">Welcome, {username}!</span>
                 </li>
                 <li className="nav-item">
-                  <button className="btn btn-link nav-link p-1" onClick={handleLogout} style={{ textDecoration: 'none' }}>
+                  <button
+                    className="btn btn-link nav-link p-1"
+                    onClick={handleLogout}
+                    style={{ textDecoration: 'none' }}
+                  >
                     Log Out
                   </button>
                 </li>
@@ -77,6 +97,6 @@ const Navbar = () => {
       )}
     </nav>
   );
-}
+};
 
 export default Navbar;
