@@ -106,14 +106,27 @@ router.get('/checklogin', authenticateToken, (req, res) => {
 // Route: Get logged-in user's information
 router.get('/me', authenticateToken, async (req, res) => {
     try {
-        const userId = req.user.user_id; 
-        const user = await getUserById(userId); // Fetch user details from the database
+        // Check if the user ID is available
+        const userId = req.user && req.user.user_id;
+        if (!userId) {
+            return res.status(401).json({ error: 'Unauthorized access.' });
+        }
+
+        // Fetch user details from the database
+        const user = await getUserById(userId);
 
         if (!user) {
             return res.status(404).json({ error: 'User not found.' });
         }
 
-        res.status(200).json(user); // Return user details
+        // Prepare the user data to return
+        const userData = {
+            id: user.id,
+            username: user.username,
+            email: user.email, 
+        };
+
+        res.status(200).json(userData); // Return user details
     } catch (error) {
         console.error('Error fetching user data:', error);
         res.status(500).json({ error: 'Failed to fetch user data.' });

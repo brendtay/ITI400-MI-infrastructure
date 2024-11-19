@@ -1,30 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { isUserLoggedIn } from '../config/authConfig';
 import axios from 'axios';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Navbar = () => {
   const [username, setUsername] = useState(null); // State to hold the logged-in username
+  const location = useLocation(); // Hook to get the current location
 
   useEffect(() => {
     // Function to fetch user info
     const fetchUserInfo = async () => {
       try {
-        const loggedIn = await isUserLoggedIn(); // Use the centralized function to check login status
-        if (loggedIn) {
-          // Retrieve the user object from the response
-          const response = await axios.get('/api/users/me', { withCredentials: true });
-          setUsername(response.data.username); // Assuming the response contains `username`
-        }
+        // Attempt to get the current user's info
+        const response = await axios.get('/api/users/me', { withCredentials: true });
+        setUsername(response.data.username); // Set the username from the response
       } catch (err) {
         console.error("Error fetching user info:", err);
+        setUsername(null); // Clear username if there's an error (e.g., not logged in)
       }
     };
   
-    fetchUserInfo();
-  }, []);
+    fetchUserInfo(); // Call the function to fetch user info
+  }, [location.pathname]); // Re-run the effect whenever the route changes
 
   return (
     <nav className="navbar navbar-expand-lg bg-dark navbar-dark fixed-top">
