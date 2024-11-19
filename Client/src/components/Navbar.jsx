@@ -1,28 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Navbar = () => {
-  const [username, setUsername] = useState(null); // State to hold the logged-in username
-  const location = useLocation(); // Hook to get the current location
+  const { username, fetchUserInfo, setUsername } = useContext(AuthContext);
+  const location = useLocation();
+  const history = useHistory(); 
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Function to fetch user info
-    const fetchUserInfo = async () => {
-      try {
-        // Attempt to get the current user's info
-        const response = await axios.get('/api/users/me', { withCredentials: true });
-        setUsername(response.data.username); // Set the username from the response
-      } catch (err) {
-        console.error("Error fetching user info:", err);
-        setUsername(null); // Clear username if there's an error (e.g., not logged in)
-      }
-    };
-  
-    fetchUserInfo(); // Call the function to fetch user info
-  }, [location.pathname]); // Re-run the effect whenever the route changes
+    fetchUserInfo();
+  }, [location]);
+
+  const handleLogout = async () => {
+    try {
+      await axios.post('/api/users/logout', {}, { withCredentials: true });
+      setUsername(null); 
+      history.push('/'); 
+    } catch (error) {
+      console.error('Logout failed:', error);
+      setError('Failed to log out. Please try again.');
+    }
+  };
 
   return (
     <nav className="navbar navbar-expand-lg bg-dark navbar-dark fixed-top">
@@ -51,15 +52,16 @@ const Navbar = () => {
             </li>
             
             {username ? (
-              <li className="nav-item dropdown">
-                <Link className="nav-link dropdown-toggle p-1" to="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  {username}
-                </Link>
-                <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                  <li><Link className="dropdown-item" to="/profile">Profile</Link></li>
-                  <li><Link className="dropdown-item" to="/logout">Log Out</Link></li>
-                </ul>
-              </li>
+              <>
+                <li className="nav-item">
+                  <span className="nav-link p-1">Welcome, {username}!</span>
+                </li>
+                <li className="nav-item">
+                  <button className="btn btn-link nav-link p-1" onClick={handleLogout} style={{ textDecoration: 'none' }}>
+                    Log Out
+                  </button>
+                </li>
+              </>
             ) : (
               <li className="nav-item">
                 <Link className="nav-link p-1" to="/login">Log In</Link>
@@ -68,6 +70,11 @@ const Navbar = () => {
           </ul>
         </div>
       </div>
+      {error && (
+        <div className="alert alert-danger" role="alert" style={{ margin: 0 }}>
+          {error}
+        </div>
+      )}
     </nav>
   );
 }
