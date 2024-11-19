@@ -1,6 +1,5 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const {
     getAllUsers,
     isEmailTaken,
@@ -106,13 +105,7 @@ router.get('/checklogin', authenticateToken, (req, res) => {
 // Route: Get logged-in user's information
 router.get('/me', authenticateToken, async (req, res) => {
     try {
-        // Check if the user ID is available
-        const userId = req.user && req.user.user_id;
-        if (!userId) {
-            return res.status(401).json({ error: 'Unauthorized access.' });
-        }
-
-        // Fetch user details from the database
+        const userId = req.user.user_id; 
         const user = await getUserById(userId);
 
         if (!user) {
@@ -121,12 +114,13 @@ router.get('/me', authenticateToken, async (req, res) => {
 
         // Prepare the user data to return
         const userData = {
-            id: user.id,
-            username: user.username,
-            email: user.email, 
+            id: user.user_id,
+            username: user.name, 
+            email: user.email,
+            role: user.role_name, 
         };
 
-        res.status(200).json(userData); // Return user details
+        res.status(200).json(userData); 
     } catch (error) {
         console.error('Error fetching user data:', error);
         res.status(500).json({ error: 'Failed to fetch user data.' });
