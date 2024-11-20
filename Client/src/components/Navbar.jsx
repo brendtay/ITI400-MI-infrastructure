@@ -4,6 +4,7 @@ import axios from 'axios';
 import { isUserLoggedIn, logoutUser } from '../config/authConfig';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const Navbar = () => {
   const [username, setUsername] = useState(null); 
@@ -44,7 +45,11 @@ const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-lg bg-dark navbar-dark fixed-top">
       <div className="container-fluid px-3">
-        <Link className="navbar-brand p-3" to="/">MI-Infrastructure</Link>
+        {/* Home Icon */}
+        <Link className="navbar-brand d-flex align-items-center" to="/">
+          <i className="fas fa-home me-2"></i> {/* Font Awesome home icon */}
+        </Link>
+  
         <button 
           className="navbar-toggler" 
           type="button" 
@@ -55,10 +60,12 @@ const Navbar = () => {
           aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>
+  
         <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
+          {/* Left-Aligned Links */}
+          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <Link className="nav-link active p-1" aria-current="page" to="/form">Report An Issue</Link>
+              <Link className="nav-link p-1" aria-current="page" to="/form">Report An Issue</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link p-1" to="/viewreports">View Reports</Link>
@@ -66,25 +73,25 @@ const Navbar = () => {
             <li className="nav-item">
               <Link className="nav-link p-1" to="/about">About Us</Link>
             </li>
-
+          </ul>
+  
+          {/* Right-Aligned User Login/Logout Section */}
+          <ul className="navbar-nav ms-auto">
             {username ? (
               <>
-                <li className="nav-item">
-                  <span className="nav-link p-1">Welcome, {username}!</span>
-                </li>
-                <li className="nav-item">
+                <li className="nav-item d-flex align-items-center">
+                  <span className="navbar-text me-2">Welcome, {username}!</span>
                   <button
-                    className="btn btn-link nav-link p-1"
+                    className="btn btn-outline-light btn-sm"
                     onClick={handleLogout}
-                    style={{ textDecoration: 'none' }}
                   >
-                    Log Out
+                    Want To Logout?
                   </button>
                 </li>
               </>
             ) : (
               <li className="nav-item">
-                <Link className="nav-link p-1" to="/login">Log In</Link>
+                <Link className="nav-link" to="/login">Log In</Link>
               </li>
             )}
           </ul>
@@ -97,6 +104,7 @@ const Navbar = () => {
       )}
     </nav>
   );
+  
 };
 
 export default Navbar;
