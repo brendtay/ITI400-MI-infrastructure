@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
 import { isUserLoggedIn } from "../config/authConfig";
@@ -16,6 +16,7 @@ const ViewIssues = () => {
   const [issueById, setIssueById] = useState(null);
   const [selectedIssue, setSelectedIssue] = useState(null);
   const [error, setError] = useState(null);
+  const mapRef = useRef(null); // Reference to the Google Map instance
 
   // Check if user is logged in
   useEffect(() => {
@@ -44,19 +45,7 @@ const ViewIssues = () => {
   // Fetch nearby issues when coordinates are set
   useEffect(() => {
     if (coordinates) {
-      const fetchNearbyIssues = async () => {
-        try {
-          const radius = 10; // Radius in km
-          const response = await axios.get(
-             `/api/location/nearby?lat=${coordinates.lat}&lng=${coordinates.lng}&radius=${radius}`
-          );
-          setNearbyIssues(response.data);
-        } catch (error) {
-          console.error('Error fetching nearby issues:', error);
-          setError('Failed to fetch nearby issues.');
-        }
-      };
-      fetchNearbyIssues();
+      fetchNearbyIssuesAt(coordinates.lat, coordinates.lng, 10); // Default radius of 10 km
     }
   }, [coordinates]);
 
@@ -107,13 +96,54 @@ const ViewIssues = () => {
     }
   };
 
+  const handleSearchArea = () => {
+    if (mapRef.current) {
+      const center = mapRef.current.getCenter();
+      const lat = center.lat();
+      const lng = center.lng();
+
+      const bounds = mapRef.current.getBounds();
+      const ne = bounds.getNorthEast();
+
+      const radius = computeRadius(lat, lng, ne.lat(), ne.lng());
+      fetchNearbyIssuesAt(lat, lng, radius);
+    } else {
+      alert('Map is not ready yet.');
+    }
+  };
+
+  const computeRadius = (lat1, lng1, lat2, lng2) => {
+    const R = 6371; // Radius of the Earth in km
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLng = (lng2 - lng1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const d = R * c;
+    return d; // Distance in km
+  };
+
+  const fetchNearbyIssuesAt = async (lat, lng, radius) => {
+    try {
+      const response = await axios.get(
+        `/api/location/nearby?lat=${lat}&lng=${lng}&radius=${radius}`
+      );
+      setNearbyIssues(response.data);
+    } catch (error) {
+      console.error('Error fetching nearby issues:', error);
+      setError('Failed to fetch issues in the current area.');
+    }
+  };
+
   const handleIssueIdInputChange = (e) => {
     setIssueIdInput(e.target.value);
   };
 
   const handleIssueIdLookup = async () => {
     try {
-      const response = await axios.get('/api/issues/${issueIdInput}');
+      const response = await axios.get(`/api/issues/${issueIdInput}`);
       setIssueById(response.data);
       setError(null);
     } catch (error) {
@@ -130,12 +160,17 @@ const ViewIssues = () => {
         <button className="btn btn-primary mb-3" onClick={getUserLocation}>
           Use My Location
         </button>
+        <button className="btn btn-primary mb-3" onClick={handleSearchArea}>
+          Search this area
+        </button>
       </div>
       {coordinates && (
         <GoogleMap
           mapContainerStyle={{ height: '400px', width: '100%' }}
           center={coordinates}
           zoom={12}
+          onLoad={(map) => (mapRef.current = map)}
+          onUnmount={() => (mapRef.current = null)}
         >
           {nearbyIssues.map((issue) => {
             const [lat, lng] = issue.gps_coords
@@ -252,8 +287,9 @@ const ViewIssues = () => {
       )}
     </div>
   );
-   // Main return
-   return (
+
+  // Main return
+  return (
     <div
       className="d-flex align-items-center justify-content-center view-issues-container"
       style={{ minHeight: '100vh' }}
@@ -295,6 +331,5 @@ const ViewIssues = () => {
     </div>
   );
 };
-
 
 export default ViewIssues;
