@@ -9,15 +9,15 @@ const router = express.Router();
 router.get('/nearby', async (req, res) => {
     const { lat, lng, radius } = req.query;
 
-    // Validate latitude, longitude, and radius parameters
-    if (!lat || !lng || !radius) {
-        return res.status(400).json({ error: 'Please provide latitude, longitude, and radius in km.' });
+    // Validate latitude and longitude parameters
+    if (!lat || !lng) {
+        return res.status(400).json({ error: 'Please provide latitude and longitude.' });
     }
 
     try {
         const latitude = Number(lat);
         const longitude = Number(lng);
-        const searchRadius = Number(radius);
+        const searchRadius = radius ? Number(radius) : 10; // Default radius is 10 km if not provided
 
         // Validate that latitude, longitude, and radius are valid numbers
         if (isNaN(latitude) || isNaN(longitude) || isNaN(searchRadius)) {

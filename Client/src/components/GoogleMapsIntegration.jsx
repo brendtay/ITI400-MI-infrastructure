@@ -97,12 +97,6 @@ export default function GoogleMapsIntegration() {
 
   return (
     <div className="map-container" style={{ textAlign: 'center', height: '100%' }}>
-      <SearchBar 
-        address={address} 
-        onAddressChange={handleAddressChange} 
-        onSearch={handleSearch} 
-        onGetLocation={handleGetLocation} 
-      />
       <div style={containerStyle}>
         <GoogleMap
           mapContainerStyle={containerStyle}
