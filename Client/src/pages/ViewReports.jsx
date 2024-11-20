@@ -5,6 +5,25 @@ import { isUserLoggedIn } from "../config/authConfig";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './pagesCss/ViewIssues.css';
 
+const containerStyle = {
+  width: '100%',
+  height: '100%',
+};
+
+const defaultCenter = {
+  lat: 43.019387852838754,
+  lng: -83.6894584432078,
+};
+
+const issueTypeColors = {
+  'Pothole': 'red',
+  'Damaged streetlight': 'yellow',
+  'Damaged road': 'blue',
+  'Damaged sidewalk': 'green',
+  'Drainage issue': 'purple',
+  'Other': 'orange',
+};
+
 const ViewIssues = () => {
   // State variables
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -48,7 +67,7 @@ const ViewIssues = () => {
         try {
           const radius = 10; // Radius in km
           const response = await axios.get(
-            `/api/issues/nearby?lat=${coordinates.lat}&lng=${coordinates.lng}&radius=${radius}`
+            `/api/location/nearby?lat=${coordinates.lat}&lng=${coordinates.lng}&radius=${radius}`
           );
           setNearbyIssues(response.data);
         } catch (error) {
@@ -133,24 +152,34 @@ const ViewIssues = () => {
       </div>
       {coordinates && (
         <GoogleMap
-          mapContainerStyle={{ height: '400px', width: '100%' }}
+          mapContainerStyle={containerStyle}
           center={coordinates}
           zoom={12}
         >
           {nearbyIssues.map((issue) => {
-            const [lat, lng] = issue.gps_coords
-              ? issue.gps_coords.split(',').map(Number)
-              : [null, null];
-            if (lat && lng) {
-              return (
-                <Marker
-                  key={issue.issue_id}
-                  position={{ lat, lng }}
-                  onClick={() => setSelectedIssue(issue)}
-                />
-              );
+            const markerColor = issueTypeColors[issue.issue_name] || 'gray';
+            let lat, lng;
+
+            try {
+              [lat, lng] = issue.gps_coords.split(',').map(Number);
+              if (isNaN(lat) || isNaN(lng)) {
+                throw new Error('Invalid GPS coordinates');
+              }
+            } catch (error) {
+              console.error('[ERROR] Error parsing GPS coordinates:', error.message);
+              return null; // Skip rendering this marker if there’s an error
             }
-            return null;
+
+            return (
+              <Marker
+                key={issue.issue_id}
+                position={{ lat, lng }}
+                icon={{
+                  url: `http://maps.google.com/mapfiles/ms/icons/${markerColor}-dot.png`,
+                }}
+                onClick={() => setSelectedIssue(issue)}
+              />
+            );
           })}
           {selectedIssue && (
             <InfoWindow
@@ -160,11 +189,23 @@ const ViewIssues = () => {
               }}
               onCloseClick={() => setSelectedIssue(null)}
             >
-              <div>
-                <h6>Issue ID: {selectedIssue.issue_id}</h6>
-                <p>Type: {selectedIssue.issue_name}</p>
-                <p>Description: {selectedIssue.description}</p>
-                <p>Status: {selectedIssue.status_name}</p>
+              <div className="info-window-container">
+                {/* Text Content */}
+                <div className="info-window-text">
+                  <div className="info-window-header">
+                    <h5 className="info-window-id">Issue ID: {selectedIssue.issue_id}</h5>
+                    <button
+                      onClick={() => setSelectedIssue(null)}
+                      className="info-window-close"
+                    >
+                      ×
+                    </button>
+                  </div>
+                  <p className="info-window-detail"><strong>Type:</strong> {selectedIssue.issue_name}</p>
+                  <p className="info-window-detail"><strong>Status:</strong> {selectedIssue.status_name}</p>
+                  <p className="info-window-detail"><strong>Description:</strong> {selectedIssue.description}</p>
+                  <p className="info-window-detail"><strong>Reporter:</strong> {selectedIssue.reported_by}</p>
+                </div>
               </div>
             </InfoWindow>
           )}
@@ -225,33 +266,26 @@ const ViewIssues = () => {
         </button>
       </div>
       {error && <p className="text-danger text-center">{error}</p>}
-      {issueById && (
-        <div>
-          <h5 className="text-center">Issue ID: {issueById.issue_id}</h5>
-          <p className="text-center">Type: {issueById.issue_name}</p>
-          <p className="text-center">Description: {issueById.description}</p>
-          <p className="text-center">Status: {issueById.status_name}</p>
-          {issueById.gps_coords && (
-            <GoogleMap
-              mapContainerStyle={{ height: '400px', width: '100%' }}
-              center={{
-                lat: parseFloat(issueById.gps_coords.split(',')[0]),
-                lng: parseFloat(issueById.gps_coords.split(',')[1]),
-              }}
-              zoom={15}
-            >
-              <Marker
-                position={{
-                  lat: parseFloat(issueById.gps_coords.split(',')[0]),
-                  lng: parseFloat(issueById.gps_coords.split(',')[1]),
-                }}
-              />
-            </GoogleMap>
-          )}
-        </div>
+      {issueById && issueById.gps_coords && (
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={{
+            lat: parseFloat(issueById.gps_coords.split(',')[0]),
+            lng: parseFloat(issueById.gps_coords.split(',')[1]),
+          }}
+          zoom={15}
+        >
+          <Marker
+            position={{
+              lat: parseFloat(issueById.gps_coords.split(',')[0]),
+              lng: parseFloat(issueById.gps_coords.split(',')[1]),
+            }}
+          />
+        </GoogleMap>
       )}
     </div>
   );
+
   // Main return
   return (
     <div
@@ -295,6 +329,5 @@ const ViewIssues = () => {
     </div>
   );
 };
-
 
 export default ViewIssues;
