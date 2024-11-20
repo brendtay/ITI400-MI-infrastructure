@@ -78,14 +78,15 @@ export default function GoogleMapsIntegration() {
 
   const fetchReports = async (center) => {
     try {
-      const radius = 10; // Adjust search radius as needed (in km)
-      const response = await axios.get(`/api/issues/search`, {
+      // Always use latitude and longitude to fetch reports
+      const response = await axios.get('/api/issues/nearby', {
         params: {
           lat: center.lat,
           lng: center.lng,
-          radius,
+          radius
         },
       });
+
       setReportMarkers(response.data);
       setError(null);
     } catch (err) {

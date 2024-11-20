@@ -47,12 +47,12 @@ const SearchBar = ({ address, onAddressChange, onSearch, onGetLocation }) => {
 
         <div className="col-md-6 col-12 mb-2">
           <div className="p-3 h-100 text-center">
-            <h5 className="mb-3">Use My Location</h5>
+            <h5 className="mb-3">Use Your Current Location</h5>
             <div style={{ marginBottom: '1rem' }}>
-              Press the button below to use your device's current location.
+              Click the button below to automatically detect your device's current location for reporting an issue.
             </div>
             <button onClick={onGetLocation} className="btn btn-outline-secondary btn-lg w-100" aria-label="Use my location button">
-              Use My Location
+              Use My Current Location
             </button>
           </div>
         </div>

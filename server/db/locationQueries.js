@@ -32,11 +32,22 @@ const findOrCreateLocation = async ({ gpsCoords, city, zip }) => {
 const getIssuesByZipCode = async (zip) => {
     try {
         const query = `
-            SELECT ii.*, lt.*, it.issue_name, st.status_name
+            SELECT 
+                ii.issue_id,
+                ii.description,
+                ii.created_time,
+                ii.updated_time,
+                lt.gps_coords,
+                lt.city,
+                lt.zip,
+                it.issue_name,
+                st.status_name,
+                u.name AS reported_by
             FROM infrastructure_issue ii
             LEFT JOIN location lt ON ii.location_id = lt.location_id
             LEFT JOIN issue_types it ON ii.issue_type = it.issue_id
-            LEFT JOIN status st ON ii.status_type = st.status_id
+            LEFT JOIN status st ON ii.status_type = st.status_type
+            LEFT JOIN users u ON ii.user_id = u.user_id
             WHERE lt.zip = $1
             ORDER BY ii.created_time DESC;
         `;
@@ -52,11 +63,22 @@ const getIssuesByZipCode = async (zip) => {
 const getIssuesNearLocation = async (latitude, longitude, radius) => {
     try {
         const query = `
-            SELECT ii.*, lt.*, it.issue_name, st.status_name
+            SELECT 
+                ii.issue_id,
+                ii.description,
+                ii.created_time,
+                ii.updated_time,
+                lt.gps_coords,
+                lt.city,
+                lt.zip,
+                it.issue_name,
+                st.status_name,
+                u.name AS reported_by
             FROM infrastructure_issue ii
             LEFT JOIN location lt ON ii.location_id = lt.location_id
             LEFT JOIN issue_types it ON ii.issue_type = it.issue_id
-            LEFT JOIN status st ON ii.status_type = st.status_id
+            LEFT JOIN status st ON ii.status_type = st.status_type
+            LEFT JOIN users u ON ii.user_id = u.user_id
             WHERE lt.gps_coords IS NOT NULL;
         `;
         const result = await pool.query(query);
@@ -99,4 +121,5 @@ module.exports = {
     findOrCreateLocation,
     getIssuesByZipCode,
     getIssuesNearLocation,
+    getDistanceFromLatLonInKm
 };
