@@ -6,10 +6,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './pagesCss/ViewIssues.css';
 
 const ViewIssues = () => {
+  // Default center coordinates
+  const defaultCenter = {
+    lat: 43.019387852838754,
+    lng: -83.6894584432078,
+  };
+
   // State variables
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [tab, setTab] = useState('nearby'); // 'nearby', 'myReports', 'byId'
-  const [coordinates, setCoordinates] = useState(null);
+  const [coordinates, setCoordinates] = useState(defaultCenter);
   const [nearbyIssues, setNearbyIssues] = useState([]);
   const [myIssues, setMyIssues] = useState([]);
   const [issueIdInput, setIssueIdInput] = useState('');
@@ -107,6 +113,8 @@ const ViewIssues = () => {
 
       const radius = computeRadius(lat, lng, ne.lat(), ne.lng());
       fetchNearbyIssuesAt(lat, lng, radius);
+      // Update coordinates to new center
+      setCoordinates({ lat, lng });
     } else {
       alert('Map is not ready yet.');
     }
@@ -156,55 +164,53 @@ const ViewIssues = () => {
   // Render functions
   const renderNearbyIssues = () => (
     <div>
-      <div className="text-center">
-        <button className="btn btn-primary mb-3" onClick={getUserLocation}>
+      <div className="text-center mb-3">
+        <button className="btn btn-primary mx-1" onClick={getUserLocation}>
           Use My Location
         </button>
-        <button className="btn btn-primary mb-3" onClick={handleSearchArea}>
+        <button className="btn btn-primary mx-1" onClick={handleSearchArea}>
           Search this area
         </button>
       </div>
-      {coordinates && (
-        <GoogleMap
-          mapContainerStyle={{ height: '400px', width: '100%' }}
-          center={coordinates}
-          zoom={12}
-          onLoad={(map) => (mapRef.current = map)}
-          onUnmount={() => (mapRef.current = null)}
-        >
-          {nearbyIssues.map((issue) => {
-            const [lat, lng] = issue.gps_coords
-              ? issue.gps_coords.split(',').map(Number)
-              : [null, null];
-            if (lat && lng) {
-              return (
-                <Marker
-                  key={issue.issue_id}
-                  position={{ lat, lng }}
-                  onClick={() => setSelectedIssue(issue)}
-                />
-              );
-            }
-            return null;
-          })}
-          {selectedIssue && (
-            <InfoWindow
-              position={{
-                lat: parseFloat(selectedIssue.gps_coords.split(',')[0]),
-                lng: parseFloat(selectedIssue.gps_coords.split(',')[1]),
-              }}
-              onCloseClick={() => setSelectedIssue(null)}
-            >
-              <div>
-                <h6>Issue ID: {selectedIssue.issue_id}</h6>
-                <p>Type: {selectedIssue.issue_name}</p>
-                <p>Description: {selectedIssue.description}</p>
-                <p>Status: {selectedIssue.status_name}</p>
-              </div>
-            </InfoWindow>
-          )}
-        </GoogleMap>
-      )}
+      <GoogleMap
+        mapContainerStyle={{ height: '400px', width: '100%' }}
+        center={coordinates}
+        zoom={12}
+        onLoad={(map) => (mapRef.current = map)}
+        onUnmount={() => (mapRef.current = null)}
+      >
+        {nearbyIssues.map((issue) => {
+          const [lat, lng] = issue.gps_coords
+            ? issue.gps_coords.split(',').map(Number)
+            : [null, null];
+          if (lat && lng) {
+            return (
+              <Marker
+                key={issue.issue_id}
+                position={{ lat, lng }}
+                onClick={() => setSelectedIssue(issue)}
+              />
+            );
+          }
+          return null;
+        })}
+        {selectedIssue && (
+          <InfoWindow
+            position={{
+              lat: parseFloat(selectedIssue.gps_coords.split(',')[0]),
+              lng: parseFloat(selectedIssue.gps_coords.split(',')[1]),
+            }}
+            onCloseClick={() => setSelectedIssue(null)}
+          >
+            <div>
+              <h6>Issue ID: {selectedIssue.issue_id}</h6>
+              <p>Type: {selectedIssue.issue_name}</p>
+              <p>Description: {selectedIssue.description}</p>
+              <p>Status: {selectedIssue.status_name}</p>
+            </div>
+          </InfoWindow>
+        )}
+      </GoogleMap>
     </div>
   );
 
