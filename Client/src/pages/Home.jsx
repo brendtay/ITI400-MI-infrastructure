@@ -25,7 +25,7 @@ export default function Home() {
   return (
     <div>
       {/* Main Content */}
-      <div className="cScontent-container mt-5  " >
+      <div className="custom-card-container Scontent-container mt-5  " >
         {/* Welcome Section */}
         <div className="row justify-content-center mt-4">
           <div className="col-auto text-center">
