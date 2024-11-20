@@ -69,8 +69,6 @@ router.post('/', authenticateToken, async (req, res) => {
 
         // Step 3: Upload image to S3 if a photo is provided
         if (photo) {
-            const formData = new FormData();
-            formData.append("image", photo);
             const imageRecord = await uploadImageToS3(photo, userId, issue.issue_id);
             issue.image = imageRecord;
         }

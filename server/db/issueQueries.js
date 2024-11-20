@@ -26,7 +26,6 @@ const getAllStatuses = async () => {
 
 // 3. Add a new issue (only for logged-in users)
 const insertIssue = async ({ userId, issueType, description, locationId, createdTime, updatedTime }) => {
-   
     try {
         const query = `
             INSERT INTO infrastructure_issue (user_id, issue_type, description, location_id, created_time, updated_time)

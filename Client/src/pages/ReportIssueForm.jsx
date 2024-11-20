@@ -76,28 +76,14 @@ const ReportIssueForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!captchaToken) {
       setError("Please complete the CAPTCHA to submit the form.");
       return;
     }
-  
-    let imageId = null;
-  
+
     try {
-      // Step 1: Upload the image if available and get imageId
-      if (photo) {
-        const formData = new FormData();
-        formData.append("image", photo);
-  
-        const imageResponse = await axios.post('/api/images/upload', formData, {
-          withCredentials: true,
-        });
-  
-        imageId = imageResponse.data.image_id;
-      }
-  
-      // Step 2: Create the issue with all data
+      // Step 1: Create the issue with all data
       const issueData = {
         issueType,
         description,
@@ -106,16 +92,27 @@ const ReportIssueForm = () => {
         city: locationData.city || null,
         zip: locationData.zip || null,
         captchaToken,
-        imageId, 
       };
-  
+
       const issueResponse = await axios.post('/api/issues', issueData, {
         withCredentials: true,
       });
-  
+
+      const issue = issueResponse.data.issue;
+
+      // Step 2: Upload the image if available
+      if (photo) {
+        const formData = new FormData();
+        formData.append("image", photo);
+
+        await axios.post(`/api/images/upload/${issue.issue_id}`, formData, {
+          withCredentials: true,
+        });
+      }
+
       setSuccess("Issue reported successfully!");
       setError(null);
-  
+
       // Reset form fields
       setIssueType("");
       setLocation("");
