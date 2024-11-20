@@ -6,12 +6,6 @@ import BackgroundImage from '../components/BackgroundImage';
 import HowItWorks from '../components/HowItWorksComponent';
 import GoogleMapsIntegration from "../components/GoogleMapsIntegration"; 
 import SearchBar from '../components/SearchBar'; 
-import { GoogleMap, Marker } from '@react-google-maps/api';
-
-const containerStyle = {
-  width: '100%',
-  height: '100%',
-};
 
 const defaultCenter = {
   lat: 43.019387852838754,
@@ -22,6 +16,9 @@ export default function Home() {
   const [address, setAddress] = useState('');
   const [location, setLocation] = useState(defaultCenter);
   const [reportMarkers, setReportMarkers] = useState([]);
+  const [error, setError] = useState(null); // Add error state
+  // If you have a 'tab' state, you can define it here. For home page, we can set it to 'nearby'.
+  const tab = 'nearby';
 
   return (
     <div>
@@ -62,13 +59,17 @@ export default function Home() {
                     setLocation={setLocation}
                     reportMarkers={reportMarkers}
                     setReportMarkers={setReportMarkers}
+                    defaultCenter={defaultCenter} 
+                    tab={tab} 
+                    error={error}
+                    setError={setError}
                   />
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </div>   
     </div>
   );
 }

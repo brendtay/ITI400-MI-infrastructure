@@ -34,7 +34,7 @@ export default function GoogleMapsIntegration({
   const mapRef = useRef(null);
 
   useEffect(() => {
-    if (location && tab === 'nearby') {
+    if (location && (tab === 'nearby' || !tab)) {
       fetchReports(location);
     }
   }, [location, tab]);
@@ -207,7 +207,6 @@ export default function GoogleMapsIntegration({
                     onClick={() => setSelectedIssue(null)}
                     className="info-window-close"
                   >
-                    ×
                   </button>
                 </div>
                 <p className="info-window-detail"><strong>Type:</strong> {selectedIssue.issue_name}</p>
