@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { isUserLoggedIn } from "../config/authConfig";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './pagesCss/ViewIssues.css';
+import './pagesCss/ViewIssues.css'; // Make sure this CSS file includes the necessary styles
 import GoogleMapsIntegration from '../components/GoogleMapsIntegration';
 
 const ViewIssues = () => {
@@ -52,7 +52,28 @@ const ViewIssues = () => {
       const fetchMyIssues = async () => {
         try {
           const response = await axios.get('/api/issues/user', { withCredentials: true });
-          setMyIssues(response.data);
+          const issues = response.data;
+
+          // For each issue, fetch the pre-signed URL if image_url exists
+          const issuesWithImages = await Promise.all(
+            issues.map(async (issue) => {
+              if (issue.image_url) {
+                try {
+                  const key = issue.image_url.split('/').pop();
+                  const presignedResponse = await axios.get('/api/images/presigned-url', {
+                    params: { key }
+                  });
+                  issue.preSignedImageUrl = presignedResponse.data.url;
+                } catch (err) {
+                  console.error('Failed to fetch image for issue', issue.issue_id);
+                  issue.preSignedImageUrl = null;
+                }
+              }
+              return issue;
+            })
+          );
+
+          setMyIssues(issuesWithImages);
         } catch (error) {
           console.error('Error fetching user issues:', error);
           setError('Failed to fetch your issues.');
@@ -70,7 +91,23 @@ const ViewIssues = () => {
   const handleIssueIdLookup = async () => {
     try {
       const response = await axios.get(`/api/issues/${issueIdInput}`);
-      setIssueById(response.data);
+      const issue = response.data;
+
+      // Fetch pre-signed URL if image_url exists
+      if (issue.image_url) {
+        try {
+          const key = issue.image_url.split('/').pop();
+          const presignedResponse = await axios.get('/api/images/presigned-url', {
+            params: { key }
+          });
+          issue.preSignedImageUrl = presignedResponse.data.url;
+        } catch (err) {
+          console.error('Failed to fetch image for issue', issue.issue_id);
+          issue.preSignedImageUrl = null;
+        }
+      }
+
+      setIssueById(issue);
       setError(null);
     } catch (error) {
       console.error('Error fetching issue by ID:', error);
@@ -112,10 +149,25 @@ const ViewIssues = () => {
           <ul className="list-group">
             {myIssues.map((issue) => (
               <li key={issue.issue_id} className="list-group-item">
-                <h5>Issue ID: {issue.issue_id}</h5>
-                <p>Type: {issue.issue_name}</p>
-                <p>Description: {issue.description}</p>
-                <p>Status: {issue.status_name}</p>
+                <div className="info-window-container">
+                  <div className="info-window-text">
+                    <div className="info-window-header">
+                      <h5 className="info-window-id">Issue ID: {issue.issue_id}</h5>
+                    </div>
+                    <p className="info-window-detail"><strong>Type:</strong> {issue.issue_name}</p>
+                    <p className="info-window-detail"><strong>Status:</strong> {issue.status_name}</p>
+                    <p className="info-window-detail"><strong>Description:</strong> {issue.description}</p>
+                  </div>
+                  {issue.preSignedImageUrl && (
+                    <div className="info-window-image">
+                      <img
+                        src={issue.preSignedImageUrl}
+                        alt="Issue"
+                        className="info-window-img"
+                      />
+                    </div>
+                  )}
+                </div>
               </li>
             ))}
           </ul>

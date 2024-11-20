@@ -49,15 +49,17 @@
   border-radius: 5px;
   padding: 15px;
   margin-bottom: 15px;
-  background-color: #f8f9fa;
+  background-color: #ffffff; /* Updated to white for better contrast */
 }
 
 .issue-item h5 {
   margin-bottom: 10px;
+  color: #333; /* Updated text color */
 }
 
 .issue-item p {
   margin-bottom: 5px;
+  color: #555; /* Updated text color */
 }
 
 /* Form inputs */
@@ -153,9 +155,70 @@
     align-items: center;
   }
 }
+
 .centered-content {
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+/* --- Added Styles for Image and Text Components --- */
+
+/* Info Window Container */
+.info-window-container {
+  display: flex;
+  padding: 10px;
+  gap: 15px;
+  max-width: 100%; /* Adjusted to utilize full width */
+}
+
+/* Info Window Text */
+.info-window-text {
+  flex: 2;
+}
+
+/* Info Window Header */
+.info-window-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Info Window ID */
+.info-window-id {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #333; /* Updated text color */
+}
+
+/* Info Window Close Button */
+.info-window-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1;
+  padding: 0;
+}
+
+/* Info Window Detail Text */
+.info-window-detail {
+  margin: 5px 0;
+  color: #555; /* Updated text color */
+}
+
+/* Info Window Image Container */
+.info-window-image {
+  flex: 1;
+  text-align: right;
+}
+
+/* Info Window Image */
+.info-window-img {
+  width: 200px;
+  height: auto;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
