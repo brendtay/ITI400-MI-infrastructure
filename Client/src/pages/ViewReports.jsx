@@ -4,6 +4,7 @@ import { isUserLoggedIn } from "../config/authConfig";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './pagesCss/ViewIssues.css'; // Make sure this CSS file includes the necessary styles
 import GoogleMapsIntegration from '../components/GoogleMapsIntegration';
+import logo from '../images/Mi-InfraLogo.png'; // Adjust the path based on your file structure
 
 const ViewIssues = () => {
   // Default center coordinates
@@ -252,6 +253,14 @@ const ViewIssues = () => {
       style={{ minHeight: '100vh' }}
     >
       <div className="container p-4 border rounded" style={{ maxWidth: '800px' }}>
+         {/* Logo */}
+         <div className="text-center mb-4">
+          <img
+            src={logo}
+            alt="MI-Infrastructure Logo"
+            style={{ maxWidth: "400px" }}
+          />
+        </div>
         <h2 className="text-center mb-4">View Reported Issues</h2>
         {error && <p className="text-danger text-center">{error}</p>}
         {!isLoggedIn && (

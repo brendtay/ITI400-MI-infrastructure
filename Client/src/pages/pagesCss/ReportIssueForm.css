@@ -38,15 +38,40 @@
 
 .recaptcha-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  width: 100%; /* Ensure it spans the full width */
+  margin-top: 15px; /* Optional spacing above */
+}
+
+.recaptcha-container > div {
+  display: inline-block; /* Ensure the inner container respects centering */
+}
+
+
+@media (max-width: 768px) {
+  .recaptcha-container {
+    padding: 0 15px; /* Prevent horizontal overflow */
+  }
 }
 
 @media (max-width: 576px) {
   .recaptcha-container {
-    /* Additional styling for small screens */
-    padding: 0 10px; /* Optional padding to avoid overflow on small screens */
+    padding: 0 10px; /* Avoid content touching edges */
+    justify-content: center !important; /* Force alignment */
   }
+
+  .recaptcha-container > div {
+    transform: scale(0.9); /* Adjust scaling if needed for smaller screens */
+    transform-origin: center; /* Ensure scaling is centered */
+  }
+}
+
+.container {
+  background-color: #ffffff; /* Set the background color to white */
+  border: 1px solid #e0e0e0; /* Optional: Light border for better visibility */
+  border-radius: 8px; /* Optional: Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Subtle shadow */
+  padding: 20px; /* Padding inside the container */
 }
 

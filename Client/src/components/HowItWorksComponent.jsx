@@ -6,12 +6,12 @@ import examplePhoto3 from "../images/userTrackingProgress.jpg";
 
 export default function HowItWorks() {
   return (
-    <div className="container text-center my-3">
+    <div className="text-center my-3">
       <h1><b>How It Works</b></h1>
       <div className="row align-items-start my-3">
         {/* Responsive columns for each step */}
         <div className="col-12 col-md-4 my-3">
-          <div className="card shadow-sm h-100"> {/* Card container */}
+          <div className="card shadow-sm h-100"> {/* Single card for Step 1 */}
             <div className="card-body">
               <p className="text-above-image"><b>1. Upload A Photo From Device</b></p>
               <img 
@@ -23,7 +23,7 @@ export default function HowItWorks() {
           </div>
         </div>
         <div className="col-12 col-md-4 my-3">
-          <div className="card shadow-sm h-100">
+          <div className="card shadow-sm h-100"> {/* Single card for Step 2 */}
             <div className="card-body">
               <p className="text-above-image"><b>2. Add Description / Location</b></p>
               <img 
@@ -35,9 +35,9 @@ export default function HowItWorks() {
           </div>
         </div>
         <div className="col-12 col-md-4 my-3">
-          <div className="card shadow-sm h-100">
+          <div className="card shadow-sm h-100"> {/* Single card for Step 3 */}
             <div className="card-body">
-              <p className="text-above-image"><b>3. Track Your Progress</b></p>
+              <p className="text-above-image"><b>3. Track Your Progress Online</b></p>
               <img 
                 src={examplePhoto3}
                 alt="User tracking progress" 

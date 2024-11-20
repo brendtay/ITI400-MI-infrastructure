@@ -2,12 +2,23 @@ import React from 'react';
 import '../pages/pagesCss/About.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import groupImage from '../images/groupPage.jpg';
+import logo from '../images/Mi-InfraLogo.png'; // Adjust the path based on your file structure
 
 export default function About() {
   return (
-    <div className="container custom-margin" style={{ paddingTop: '120px' }}> {/* Increased padding top */}
+    <div className="custom-margin" style={{ paddingTop: '80px' }}> {/* Increased padding top */}
+
       <div className="card mb-5 limited-width-card"> {/* Main card with limited width */}
-        <div className="card-body">
+        <div className="card-body text-center"> {/* Center text within the card */}
+          {/* Logo Section */}
+          <div className="text-center mb-5">
+            <img
+              src={logo}
+              alt="MI-Infrastructure Logo"
+              style={{ maxWidth: '400px', height: 'auto' }}
+            />
+          </div>
+
           <h2 className="card-title mb-4">Our Mission</h2>
           <p className="card-text">
             At MI-Infrastructure, our mission is to empower residents to enhance their communities by providing an easy-to-use platform for reporting infrastructure issues. 
@@ -20,7 +31,7 @@ export default function About() {
           <div className="d-flex justify-content-center mb-4">
             <img 
               src={groupImage} 
-              alt="Description of the image" 
+              alt="Group Image" 
               className="img-fluid" 
               style={{ maxWidth: '50%', height: 'auto' }} 
             />
@@ -43,7 +54,7 @@ export default function About() {
           <h2 className="text-center mb-3 mt-5">About Our Team</h2>
           <div className="row mt-4"> {/* Team member cards within the main card */}
             <div className="col-md-6">
-              <div className="card limited-width-card">
+              <div className="card limited-width-card text-center"> {/* Added text-center */}
                 <div className="card-body">
                   <h5 className="card-title">Amanda</h5>
                   <h6 className="card-subtitle mb-2 text-muted">Project Owner</h6>
@@ -55,7 +66,7 @@ export default function About() {
             </div>
 
             <div className="col-md-6 mt-3 mt-md-0">
-              <div className="card limited-width-card">
+              <div className="card limited-width-card text-center"> {/* Added text-center */}
                 <div className="card-body">
                   <h5 className="card-title">Matt</h5>
                   <h6 className="card-subtitle mb-2 text-muted">Scrum Master</h6>
@@ -67,7 +78,7 @@ export default function About() {
             </div>
 
             <div className="col-md-6 mt-3">
-              <div className="card limited-width-card">
+              <div className="card limited-width-card text-center"> {/* Added text-center */}
                 <div className="card-body">
                   <h5 className="card-title">Brendan</h5>
                   <h6 className="card-subtitle mb-2 text-muted">Developer</h6>
@@ -79,7 +90,7 @@ export default function About() {
             </div>
 
             <div className="col-md-6 mt-3">
-              <div className="card limited-width-card">
+              <div className="card limited-width-card text-center"> {/* Added text-center */}
                 <div className="card-body">
                   <h5 className="card-title">Cameron</h5>
                   <h6 className="card-subtitle mb-2 text-muted">Developer</h6>

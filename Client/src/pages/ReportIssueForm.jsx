@@ -4,6 +4,7 @@ import './pagesCss/ReportIssueForm.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { GoogleMap, Marker, Autocomplete } from '@react-google-maps/api';
 import ReCAPTCHA from 'react-google-recaptcha';
+import logo from '../images/Mi-InfraLogo.png'; // Adjust the path based on your file structure
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
@@ -162,6 +163,14 @@ const ReportIssueForm = () => {
   return (
     <div className="d-flex align-items-center justify-content-center report-issue-container" style={{ minHeight: "100vh" }}>
       <div className="container p-4 border rounded" style={{ maxWidth: "600px" }}>
+         {/* Logo */}
+         <div className="text-center mb-4">
+          <img
+            src={logo}
+            alt="MI-Infrastructure Logo"
+            style={{ maxWidth: "400px" }}
+          />
+        </div>
         {!isLoggedIn && (
           <div className="alert alert-warning text-center mb-4">
             <p>You are not logged in. <a href="/login">Log in</a> to track your reports or <strong>continue as a guest</strong>.</p>
@@ -223,9 +232,9 @@ const ReportIssueForm = () => {
           <div className="text-center my-3">
             <strong>or</strong>
           </div>
-          <div className="mb-3">
+          <div className="mb-5">
             <button type="button" className="btn btn-outline-secondary w-100" onClick={useDeviceLocation}>
-              Use My Location
+              Use My Current Location
             </button>
           </div>
 
@@ -239,7 +248,7 @@ const ReportIssueForm = () => {
           </GoogleMap>
 
           {/* Photo Upload */}
-          <div className="mb-3">
+          <div className="mb-4 mt-3">
             <label htmlFor="photo" className="form-label">Upload Photo</label>
             <input
               type="file"
@@ -259,7 +268,7 @@ const ReportIssueForm = () => {
           </div>
 
           {/* Submit Button */}
-          <button type="submit" className="btn btn-primary w-100">Submit</button>
+          <button type="submit" className="btn btn-primary w-100 mt-2">Submit</button>
         </form>
       </div>
     </div>

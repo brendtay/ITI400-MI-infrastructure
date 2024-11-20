@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { loginUser, registerUser } from "../config/authConfig";
 import "./pagesCss/Login.css";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
+import logo from "../images/Mi-InfraLogo.png"; // Adjust the path based on your file structure
 
 const Login = ({ onLogin }) => {
   const [isRegistering, setIsRegistering] = useState(false); // Toggle between login and registration
@@ -34,6 +35,15 @@ const Login = ({ onLogin }) => {
   return (
     <div className="d-flex align-items-center justify-content-center login-background" style={{ minHeight: "100vh" }}>
       <div className="container p-4 border rounded" style={{ maxWidth: "400px" }}>
+        {/* Logo */}
+        <div className="text-center mb-4">
+          <img
+            src={logo}
+            alt="MI-Infrastructure Logo"
+            style={{ maxWidth: "300px" }}
+          />
+        </div>
+
         <h2 className="text-center mb-4">{isRegistering ? "Register" : "Login"}</h2>
         {error && <p className="text-danger">{error}</p>}
         {success && <p className="text-success">{success}</p>}
