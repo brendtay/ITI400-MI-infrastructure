@@ -1,5 +1,19 @@
-/* googleMapInt.css */
-.custom-btn {
-    padding: 10px 20px; /* Adjust padding as needed */
-  }
-  
+.search-bar-container {
+  max-width: 400px; /* Limit the container width */
+  margin: 0 auto; /* Center the container horizontally */
+}
+
+.search-bar-container .btn {
+  width: 100%; /* Make buttons full width */
+  max-width: 400px; /* Ensure they don't exceed the container's max width */
+  display: block; /* Make each button take a new line */
+  margin: 10px 0; /* Add vertical margin to each button */
+}
+
+.search-bar-container .btn + .btn {
+  margin-top: 10px; /* Add spacing between buttons */
+}
+
+.search-bar-container input::placeholder {
+  text-align: center;
+}

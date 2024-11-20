@@ -2,16 +2,14 @@ import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Autocomplete } from '@react-google-maps/api';
-
+import './componentCss/searchBar.css'
 export default function SearchBar({ address, setAddress, setLocation }) {
   const autocompleteRef = useRef(null);
 
-  // Handle the user manually changing the address in the input field
   const handleAddressChange = (e) => {
     setAddress(e.target.value);
   };
 
-  // Handle the user selecting a place from Google Autocomplete
   const handleSearch = () => {
     const place = autocompleteRef.current.getPlace();
     if (place && place.geometry) {
@@ -20,12 +18,11 @@ export default function SearchBar({ address, setAddress, setLocation }) {
       const lng = place.geometry.location.lng();
       const newLocation = { lat, lng };
 
-      setAddress(formattedAddress); // Update the address input field
-      setLocation(newLocation); // Update the map location
+      setAddress(formattedAddress);
+      setLocation(newLocation);
     }
   };
 
-  // Handle the user clicking the button to use their current location
   const handleGetLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -59,11 +56,11 @@ export default function SearchBar({ address, setAddress, setLocation }) {
             aria-label="Address input"
           />
         </Autocomplete>
-        <button type="submit" className="btn btn-primary btn-lg w-100" aria-label="Search button">
+        <button type="submit" className="btn btn-primary btn-lg" aria-label="Search button">
           Search
         </button>
       </form>
-      <button onClick={handleGetLocation} className="btn btn-outline-secondary btn-lg w-100 mt-3" aria-label="Use my location button">
+      <button onClick={handleGetLocation} className="btn btn-outline-secondary btn-lg" aria-label="Use my location button">
         Use My Current Location
       </button>
     </div>

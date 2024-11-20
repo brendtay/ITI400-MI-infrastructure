@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { isUserLoggedIn } from "../config/authConfig";
 import './pagesCss/ReportIssueForm.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { GoogleMap, Marker, Autocomplete } from '@react-google-maps/api';
@@ -14,7 +13,6 @@ const ReportIssueForm = () => {
   const [issueType, setIssueType] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
-  const [locationData, setLocationData] = useState({ city: null, zip: null });
   const [coordinates, setCoordinates] = useState(null);
   const [photo, setPhoto] = useState(null);
   const [issueTypes, setIssueTypes] = useState([]);
@@ -24,28 +22,26 @@ const ReportIssueForm = () => {
   const autocompleteRef = useRef(null);
 
   useEffect(() => {
-    const checkLogin = async () => {
-      const loggedIn = await isUserLoggedIn();
-      if (!loggedIn) {
-        alert("You must log in to use this feature.");
-        window.location.href = "/login";
+    // Check if the user is logged in
+    const checkLoginStatus = async () => {
+      try {
+        const response = await axios.get('/api/check-login', { withCredentials: true });
+        setIsLoggedIn(response.data.status === 'logged_in');
+      } catch (err) {
+        console.error("Error checking login status:", err);
       }
-      setIsLoggedIn(loggedIn);
     };
-  
-    checkLogin();
-  }, []);
 
-  useEffect(() => {
+    checkLoginStatus();
+
     const setMinHeight = () => {
       const vh = window.innerHeight * 0.01;
       document.documentElement.style.setProperty("--min-height", `${vh * 110}px`);
     };
-  
-    setMinHeight(); // Set height on load
+
+    setMinHeight();
     window.addEventListener("resize", setMinHeight);
-  
-    return () => window.removeEventListener("resize", setMinHeight); // Cleanup on unmount
+    return () => window.removeEventListener("resize", setMinHeight);
   }, []);
 
   useEffect(() => {
@@ -82,30 +78,26 @@ const ReportIssueForm = () => {
       return;
     }
 
-    try {
-      // Step 1: Create the issue with all data
-      const issueData = {
-        issueType,
-        description,
-        gpsCoords: coordinates ? `${coordinates.lat},${coordinates.lng}` : null,
-        location,
-        city: locationData.city || null,
-        zip: locationData.zip || null,
-        captchaToken,
-      };
+    const issueData = {
+      issueType,
+      description,
+      gpsCoords: coordinates ? `${coordinates.lat},${coordinates.lng}` : null,
+      location,
+      captchaToken,
+    };
 
+    try {
       const issueResponse = await axios.post('/api/issues', issueData, {
         withCredentials: true,
       });
 
-      const issue = issueResponse.data.issue;
+      const issueId = issueResponse.data.issue.issue_id;
 
-      // Step 2: Upload the image if available
       if (photo) {
         const formData = new FormData();
         formData.append("image", photo);
 
-        await axios.post(`/api/images/upload/${issue.issue_id}`, formData, {
+        await axios.post(`/api/images/upload/${issueId}`, formData, {
           withCredentials: true,
         });
       }
@@ -113,7 +105,6 @@ const ReportIssueForm = () => {
       setSuccess("Issue reported successfully!");
       setError(null);
 
-      // Reset form fields
       setIssueType("");
       setLocation("");
       setDescription("");
@@ -130,45 +121,28 @@ const ReportIssueForm = () => {
   const useDeviceLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        async (position) => {
+        (position) => {
           const { latitude, longitude } = position.coords;
           setCoordinates({ lat: latitude, lng: longitude });
-  
-          // Reverse geocode to get city and zip
-          try {
-            const response = await axios.get(
-              `https://maps.googleapis.com/maps/api/geocode/json`,
-              {
-                params: {
-                  latlng: `${latitude},${longitude}`,
-                  key: apiKey,
-                },
-              }
-            );
-  
-            if (response.data.status === "OK") {
-              const addressComponents =
-                response.data.results[0].address_components;
-  
-              const cityComponent = addressComponents.find((comp) =>
-                comp.types.includes("locality")
-              );
-              const zipComponent = addressComponents.find((comp) =>
-                comp.types.includes("postal_code")
-              );
-  
-              const city = cityComponent ? cityComponent.long_name : null;
-              const zip = zipComponent ? zipComponent.long_name : null;
-  
-              setLocationData({ city, zip });
-            }
-          } catch (error) {
-            console.error("Error during reverse geocoding:", error.message);
-          }
+          setLocation("");
+          console.log("Location obtained:", latitude, longitude);
         },
         (error) => {
           console.error("Error obtaining location:", error.message);
-          // Handle error cases (as in your existing code)
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              alert("Location access was denied. Please enable it in your browser settings.");
+              break;
+            case error.POSITION_UNAVAILABLE:
+              alert("Location information is unavailable.");
+              break;
+            case error.TIMEOUT:
+              alert("The request to get your location timed out.");
+              break;
+            default:
+              alert("An unknown error occurred.");
+              break;
+          }
         }
       );
     } else {
@@ -176,27 +150,12 @@ const ReportIssueForm = () => {
     }
   };
 
-  const onPlaceSelected = async () => {
+  const onPlaceSelected = () => {
     const place = autocompleteRef.current.getPlace();
     if (place.geometry) {
       const { lat, lng } = place.geometry.location;
       setCoordinates({ lat: lat(), lng: lng() });
       setLocation(place.formatted_address);
-  
-      // Fetch city and zip from place details
-      const addressComponents = place.address_components;
-      const cityComponent = addressComponents.find((comp) =>
-        comp.types.includes('locality')
-      );
-      const zipComponent = addressComponents.find((comp) =>
-        comp.types.includes('postal_code')
-      );
-  
-      const city = cityComponent ? cityComponent.long_name : null;
-      const zip = zipComponent ? zipComponent.long_name : null;
-  
-      // Add city and zip to state
-      setLocationData({ city, zip });
     }
   };
 
