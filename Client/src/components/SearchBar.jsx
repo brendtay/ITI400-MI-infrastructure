@@ -3,69 +3,75 @@ import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Autocomplete } from '@react-google-maps/api';
 
-const SearchBar = ({ address, onAddressChange, onSearch, onGetLocation }) => {
+export default function SearchBar({ address, setAddress, setLocation }) {
   const autocompleteRef = useRef(null);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSearch(); // Trigger the search for reports
+  // Handle the user manually changing the address in the input field
+  const handleAddressChange = (e) => {
+    setAddress(e.target.value);
   };
 
-  const onPlaceSelected = () => {
+  // Handle the user selecting a place from Google Autocomplete
+  const handleSearch = () => {
     const place = autocompleteRef.current.getPlace();
-    if (place && place.formatted_address) {
-      onAddressChange({ target: { value: place.formatted_address } });
+    if (place && place.geometry) {
+      const formattedAddress = place.formatted_address;
+      const lat = place.geometry.location.lat();
+      const lng = place.geometry.location.lng();
+      const newLocation = { lat, lng };
+
+      setAddress(formattedAddress); // Update the address input field
+      setLocation(newLocation); // Update the map location
+    }
+  };
+
+  // Handle the user clicking the button to use their current location
+  const handleGetLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          const newLocation = { lat: latitude, lng: longitude };
+          setLocation(newLocation);
+        },
+        (error) => {
+          alert('Unable to retrieve your location: ' + error.message);
+        }
+      );
+    } else {
+      alert('Geolocation is not supported by this browser.');
     }
   };
 
   return (
-    <div className="container-fluid" style={{ marginBottom: '4px', padding: 0 }}>
-      <div className="row d-flex align-items-stretch">
-        <div className="col-md-6 col-12 mb-2">
-          <div className="p-3 h-100">
-            <h5 className="mb-3 text-center">Enter An Address Or Zipcode To Search</h5>
-            <form onSubmit={handleSubmit}>
-              <Autocomplete
-                onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
-                onPlaceChanged={onPlaceSelected}
-              >
-                <input
-                  type="text"
-                  value={address}
-                  onChange={onAddressChange}
-                  placeholder="Enter an address"
-                  className="form-control form-control-lg mb-2"
-                  aria-label="Address input"
-                />
-              </Autocomplete>
-              <button type="submit" className="btn btn-primary btn-lg w-100" aria-label="Search button">
-                Search
-              </button>
-            </form>
-          </div>
-        </div>
-
-        <div className="col-md-6 col-12 mb-2">
-          <div className="p-3 h-100 text-center">
-            <h5 className="mb-3">Use Your Current Location</h5>
-            <div style={{ marginBottom: '1rem' }}>
-              Click the button below to automatically detect your device's current location for reporting an issue.
-            </div>
-            <button onClick={onGetLocation} className="btn btn-outline-secondary btn-lg w-100" aria-label="Use my location button">
-              Use My Current Location
-            </button>
-          </div>
-        </div>
-      </div>
+    <div className="search-bar-container mt-3">
+      <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
+        <Autocomplete
+          onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
+          onPlaceChanged={handleSearch}
+        >
+          <input
+            type="text"
+            value={address}
+            onChange={handleAddressChange}
+            placeholder="Enter an address"
+            className="form-control form-control-lg mb-2"
+            aria-label="Address input"
+          />
+        </Autocomplete>
+        <button type="submit" className="btn btn-primary btn-lg w-100" aria-label="Search button">
+          Search
+        </button>
+      </form>
+      <button onClick={handleGetLocation} className="btn btn-outline-secondary btn-lg w-100 mt-3" aria-label="Use my location button">
+        Use My Current Location
+      </button>
     </div>
   );
-};
+}
 
 SearchBar.propTypes = {
   address: PropTypes.string.isRequired,
-  onAddressChange: PropTypes.func.isRequired,
-  onSearch: PropTypes.func.isRequired,
-  onGetLocation: PropTypes.func.isRequired,
+  setAddress: PropTypes.func.isRequired,
+  setLocation: PropTypes.func.isRequired,
 };
-
-export default SearchBar;
