@@ -94,11 +94,22 @@ const addImageToIssue = async (imageUrl, issueId, userId) => {
 const getIssueById = async (issueId) => {
     try {
         const query = `
-            SELECT ii.*, lt.*, it.issue_name, st.status_name
+            SELECT 
+                ii.issue_id,
+                ii.description,
+                ii.created_time,
+                ii.updated_time,
+                lt.gps_coords,
+                lt.city,
+                lt.zip,
+                it.issue_name,
+                st.status_name,
+                u.name AS reported_by
             FROM infrastructure_issue ii
             LEFT JOIN location lt ON ii.location_id = lt.location_id
             LEFT JOIN issue_types it ON ii.issue_type = it.issue_id
-            LEFT JOIN status st ON ii.status_type = st.status_id
+            LEFT JOIN status st ON ii.status_type = st.status_type
+            LEFT JOIN users u ON ii.user_id = u.user_id
             WHERE ii.issue_id = $1;
         `;
         const result = await pool.query(query, [issueId]);
