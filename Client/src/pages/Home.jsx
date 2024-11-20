@@ -79,15 +79,9 @@ export default function Home() {
               <div className="card-body">
                 <h5 className="card-title text-center"><b>Nearby Issues</b></h5>
                 
-                {/* Google Map Section */}
+                {/* Google Maps Integration Component */}
                 <div className="google-map-container mt-4" style={{ height: '500px' }}>
-                  <GoogleMap
-                    mapContainerStyle={containerStyle}
-                    center={location}
-                    zoom={13}
-                  >
-                    <Marker position={location} />
-                  </GoogleMap>
+                  <GoogleMapsIntegration />
                 </div>
 
                 {/* Search Bar Section */}
