@@ -118,41 +118,30 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
             }}
             onCloseClick={() => setSelectedIssue(null)}
           >
-            <div style={{ display: 'flex', padding: '10px', gap: '15px', maxWidth: '400px' }}>
+            <div className="info-window-container">
               {/* Text Content */}
-              <div style={{ flex: 2 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <h5 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 'bold' }}>Issue ID: {selectedIssue.issue_id}</h5>
+              <div className="info-window-text">
+                <div className="info-window-header">
+                  <h5 className="info-window-id">Issue ID: {selectedIssue.issue_id}</h5>
                   <button 
                     onClick={() => setSelectedIssue(null)} 
-                    style={{ 
-                      background: 'none', 
-                      border: 'none', 
-                      cursor: 'pointer', 
-                      fontSize: '1.2rem', 
-                      lineHeight: '1',
-                      padding: 0 
-                    }}
+                    className="info-window-close"
                   >
                     ×
                   </button>
                 </div>
-                <p style={{ margin: '5px 0' }}><strong>Type:</strong> {selectedIssue.issue_name}</p>
-                <p style={{ margin: '5px 0', color: '#555' }}><strong>Status:</strong> {selectedIssue.status_name}</p>
-                <p style={{ margin: '5px 0', color: '#555' }}><strong>Description:</strong> {selectedIssue.description}</p>
+                <p className="info-window-detail"><strong>Type:</strong> {selectedIssue.issue_name}</p>
+                <p className="info-window-detail"><strong>Status:</strong> {selectedIssue.status_name}</p>
+                <p className="info-window-detail"><strong>Description:</strong> {selectedIssue.description}</p>
+                <p className="info-window-detail"><strong>Uploaded by Reporter:</strong> {selectedIssue.reported_by}</p>
               </div>
               {/* Image Content */}
               {preSignedImageUrl && (
-                <div style={{ flex: 1, textAlign: 'right' }}>
+                <div className="info-window-image">
                   <img 
                     src={preSignedImageUrl} 
                     alt="Issue" 
-                    style={{ 
-                      width: '100px', 
-                      height: 'auto', 
-                      borderRadius: '4px', 
-                      boxShadow: '0 2px 5px rgba(0,0,0,0.2)' 
-                    }} 
+                    className="info-window-img"
                   />
                 </div>
               )}
