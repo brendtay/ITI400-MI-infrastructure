@@ -15,6 +15,15 @@ const defaultCenter = {
   lng: -83.6894584432078,
 };
 
+const issueTypeColors = {
+  'Pothole': 'red',
+  'Damaged streetlight': 'yellow',
+  'Damaged road': 'blue',
+  'Damaged sidewalk': 'green',
+  'Drainage issue': 'purple',
+  'Other': 'orange'
+};
+
 export default function GoogleMapsIntegration({ location, setLocation, reportMarkers, setReportMarkers }) {
   const [error, setError] = useState(null);
 
@@ -46,15 +55,21 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
     <div className="google-map-container">
       <GoogleMap mapContainerStyle={containerStyle} center={location || defaultCenter} zoom={13}>
         {location && <Marker position={location} />}
-        {reportMarkers && reportMarkers.map((issue) => (
-          <Marker
-            key={issue.issue_id}
-            position={{
-              lat: parseFloat(issue.gps_coords.split(',')[0]),
-              lng: parseFloat(issue.gps_coords.split(',')[1]),
-            }}
-          />
-        ))}
+        {reportMarkers && reportMarkers.map((issue) => {
+          const markerColor = issueTypeColors[issue.issue_name] || 'gray';
+          return (
+            <Marker
+              key={issue.issue_id}
+              position={{
+                lat: parseFloat(issue.gps_coords.split(',')[0]),
+                lng: parseFloat(issue.gps_coords.split(',')[1]),
+              }}
+              icon={{
+                url: `http://maps.google.com/mapfiles/ms/icons/${markerColor}-dot.png`,
+              }}
+            />
+          );
+        })}
       </GoogleMap>
       {error && <p className="text-danger text-center mt-3">{error}</p>}
     </div>
