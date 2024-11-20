@@ -71,23 +71,17 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
     try {
       // Extract key from the full URL
       const key = imageUrl.split('/').pop(); 
-      console.log('[DEBUG] Extracted key for pre-signed URL:', key);
-  
-      console.log('[DEBUG] Making API call to fetch pre-signed URL for key:', key);
       const response = await axios.get('/api/images/presigned-url', {
         params: { key }
       });
   
-      console.log('[DEBUG] Pre-signed URL fetched successfully:', response.data.url);
       setPreSignedImageUrl(response.data.url);
     } catch (error) {
-      console.error('[ERROR] Error fetching pre-signed URL:', error.message);
       setError('Failed to load image.');
     }
   };
 
   const handleMarkerClick = (issue) => {
-    console.log('[DEBUG] Marker clicked for issue:', issue);
     setSelectedIssue(issue);
   };
 
@@ -135,7 +129,7 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
               {preSignedImageUrl && (
                 <>
                   <p>[DEBUG] Attempting to display image with pre-signed URL: {preSignedImageUrl}</p>
-                  <img src={preSignedImageUrl} alt="Issue" style={{ width: '100%', height: 'auto' }} />
+                  <img src={preSignedImageUrl} alt="Issue" style={{ width: '200px', height: 'auto' }} />
                 </>
               )}
             </div>
