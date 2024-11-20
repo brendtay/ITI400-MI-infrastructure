@@ -35,25 +35,33 @@ router.post('/upload/:issueId', authenticateToken, upload.single('image'), async
 // Route to get a pre-signed URL for an image by its key
 router.get('/presigned-url', authenticateToken, async (req, res) => {
     const { key } = req.query;
-
+  
+    // Debugging: Log incoming request parameters
     console.log('[DEBUG] Received request for pre-signed URL with key:', key);
   
     if (!key) {
-        console.log('[DEBUG] Missing "key" parameter in request.');
-        return res.status(400).json({ error: 'Missing "key" parameter in request' });
-      }
+      console.log('[DEBUG] Missing "key" parameter in request.');
+      return res.status(400).json({ error: 'Missing "key" parameter in request' });
+    }
   
     try {
-        const bucketName = 'mi-infrastructure-images'; 
-        console.log('[DEBUG] Generating pre-signed URL for bucket:', bucketName, 'and key:', key);
-        const presignedUrl = generatePresignedUrl(bucketName, key);
-        console.log('[DEBUG] Successfully generated pre-signed URL:', presignedUrl);
-        res.json({ url: presignedUrl });
+      const bucketName = 'mi-infrastructure-images';
+      console.log('[DEBUG] Generating pre-signed URL for bucket:', bucketName, 'and key:', key);
+  
+      // Generate the pre-signed URL
+      const presignedUrl = generatePresignedUrl(bucketName, key);
+  
+      // Debugging: Log the generated pre-signed URL
+      console.log('[DEBUG] Successfully generated pre-signed URL:', presignedUrl);
+  
+      // Return the URL
+      res.status(200).json({ url: presignedUrl });
     } catch (error) {
-        console.error('[ERROR] Error generating pre-signed URL:', error.message);
-        console.error('[DEBUG] Error stack:', error.stack);
-        res.status(500).json({ error: 'Failed to generate pre-signed URL' });
-      }
+      // Debugging: Log error details
+      console.error('[ERROR] Error generating pre-signed URL:', error.message);
+      console.error('[DEBUG] Error stack:', error.stack);
+      res.status(500).json({ error: 'Failed to generate pre-signed URL' });
+    }
   });
 
 // Route to get all images for a specific issue

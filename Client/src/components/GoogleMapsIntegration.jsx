@@ -67,13 +67,17 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
     }
   };
 
-  const fetchPreSignedUrl = async (key) => {
+  const fetchPreSignedUrl = async (imageUrl) => {
     try {
+      // Extract key from the full URL
+      const key = imageUrl.split('/').pop(); 
+      console.log('[DEBUG] Extracted key for pre-signed URL:', key);
+  
       console.log('[DEBUG] Making API call to fetch pre-signed URL for key:', key);
       const response = await axios.get('/api/images/presigned-url', {
         params: { key }
       });
-
+  
       console.log('[DEBUG] Pre-signed URL fetched successfully:', response.data.url);
       setPreSignedImageUrl(response.data.url);
     } catch (error) {
