@@ -76,41 +76,47 @@ const ReportIssueForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!captchaToken) {
       setError("Please complete the CAPTCHA to submit the form.");
       return;
     }
-
-    const issueData = {
-      issueType,
-      description,
-      gpsCoords: coordinates ? `${coordinates.lat},${coordinates.lng}` : null,
-      location,
-      city: locationData.city || null,
-      zip: locationData.zip || null,
-      captchaToken,
-    };
-
+  
+    let imageId = null;
+  
     try {
-      const issueResponse = await axios.post('/api/issues', issueData, {
-        withCredentials: true,
-      });
-
-      const issueId = issueResponse.data.issue.issue_id;
-
+      // Step 1: Upload the image if available and get imageId
       if (photo) {
         const formData = new FormData();
         formData.append("image", photo);
-
-        await axios.post(`/api/images/upload/${issueId}`, formData, {
+  
+        const imageResponse = await axios.post('/api/images/upload', formData, {
           withCredentials: true,
         });
+  
+        imageId = imageResponse.data.image_id;
       }
-
+  
+      // Step 2: Create the issue with all data
+      const issueData = {
+        issueType,
+        description,
+        gpsCoords: coordinates ? `${coordinates.lat},${coordinates.lng}` : null,
+        location,
+        city: locationData.city || null,
+        zip: locationData.zip || null,
+        captchaToken,
+        imageId, 
+      };
+  
+      const issueResponse = await axios.post('/api/issues', issueData, {
+        withCredentials: true,
+      });
+  
       setSuccess("Issue reported successfully!");
       setError(null);
-
+  
+      // Reset form fields
       setIssueType("");
       setLocation("");
       setDescription("");

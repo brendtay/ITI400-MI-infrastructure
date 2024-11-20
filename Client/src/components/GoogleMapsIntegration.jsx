@@ -109,3 +109,10 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
     </div>
   );
 }
+
+GoogleMapsIntegration.propTypes = {
+  location: PropTypes.object,
+  setLocation: PropTypes.func.isRequired,
+  reportMarkers: PropTypes.array.isRequired,
+  setReportMarkers: PropTypes.func.isRequired,
+};
