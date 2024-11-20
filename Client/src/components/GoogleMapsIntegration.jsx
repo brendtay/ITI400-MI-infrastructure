@@ -52,23 +52,37 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
     }
   };
 
+  const handleMarkerClick = (issue) => {
+    console.log('Marker clicked:', issue); // Debugging line to verify the click
+    setSelectedIssue(issue);
+  };
+
   return (
     <div className="google-map-container">
       <GoogleMap mapContainerStyle={containerStyle} center={location || defaultCenter} zoom={13}>
         {location && <Marker position={location} />}
         {reportMarkers && reportMarkers.map((issue) => {
           const markerColor = issueTypeColors[issue.issue_name] || 'gray';
+          let lat, lng;
+
+          try {
+            [lat, lng] = issue.gps_coords.split(',').map(Number);
+            if (isNaN(lat) || isNaN(lng)) {
+              throw new Error('Invalid GPS coordinates');
+            }
+          } catch (error) {
+            console.error('Error parsing GPS coordinates:', error);
+            return null; // Skip rendering this marker if there’s an error
+          }
+
           return (
             <Marker
               key={issue.issue_id}
-              position={{
-                lat: parseFloat(issue.gps_coords.split(',')[0]),
-                lng: parseFloat(issue.gps_coords.split(',')[1]),
-              }}
+              position={{ lat, lng }}
               icon={{
                 url: `http://maps.google.com/mapfiles/ms/icons/${markerColor}-dot.png`,
               }}
-              onClick={() => setSelectedIssue(issue)}
+              onClick={() => handleMarkerClick(issue)}
             />
           );
         })}
@@ -95,10 +109,3 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
     </div>
   );
 }
-
-GoogleMapsIntegration.propTypes = {
-  location: PropTypes.object,
-  setLocation: PropTypes.func.isRequired,
-  reportMarkers: PropTypes.array.isRequired,
-  setReportMarkers: PropTypes.func.isRequired,
-};
