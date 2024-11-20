@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { GoogleMap, Marker } from '@react-google-maps/api';
+import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../components/componentCss/googleMapInt.css';
@@ -26,6 +26,7 @@ const issueTypeColors = {
 
 export default function GoogleMapsIntegration({ location, setLocation, reportMarkers, setReportMarkers }) {
   const [error, setError] = useState(null);
+  const [selectedIssue, setSelectedIssue] = useState(null);
 
   useEffect(() => {
     if (location) {
@@ -67,9 +68,28 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
               icon={{
                 url: `http://maps.google.com/mapfiles/ms/icons/${markerColor}-dot.png`,
               }}
+              onClick={() => setSelectedIssue(issue)}
             />
           );
         })}
+        {selectedIssue && (
+          <InfoWindow
+            position={{
+              lat: parseFloat(selectedIssue.gps_coords.split(',')[0]),
+              lng: parseFloat(selectedIssue.gps_coords.split(',')[1]),
+            }}
+            onCloseClick={() => setSelectedIssue(null)}
+          >
+            <div>
+              <h6>{selectedIssue.issue_name}</h6>
+              <p>Status: {selectedIssue.status_name}</p>
+              <p>Description: {selectedIssue.description}</p>
+              {selectedIssue.image_url && (
+                <img src={selectedIssue.image_url} alt="Issue" style={{ width: '100%', height: 'auto' }} />
+              )}
+            </div>
+          </InfoWindow>
+        )}
       </GoogleMap>
       {error && <p className="text-danger text-center mt-3">{error}</p>}
     </div>
