@@ -133,7 +133,7 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
                 <p className="info-window-detail"><strong>Type:</strong> {selectedIssue.issue_name}</p>
                 <p className="info-window-detail"><strong>Status:</strong> {selectedIssue.status_name}</p>
                 <p className="info-window-detail"><strong>Description:</strong> {selectedIssue.description}</p>
-                <p className="info-window-detail"><strong>Uploaded by Reporter:</strong> {selectedIssue.reported_by}</p>
+                <p className="info-window-detail"><strong>Reporter:</strong> {selectedIssue.reported_by}</p>
               </div>
               {/* Image Content */}
               {preSignedImageUrl && (

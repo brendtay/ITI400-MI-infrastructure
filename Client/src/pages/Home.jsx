@@ -56,7 +56,7 @@ export default function Home() {
                 />
 
                 {/* Google Maps Integration Component */}
-                <div className="google-map-container mt-4" style={{ height: '500px' }}>
+                <div className="google-map-container mt-4" style={{ height: '100%' }}>
                   <GoogleMapsIntegration
                     location={location}
                     setLocation={setLocation}
