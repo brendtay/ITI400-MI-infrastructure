@@ -80,7 +80,7 @@ const getIssuesNearLocation = async (latitude, longitude, radius) => {
             LEFT JOIN issue_types it ON ii.issue_type = it.issue_id
             LEFT JOIN status st ON ii.status_type = st.status_type
             LEFT JOIN users u ON ii.user_id = u.user_id
-            LEFT JOIN images img ON ii.image_id = img.image_id
+            LEFT JOIN images img ON ii.issue_id = img.issue_id
             WHERE lt.gps_coords IS NOT NULL;
         `;
         const result = await pool.query(query);

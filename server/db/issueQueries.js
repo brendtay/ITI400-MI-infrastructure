@@ -77,7 +77,7 @@ const getIssuesByUser = async (userId) => {
             LEFT JOIN issue_types it ON ii.issue_type = it.issue_id
             LEFT JOIN status st ON ii.status_type = st.status_type
             LEFT JOIN users u ON ii.user_id = u.user_id
-            LEFT JOIN images img ON ii.image_id = img.image_id
+            LEFT JOIN images img ON ii.issue_id = img.issue_id
             WHERE ii.user_id = $1
             ORDER BY ii.created_time DESC;
         `;
