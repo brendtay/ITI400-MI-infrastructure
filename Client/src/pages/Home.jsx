@@ -77,10 +77,10 @@ export default function Home() {
             {/* Card for Google Maps and Search Bar */}
             <div className="card">
               <div className="card-body">
-                <h5 className="card-title text-center">Search & Map</h5>
+                <h5 className="card-title text-center"><b>Location Search Of Near By Issues</b></h5>
                 
                 {/* Google Map Section */}
-                <div className="google-map-container" style={{ height: '300px' }}>
+                <div className="google-map-container mt-4" style={{ height: '500px' }}>
                   <GoogleMap
                     mapContainerStyle={containerStyle}
                     center={location}

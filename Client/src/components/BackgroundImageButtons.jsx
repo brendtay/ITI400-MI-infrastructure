@@ -18,7 +18,7 @@ const BackgroundImageButtons = () => {
             <h1 className="text-white mb-4">Report Public Infrastructure Issues</h1>
             <div style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
     <h3 className="text-white mb-4 custom-h3">
-        Help us keep our community safe and well-maintained by reporting issues like potholes, broken sidewalks, and more. Your input makes a difference!
+        <b>Help us keep our community safe and well-maintained by reporting issues like potholes, broken sidewalks, and more. Your input makes a difference!</b>
     </h3>
 </div>
             <div className="button-container d-flex flex-column flex-md-row justify-content-center">

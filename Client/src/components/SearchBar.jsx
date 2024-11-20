@@ -1,4 +1,3 @@
-// src/components/SearchBar.jsx
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -8,8 +7,8 @@ const SearchBar = ({ address, onAddressChange, onSearch, onGetLocation }) => {
   const autocompleteRef = useRef(null);
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent default form submission
-    onSearch(); // Call the search function
+    e.preventDefault();
+    onSearch(); // Trigger the search for reports
   };
 
   const onPlaceSelected = () => {
@@ -22,11 +21,9 @@ const SearchBar = ({ address, onAddressChange, onSearch, onGetLocation }) => {
   return (
     <div className="container-fluid" style={{ marginBottom: '4px', padding: 0 }}>
       <div className="row d-flex align-items-stretch">
-        
-        {/* Input for Enter Address and Search */}
         <div className="col-md-6 col-12 mb-2">
           <div className="p-3 h-100">
-            <h5 className="mb-3 text-center">Enter An Address Or Zipcode To Search</h5> {/* Centered text */}
+            <h5 className="mb-3 text-center">Enter An Address Or Zipcode To Search</h5>
             <form onSubmit={handleSubmit}>
               <Autocomplete
                 onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
@@ -38,7 +35,7 @@ const SearchBar = ({ address, onAddressChange, onSearch, onGetLocation }) => {
                   onChange={onAddressChange}
                   placeholder="Enter an address"
                   className="form-control form-control-lg mb-2"
-                  aria-label="Address input" // Accessibility label
+                  aria-label="Address input"
                 />
               </Autocomplete>
               <button type="submit" className="btn btn-primary btn-lg w-100" aria-label="Search button">
@@ -48,7 +45,6 @@ const SearchBar = ({ address, onAddressChange, onSearch, onGetLocation }) => {
           </div>
         </div>
 
-        {/* Button for Use My Location */}
         <div className="col-md-6 col-12 mb-2">
           <div className="p-3 h-100 text-center">
             <h5 className="mb-3">Use My Location</h5>

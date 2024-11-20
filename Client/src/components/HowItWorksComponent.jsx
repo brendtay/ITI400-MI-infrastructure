@@ -7,7 +7,7 @@ import examplePhoto3 from "../images/userTrackingProgress.jpg";
 export default function HowItWorks() {
   return (
     <div className="container text-center my-3">
-      <h1>How It Works</h1>
+      <h1><b>How It Works</b></h1>
       <div className="row align-items-start my-3">
         {/* Responsive columns for each step */}
         <div className="col-12 col-md-4 my-3">

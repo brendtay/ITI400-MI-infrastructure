@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { GoogleMap, Marker } from '@react-google-maps/api';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../components/componentCss/googleMapInt.css';
@@ -7,8 +8,8 @@ import SearchBar from './SearchBar';
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 const containerStyle = {
-  width: '100%', // Make it responsive
-  height: '100%', // Use full height of parent
+  width: '100%', 
+  height: '100%' 
 };
 
 const defaultCenter = {
@@ -19,9 +20,10 @@ const defaultCenter = {
 export default function GoogleMapsIntegration() {
   const [address, setAddress] = useState('');
   const [location, setLocation] = useState(defaultCenter);
+  const [reportMarkers, setReportMarkers] = useState([]); // State to hold nearby report markers
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Attempt to set user's current location on load
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -44,22 +46,26 @@ export default function GoogleMapsIntegration() {
     }
 
     const geocoder = new window.google.maps.Geocoder();
-    geocoder.geocode({ address }, (results, status) => {
+    geocoder.geocode({ address }, async (results, status) => {
       if (status === 'OK') {
         const { lat, lng } = results[0].geometry.location;
-        setLocation({ lat: lat(), lng: lng() });
+        const newLocation = { lat: lat(), lng: lng() };
+        setLocation(newLocation);
+        await fetchReports(newLocation); // Fetch local reports based on new location
       } else {
         alert('Geocode was not successful for the following reason: ' + status);
       }
     });
   };
 
-  const handleGetLocation = () => {
+  const handleGetLocation = async () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        async (position) => {
           const { latitude, longitude } = position.coords;
-          setLocation({ lat: latitude, lng: longitude });
+          const newLocation = { lat: latitude, lng: longitude };
+          setLocation(newLocation);
+          await fetchReports(newLocation); // Fetch local reports based on new location
         },
         (error) => {
           alert('Unable to retrieve your location: ' + error.message);
@@ -70,8 +76,32 @@ export default function GoogleMapsIntegration() {
     }
   };
 
+  const fetchReports = async (center) => {
+    try {
+      const radius = 10; // Adjust search radius as needed (in km)
+      const response = await axios.get(`/api/issues/search`, {
+        params: {
+          lat: center.lat,
+          lng: center.lng,
+          radius,
+        },
+      });
+      setReportMarkers(response.data);
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching local reports:', err);
+      setError('Failed to fetch reports.');
+    }
+  };
+
   return (
     <div className="map-container" style={{ textAlign: 'center', height: '100%' }}>
+      <SearchBar 
+        address={address} 
+        onAddressChange={handleAddressChange} 
+        onSearch={handleSearch} 
+        onGetLocation={handleGetLocation} 
+      />
       <div style={containerStyle}>
         <GoogleMap
           mapContainerStyle={containerStyle}
@@ -79,8 +109,18 @@ export default function GoogleMapsIntegration() {
           zoom={13}
         >
           <Marker position={location} />
+          {reportMarkers.map((issue) => (
+            <Marker 
+              key={issue.issue_id} 
+              position={{ 
+                lat: parseFloat(issue.gps_coords.split(',')[0]), 
+                lng: parseFloat(issue.gps_coords.split(',')[1])
+              }} 
+            />
+          ))}
         </GoogleMap>
       </div>
+      {error && <p className="text-danger text-center mt-3">{error}</p>}
     </div>
   );
 }

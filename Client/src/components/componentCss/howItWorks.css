@@ -10,7 +10,7 @@
 /* Styling for text above images */
 .text-above-image {
     font-size: clamp(1.2rem, 2.5vw, 2rem); /* Scales text based on viewport width with min of 1.2rem and max of 2rem */
-    font-weight: bold;
+   
     margin-bottom: 10px;
 }
 
