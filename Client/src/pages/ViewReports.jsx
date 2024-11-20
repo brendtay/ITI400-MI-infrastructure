@@ -157,6 +157,12 @@ const ViewIssues = () => {
                     <p className="info-window-detail"><strong>Type:</strong> {issue.issue_name}</p>
                     <p className="info-window-detail"><strong>Status:</strong> {issue.status_name}</p>
                     <p className="info-window-detail"><strong>Description:</strong> {issue.description}</p>
+                    <p className="info-window-detail">
+                      <strong>Reported on:</strong> {formatDate(issue.created_time)}
+                    </p>
+                    <p className="info-window-detail">
+                      <strong>Updated on:</strong> {formatDate(issue.updated_time)}
+                    </p>
                   </div>
                   {issue.preSignedImageUrl && (
                     <div className="info-window-image">
