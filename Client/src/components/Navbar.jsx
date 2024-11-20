@@ -91,7 +91,7 @@ const Navbar = () => {
               </>
             ) : (
               <li className="nav-item">
-                <Link className="nav-link" to="/login">Log In</Link>
+                <Link className="btn btn-outline-light btn-sm" to="/login">Log In</Link>
               </li>
             )}
           </ul>
@@ -104,7 +104,6 @@ const Navbar = () => {
       )}
     </nav>
   );
-  
 };
 
 export default Navbar;
