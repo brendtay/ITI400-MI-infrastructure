@@ -61,10 +61,24 @@ const updateIssueStatus = async (issueId, statusType) => {
 const getIssuesByUser = async (userId) => {
     try {
         const query = `
-            SELECT * 
-            FROM infrastructure_issue 
-            WHERE user_id = $1 
-            ORDER BY created_time DESC;
+            SELECT 
+                ii.issue_id,
+                ii.description,
+                ii.created_time,
+                ii.updated_time,
+                lt.gps_coords,
+                lt.city,
+                lt.zip,
+                it.issue_name,
+                st.status_name,
+                u.name AS reported_by
+            FROM infrastructure_issue ii
+            LEFT JOIN location lt ON ii.location_id = lt.location_id
+            LEFT JOIN issue_types it ON ii.issue_type = it.issue_id
+            LEFT JOIN status st ON ii.status_type = st.status_type
+            LEFT JOIN users u ON ii.user_id = u.user_id
+            WHERE ii.user_id = $1
+            ORDER BY ii.created_time DESC;
         `;
         const result = await pool.query(query, [userId]);
         return result.rows;
