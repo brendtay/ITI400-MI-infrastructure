@@ -35,19 +35,25 @@ router.post('/upload/:issueId', authenticateToken, upload.single('image'), async
 // Route to get a pre-signed URL for an image by its key
 router.get('/presigned-url', authenticateToken, async (req, res) => {
     const { key } = req.query;
+
+    console.log('[DEBUG] Received request for pre-signed URL with key:', key);
   
     if (!key) {
-      return res.status(400).json({ error: 'Missing "key" parameter in request' });
-    }
+        console.log('[DEBUG] Missing "key" parameter in request.');
+        return res.status(400).json({ error: 'Missing "key" parameter in request' });
+      }
   
     try {
-      const bucketName = 'mi-infrastructure-images'; 
-      const presignedUrl = generatePresignedUrl(bucketName, key);
-      res.json({ url: presignedUrl });
+        const bucketName = 'mi-infrastructure-images'; 
+        console.log('[DEBUG] Generating pre-signed URL for bucket:', bucketName, 'and key:', key);
+        const presignedUrl = generatePresignedUrl(bucketName, key);
+        console.log('[DEBUG] Successfully generated pre-signed URL:', presignedUrl);
+        res.json({ url: presignedUrl });
     } catch (error) {
-      console.error('Error generating pre-signed URL:', error);
-      res.status(500).json({ error: 'Failed to generate pre-signed URL' });
-    }
+        console.error('[ERROR] Error generating pre-signed URL:', error.message);
+        console.error('[DEBUG] Error stack:', error.stack);
+        res.status(500).json({ error: 'Failed to generate pre-signed URL' });
+      }
   });
 
 // Route to get all images for a specific issue

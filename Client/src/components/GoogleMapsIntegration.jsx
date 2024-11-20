@@ -31,6 +31,7 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
 
   useEffect(() => {
     if (location) {
+      console.log('[DEBUG] Fetching reports for location:', location);
       fetchReports(location);
     }
   }, [location]);
@@ -38,14 +39,17 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
   useEffect(() => {
     // Fetch pre-signed URL when an issue with an image is selected
     if (selectedIssue && selectedIssue.image_url) {
+      console.log('[DEBUG] Selected issue has image. Fetching pre-signed URL for key:', selectedIssue.image_url);
       fetchPreSignedUrl(selectedIssue.image_url);
     } else {
+      console.log('[DEBUG] No selected issue or selected issue does not have an image URL.');
       setPreSignedImageUrl(null);
     }
   }, [selectedIssue]);
 
   const fetchReports = async (center) => {
     try {
+      console.log('[DEBUG] Making API call to fetch reports for center:', center);
       const response = await axios.get('/api/location/nearby', {
         params: {
           lat: center.lat,
@@ -54,28 +58,32 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
         },
       });
 
+      console.log('[DEBUG] Reports fetched successfully:', response.data);
       setReportMarkers(response.data);
       setError(null);
     } catch (err) {
-      console.error('Error fetching local reports:', err);
+      console.error('[ERROR] Error fetching local reports:', err.message);
       setError('Failed to fetch reports.');
     }
   };
 
   const fetchPreSignedUrl = async (key) => {
     try {
+      console.log('[DEBUG] Making API call to fetch pre-signed URL for key:', key);
       const response = await axios.get('/api/images/presigned-url', {
         params: { key }
       });
+
+      console.log('[DEBUG] Pre-signed URL fetched successfully:', response.data.url);
       setPreSignedImageUrl(response.data.url);
     } catch (error) {
-      console.error('Error fetching pre-signed URL:', error);
+      console.error('[ERROR] Error fetching pre-signed URL:', error.message);
       setError('Failed to load image.');
     }
   };
 
   const handleMarkerClick = (issue) => {
-    console.log('Marker clicked:', issue); // Debugging line to verify the click
+    console.log('[DEBUG] Marker clicked for issue:', issue);
     setSelectedIssue(issue);
   };
 
@@ -93,7 +101,7 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
               throw new Error('Invalid GPS coordinates');
             }
           } catch (error) {
-            console.error('Error parsing GPS coordinates:', error);
+            console.error('[ERROR] Error parsing GPS coordinates:', error.message);
             return null; // Skip rendering this marker if there’s an error
           }
 
@@ -121,7 +129,10 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
               <p>Status: {selectedIssue.status_name}</p>
               <p>Description: {selectedIssue.description}</p>
               {preSignedImageUrl && (
-                <img src={preSignedImageUrl} alt="Issue" style={{ width: '100%', height: 'auto' }} />
+                <>
+                  <p>[DEBUG] Attempting to display image with pre-signed URL: {preSignedImageUrl}</p>
+                  <img src={preSignedImageUrl} alt="Issue" style={{ width: '100%', height: 'auto' }} />
+                </>
               )}
             </div>
           </InfoWindow>

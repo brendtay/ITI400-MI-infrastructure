@@ -21,12 +21,21 @@ const s3 = new AWS.S3({
 
 // Helper function to generate pre-signed URL
 const generatePresignedUrl = (bucketName, key, expiresInSeconds = 60) => {
+  console.log('[DEBUG] generatePresignedUrl called with bucket:', bucketName, 'key:', key, 'expiresInSeconds:', expiresInSeconds);
   const params = {
     Bucket: bucketName,
     Key: key,
     Expires: expiresInSeconds,
   };
-  return s3.getSignedUrl('getObject', params);
+  
+  try {
+    const url = s3.getSignedUrl('getObject', params);
+    console.log('[DEBUG] Pre-signed URL generated:', url);
+    return url;
+  } catch (error) {
+    console.error('[ERROR] Failed to generate pre-signed URL in helper function:', error.message);
+    throw error;
+  }
 };
 
 // Test the connection
