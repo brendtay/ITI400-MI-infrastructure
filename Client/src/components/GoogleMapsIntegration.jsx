@@ -34,7 +34,7 @@ export default function GoogleMapsIntegration({
   const mapRef = useRef(null);
 
   useEffect(() => {
-    if (location && (tab === 'nearby' || !tab)) {
+    if (location && (tab === 'nearby' || tab === 'home')) {
       fetchReports(location);
     }
   }, [location, tab]);

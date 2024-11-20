@@ -18,7 +18,7 @@ export default function Home() {
   const [reportMarkers, setReportMarkers] = useState([]);
   const [error, setError] = useState(null); // Add error state
   // If you have a 'tab' state, you can define it here. For home page, we can set it to 'nearby'.
-  const tab = 'nearby';
+  const tab = 'home';
 
   return (
     <div>
