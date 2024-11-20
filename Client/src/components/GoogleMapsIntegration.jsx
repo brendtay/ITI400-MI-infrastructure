@@ -48,13 +48,13 @@ export default function GoogleMapsIntegration({
     }
   }, [selectedIssue]);
 
-  const fetchReports = async (center) => {
+  const fetchReports = async (center, radius = 10) => {
     try {
       const response = await axios.get('/api/location/nearby', {
         params: {
           lat: center.lat,
           lng: center.lng,
-          radius: 10, // Default radius of 10 km
+          radius: radius, // Use the passed radius
         },
       });
 

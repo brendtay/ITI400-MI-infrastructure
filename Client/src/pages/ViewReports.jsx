@@ -211,25 +211,35 @@ const ViewIssues = () => {
       </div>
       {error && <p className="text-danger text-center">{error}</p>}
       {issueById && (
-        <div>
-          <h5 className="text-center">Issue ID: {issueById.issue_id}</h5>
-          <p className="text-center">Type: {issueById.issue_name}</p>
-          <p className="text-center">Description: {issueById.description}</p>
-          <p className="text-center">Status: {issueById.status_name}</p>
-          {issueById.gps_coords && (
-            <GoogleMapsIntegration
-              location={{
-                lat: parseFloat(issueById.gps_coords.split(',')[0]),
-                lng: parseFloat(issueById.gps_coords.split(',')[1]),
-              }}
-              setLocation={() => {}}
-              reportMarkers={[issueById]}
-              setReportMarkers={() => {}}
-              error={error}
-              setError={setError}
-              tab="byId"
-            />
-          )}
+        <div className="list-group-item">
+          <div className="info-window-container">
+            <div className="info-window-text">
+              <div className="info-window-header">
+                <h5 className="info-window-id">Issue ID: {issueById.issue_id}</h5>
+              </div>
+              <p className="info-window-detail"><strong>Type:</strong> {issueById.issue_name}</p>
+              <p className="info-window-detail"><strong>Status:</strong> {issueById.status_name}</p>
+              <p className="info-window-detail"><strong>Description:</strong> {issueById.description}</p>
+              <p className="info-window-detail">
+                <strong>Reported on:</strong> {formatDate(issueById.created_time)}
+              </p>
+              <p className="info-window-detail">
+                <strong>Updated on:</strong> {formatDate(issueById.updated_time)}
+              </p>
+              <p className="info-window-detail">
+                <strong>Reporter:</strong> {issueById.reported_by}
+              </p>
+            </div>
+            {issueById.preSignedImageUrl && (
+              <div className="info-window-image">
+                <img
+                  src={issueById.preSignedImageUrl}
+                  alt="Issue"
+                  className="info-window-img"
+                />
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
