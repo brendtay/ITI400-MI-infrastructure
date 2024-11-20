@@ -31,7 +31,6 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
 
   useEffect(() => {
     if (location) {
-      console.log('[DEBUG] Fetching reports for location:', location);
       fetchReports(location);
     }
   }, [location]);
@@ -39,17 +38,15 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
   useEffect(() => {
     // Fetch pre-signed URL when an issue with an image is selected
     if (selectedIssue && selectedIssue.image_url) {
-      console.log('[DEBUG] Selected issue has image. Fetching pre-signed URL for key:', selectedIssue.image_url);
+    
       fetchPreSignedUrl(selectedIssue.image_url);
     } else {
-      console.log('[DEBUG] No selected issue or selected issue does not have an image URL.');
       setPreSignedImageUrl(null);
     }
   }, [selectedIssue]);
 
   const fetchReports = async (center) => {
     try {
-      console.log('[DEBUG] Making API call to fetch reports for center:', center);
       const response = await axios.get('/api/location/nearby', {
         params: {
           lat: center.lat,
@@ -58,11 +55,9 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
         },
       });
 
-      console.log('[DEBUG] Reports fetched successfully:', response.data);
       setReportMarkers(response.data);
       setError(null);
     } catch (err) {
-      console.error('[ERROR] Error fetching local reports:', err.message);
       setError('Failed to fetch reports.');
     }
   };
@@ -124,9 +119,22 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
           >
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h6 style={{ margin: 0 }}>{selectedIssue.issue_id}</h6>
-                <button onClick={() => setSelectedIssue(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem' }}>×</button>
+                <span style={{ fontWeight: 'bold', fontSize: '1rem', margin: 0 }}>ID: {selectedIssue.issue_id}</span>
+                <button 
+                  onClick={() => setSelectedIssue(null)} 
+                  style={{ 
+                    background: 'none', 
+                    border: 'none', 
+                    cursor: 'pointer', 
+                    fontSize: '1.2rem', 
+                    lineHeight: '1',
+                    padding: 0 
+                  }}
+                >
+                  &times;
+                </button>
               </div>
+              <p><strong>Type:</strong> {selectedIssue.type_name}</p>
               <p><strong>Status:</strong> {selectedIssue.status_name}</p>
               <p><strong>Description:</strong> {selectedIssue.description}</p>
               {preSignedImageUrl && (
