@@ -19,6 +19,16 @@ const s3 = new AWS.S3({
   region: 'us-east-2' 
 });
 
+// Helper function to generate pre-signed URL
+const generatePresignedUrl = (bucketName, key, expiresInSeconds = 60) => {
+  const params = {
+    Bucket: 'mi-infrastructure-images',
+    Key: key,
+    Expires: expiresInSeconds,
+  };
+  return s3.getSignedUrl('getObject', params);
+};
+
 // Test the connection
 pool.connect((err, client, release) => {
   if (err) {
@@ -36,4 +46,4 @@ pool.connect((err, client, release) => {
 });
 
 // Export the pool and s3 to use it in other parts of the app
-module.exports = { pool, s3 };
+module.exports = { pool, s3, generatePresignedUrl };

@@ -27,12 +27,22 @@ const issueTypeColors = {
 export default function GoogleMapsIntegration({ location, setLocation, reportMarkers, setReportMarkers }) {
   const [error, setError] = useState(null);
   const [selectedIssue, setSelectedIssue] = useState(null);
+  const [preSignedImageUrl, setPreSignedImageUrl] = useState(null);
 
   useEffect(() => {
     if (location) {
       fetchReports(location);
     }
   }, [location]);
+
+  useEffect(() => {
+    // Fetch pre-signed URL when an issue with an image is selected
+    if (selectedIssue && selectedIssue.image_url) {
+      fetchPreSignedUrl(selectedIssue.image_url);
+    } else {
+      setPreSignedImageUrl(null);
+    }
+  }, [selectedIssue]);
 
   const fetchReports = async (center) => {
     try {
@@ -49,6 +59,18 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
     } catch (err) {
       console.error('Error fetching local reports:', err);
       setError('Failed to fetch reports.');
+    }
+  };
+
+  const fetchPreSignedUrl = async (key) => {
+    try {
+      const response = await axios.get('/api/images/presigned-url', {
+        params: { key }
+      });
+      setPreSignedImageUrl(response.data.url);
+    } catch (error) {
+      console.error('Error fetching pre-signed URL:', error);
+      setError('Failed to load image.');
     }
   };
 
@@ -98,8 +120,8 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
               <h6>{selectedIssue.issue_name}</h6>
               <p>Status: {selectedIssue.status_name}</p>
               <p>Description: {selectedIssue.description}</p>
-              {selectedIssue.image_url && (
-                <img src={selectedIssue.image_url} alt="Issue" style={{ width: '100%', height: 'auto' }} />
+              {preSignedImageUrl && (
+                <img src={preSignedImageUrl} alt="Issue" style={{ width: '100%', height: 'auto' }} />
               )}
             </div>
           </InfoWindow>
