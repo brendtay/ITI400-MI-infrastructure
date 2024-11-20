@@ -116,35 +116,27 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
               lng: parseFloat(selectedIssue.gps_coords.split(',')[1]),
             }}
             onCloseClick={() => setSelectedIssue(null)}
-          >
-            <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h1 style={{ fontSize: '1.5rem', margin: 0 }}>ID: {selectedIssue.issue_id}</h1>
-                <button 
-                  onClick={() => setSelectedIssue(null)} 
-                  style={{ 
-                    background: 'none', 
-                    border: 'none', 
-                    cursor: 'pointer', 
-                    fontSize: '1.2rem', 
-                    lineHeight: '1',
-                    padding: 0 
-                  }}
-                >
-                  &times;
-                </button>
+            >
+            <div className="infoWindowContainer">
+              {/* Header */}
+              <div className="infoWindowHeader">
+                <h1>ID: {selectedIssue.issue_id}</h1>
+                <button onClick={() => setSelectedIssue(null)} className="closeButton">&times;</button>
               </div>
-              <p><strong>Type:</strong> {selectedIssue.type_name}</p>
-              <p><strong>Status:</strong> {selectedIssue.status_name}</p>
-              <p><strong>Description:</strong> {selectedIssue.description}</p>
-              {preSignedImageUrl && (
-                <>
-                  <p><strong>Image Preview:</strong></p>
-                  <img src={preSignedImageUrl} alt="Issue" style={{ width: '200px', height: 'auto' }} />
-                </>
-              )}
+              {/* Scrollable Content */}
+              <div className="infoWindowContent">
+                <p><strong>Type:</strong> {selectedIssue.type_name}</p>
+                <p><strong>Status:</strong> {selectedIssue.status_name}</p>
+                <p><strong>Description:</strong> {selectedIssue.description}</p>
+                {preSignedImageUrl && (
+                  <>
+                    <p><strong>Image Preview:</strong></p>
+                    <img src={preSignedImageUrl} alt="Issue" style={{ width: '200px', height: 'auto' }} />
+                  </>
+                )}
+              </div>
             </div>
-          </InfoWindow>
+            </InfoWindow>
         )}
       </GoogleMap>
       {error && <p className="text-danger text-center mt-3">{error}</p>}
