@@ -26,7 +26,7 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
 
   const fetchReports = async (center) => {
     try {
-      const response = await axios.get('/api/issues/nearby', {
+      const response = await axios.get('/api/location/nearby', {
         params: {
           lat: center.lat,
           lng: center.lng,
