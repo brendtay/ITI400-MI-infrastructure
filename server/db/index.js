@@ -22,7 +22,7 @@ const s3 = new AWS.S3({
 // Helper function to generate pre-signed URL
 const generatePresignedUrl = (bucketName, key, expiresInSeconds = 60) => {
   const params = {
-    Bucket: 'mi-infrastructure-images',
+    Bucket: bucketName,
     Key: key,
     Expires: expiresInSeconds,
   };
