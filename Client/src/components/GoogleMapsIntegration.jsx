@@ -123,12 +123,15 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
             onCloseClick={() => setSelectedIssue(null)}
           >
             <div>
-              <h6>{selectedIssue.issue_name}</h6>
-              <p>Status: {selectedIssue.status_name}</p>
-              <p>Description: {selectedIssue.description}</p>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h6 style={{ margin: 0 }}>{selectedIssue.issue_id}</h6>
+                <button onClick={() => setSelectedIssue(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem' }}>×</button>
+              </div>
+              <p><strong>Status:</strong> {selectedIssue.status_name}</p>
+              <p><strong>Description:</strong> {selectedIssue.description}</p>
               {preSignedImageUrl && (
                 <>
-                  <p>[DEBUG] Attempting to display image with pre-signed URL: {preSignedImageUrl}</p>
+                  <p><strong>Image Preview:</strong></p>
                   <img src={preSignedImageUrl} alt="Issue" style={{ width: '200px', height: 'auto' }} />
                 </>
               )}
