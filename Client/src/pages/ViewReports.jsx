@@ -116,6 +116,11 @@ const ViewIssues = () => {
     }
   };
 
+  // Helper function to format date as yyyy-mm-dd
+  const formatDate = (dateString) => {
+    return new Date(dateString).toISOString().split('T')[0];
+  };
+
   // Render functions
   const renderNearbyIssues = () => (
     <div>
