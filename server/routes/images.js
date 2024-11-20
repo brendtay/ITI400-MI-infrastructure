@@ -8,7 +8,7 @@ const {
   deleteImageFromS3
 } = require('../db/imageQueries');
 const { authenticateToken, isRole } = require('../middleware/auth');
-const generatePresignedUrl = require('../index'); // Import the configured S3 instance
+const { generatePresignedUrl } = require('../db/index'); // Import the configured S3 instance
 
 const router = express.Router();
 const upload = multer();
