@@ -119,7 +119,7 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
           >
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontWeight: 'bold', fontSize: '1rem', margin: 0 }}>ID: {selectedIssue.issue_id}</span>
+                <h1 style={{ fontSize: '1.5rem', margin: 0 }}>ID: {selectedIssue.issue_id}</h1>
                 <button 
                   onClick={() => setSelectedIssue(null)} 
                   style={{ 
