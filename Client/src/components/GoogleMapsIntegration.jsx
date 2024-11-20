@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
 import axios from 'axios';
@@ -7,12 +7,7 @@ import '../components/componentCss/googleMapInt.css';
 
 const containerStyle = {
   width: '100%',
-  height: '100%',
-};
-
-const defaultCenter = {
-  lat: 43.019387852838754,
-  lng: -83.6894584432078,
+  height: '400px',
 };
 
 const issueTypeColors = {
@@ -24,21 +19,29 @@ const issueTypeColors = {
   'Other': 'orange'
 };
 
-export default function GoogleMapsIntegration({ location, setLocation, reportMarkers, setReportMarkers }) {
-  const [error, setError] = useState(null);
+export default function GoogleMapsIntegration({
+  location,
+  setLocation,
+  reportMarkers,
+  setReportMarkers,
+  error,
+  setError,
+  defaultCenter,
+  tab,
+}) {
   const [selectedIssue, setSelectedIssue] = useState(null);
   const [preSignedImageUrl, setPreSignedImageUrl] = useState(null);
+  const mapRef = useRef(null);
 
   useEffect(() => {
-    if (location) {
+    if (location && tab === 'nearby') {
       fetchReports(location);
     }
-  }, [location]);
+  }, [location, tab]);
 
   useEffect(() => {
     // Fetch pre-signed URL when an issue with an image is selected
     if (selectedIssue && selectedIssue.image_url) {
-    
       fetchPreSignedUrl(selectedIssue.image_url);
     } else {
       setPreSignedImageUrl(null);
@@ -65,11 +68,11 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
   const fetchPreSignedUrl = async (imageUrl) => {
     try {
       // Extract key from the full URL
-      const key = imageUrl.split('/').pop(); 
+      const key = imageUrl.split('/').pop();
       const response = await axios.get('/api/images/presigned-url', {
         params: { key }
       });
-  
+
       setPreSignedImageUrl(response.data.url);
     } catch (error) {
       setError('Failed to load image.');
@@ -81,9 +84,86 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
     setSelectedIssue(issue);
   };
 
+  const getUserLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setLocation({ lat: latitude, lng: longitude });
+        },
+        (error) => {
+          console.error("Error obtaining location:", error.message);
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              alert("Location access was denied. Please enable it in your browser settings.");
+              break;
+            case error.POSITION_UNAVAILABLE:
+              alert("Location information is unavailable.");
+              break;
+            case error.TIMEOUT:
+              alert("The request to get your location timed out.");
+              break;
+            default:
+              alert("An unknown error occurred.");
+              break;
+          }
+        }
+      );
+    } else {
+      alert("Geolocation is not supported by your browser.");
+    }
+  };
+
+  const handleSearchArea = () => {
+    if (mapRef.current) {
+      const center = mapRef.current.getCenter();
+      const lat = center.lat();
+      const lng = center.lng();
+
+      const bounds = mapRef.current.getBounds();
+      const ne = bounds.getNorthEast();
+
+      const radius = computeRadius(lat, lng, ne.lat(), ne.lng());
+      fetchReports({ lat, lng }, radius);
+      // Update location to new center
+      setLocation({ lat, lng });
+    } else {
+      alert('Map is not ready yet.');
+    }
+  };
+
+  const computeRadius = (lat1, lng1, lat2, lng2) => {
+    const R = 6371; // Radius of the Earth in km
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLng = (lng2 - lng1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const d = R * c;
+    return d; // Distance in km
+  };
+
   return (
     <div className="google-map-container">
-      <GoogleMap mapContainerStyle={containerStyle} center={location || defaultCenter} zoom={13}>
+      {tab === 'nearby' && (
+        <div className="text-center mb-3">
+          <button className="btn btn-primary mx-1" onClick={getUserLocation}>
+            Use My Location
+          </button>
+          <button className="btn btn-primary mx-1" onClick={handleSearchArea}>
+            Search this area
+          </button>
+        </div>
+      )}
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={location || defaultCenter}
+        zoom={13}
+        onLoad={(map) => (mapRef.current = map)}
+        onUnmount={() => (mapRef.current = null)}
+      >
         {location && <Marker position={location} />}
         {reportMarkers && reportMarkers.map((issue) => {
           const markerColor = issueTypeColors[issue.issue_name] || 'gray';
@@ -123,8 +203,8 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
               <div className="info-window-text">
                 <div className="info-window-header">
                   <h5 className="info-window-id">Issue ID: {selectedIssue.issue_id}</h5>
-                  <button 
-                    onClick={() => setSelectedIssue(null)} 
+                  <button
+                    onClick={() => setSelectedIssue(null)}
                     className="info-window-close"
                   >
                     ×
@@ -138,9 +218,9 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
               {/* Image Content */}
               {preSignedImageUrl && (
                 <div className="info-window-image">
-                  <img 
-                    src={preSignedImageUrl} 
-                    alt="Issue" 
+                  <img
+                    src={preSignedImageUrl}
+                    alt="Issue"
                     className="info-window-img"
                   />
                 </div>
@@ -159,4 +239,8 @@ GoogleMapsIntegration.propTypes = {
   setLocation: PropTypes.func.isRequired,
   reportMarkers: PropTypes.array.isRequired,
   setReportMarkers: PropTypes.func.isRequired,
+  error: PropTypes.string,
+  setError: PropTypes.func.isRequired,
+  defaultCenter: PropTypes.object.isRequired,
+  tab: PropTypes.string.isRequired,
 };

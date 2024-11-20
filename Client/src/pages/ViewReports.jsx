@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
 import { isUserLoggedIn } from "../config/authConfig";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './pagesCss/ViewIssues.css';
+import GoogleMapsIntegration from '../components/GoogleMapsIntegration';
 
 const ViewIssues = () => {
   // Default center coordinates
@@ -15,14 +15,12 @@ const ViewIssues = () => {
   // State variables
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [tab, setTab] = useState('nearby'); // 'nearby', 'myReports', 'byId'
-  const [coordinates, setCoordinates] = useState(defaultCenter);
-  const [nearbyIssues, setNearbyIssues] = useState([]);
+  const [location, setLocation] = useState(defaultCenter);
+  const [reportMarkers, setReportMarkers] = useState([]);
   const [myIssues, setMyIssues] = useState([]);
   const [issueIdInput, setIssueIdInput] = useState('');
   const [issueById, setIssueById] = useState(null);
-  const [selectedIssue, setSelectedIssue] = useState(null);
   const [error, setError] = useState(null);
-  const mapRef = useRef(null); // Reference to the Google Map instance
 
   // Check if user is logged in
   useEffect(() => {
@@ -48,13 +46,6 @@ const ViewIssues = () => {
     return () => window.removeEventListener("resize", setMinHeight); // Cleanup on unmount
   }, []);
 
-  // Fetch nearby issues when coordinates are set
-  useEffect(() => {
-    if (coordinates) {
-      fetchNearbyIssuesAt(coordinates.lat, coordinates.lng, 10); // Default radius of 10 km
-    }
-  }, [coordinates]);
-
   // Fetch user's issues when tab is 'myReports' and user is logged in
   useEffect(() => {
     if (tab === 'myReports' && isLoggedIn) {
@@ -72,79 +63,6 @@ const ViewIssues = () => {
   }, [tab, isLoggedIn]);
 
   // Functions
-  const getUserLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setCoordinates({ lat: latitude, lng: longitude });
-        },
-        (error) => {
-          console.error("Error obtaining location:", error.message);
-          switch (error.code) {
-            case error.PERMISSION_DENIED:
-              alert("Location access was denied. Please enable it in your browser settings.");
-              break;
-            case error.POSITION_UNAVAILABLE:
-              alert("Location information is unavailable.");
-              break;
-            case error.TIMEOUT:
-              alert("The request to get your location timed out.");
-              break;
-            default:
-              alert("An unknown error occurred.");
-              break;
-          }
-        }
-      );
-    } else {
-      alert("Geolocation is not supported by your browser.");
-    }
-  };
-
-  const handleSearchArea = () => {
-    if (mapRef.current) {
-      const center = mapRef.current.getCenter();
-      const lat = center.lat();
-      const lng = center.lng();
-
-      const bounds = mapRef.current.getBounds();
-      const ne = bounds.getNorthEast();
-
-      const radius = computeRadius(lat, lng, ne.lat(), ne.lng());
-      fetchNearbyIssuesAt(lat, lng, radius);
-      // Update coordinates to new center
-      setCoordinates({ lat, lng });
-    } else {
-      alert('Map is not ready yet.');
-    }
-  };
-
-  const computeRadius = (lat1, lng1, lat2, lng2) => {
-    const R = 6371; // Radius of the Earth in km
-    const dLat = (lat2 - lat1) * (Math.PI / 180);
-    const dLng = (lng2 - lng1) * (Math.PI / 180);
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
-      Math.sin(dLng / 2) * Math.sin(dLng / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const d = R * c;
-    return d; // Distance in km
-  };
-
-  const fetchNearbyIssuesAt = async (lat, lng, radius) => {
-    try {
-      const response = await axios.get(
-        `/api/location/nearby?lat=${lat}&lng=${lng}&radius=${radius}`
-      );
-      setNearbyIssues(response.data);
-    } catch (error) {
-      console.error('Error fetching nearby issues:', error);
-      setError('Failed to fetch issues in the current area.');
-    }
-  };
-
   const handleIssueIdInputChange = (e) => {
     setIssueIdInput(e.target.value);
   };
@@ -164,53 +82,16 @@ const ViewIssues = () => {
   // Render functions
   const renderNearbyIssues = () => (
     <div>
-      <div className="text-center mb-3">
-        <button className="btn btn-primary mx-1" onClick={getUserLocation}>
-          Use My Location
-        </button>
-        <button className="btn btn-primary mx-1" onClick={handleSearchArea}>
-          Search this area
-        </button>
-      </div>
-      <GoogleMap
-        mapContainerStyle={{ height: '400px', width: '100%' }}
-        center={coordinates}
-        zoom={12}
-        onLoad={(map) => (mapRef.current = map)}
-        onUnmount={() => (mapRef.current = null)}
-      >
-        {nearbyIssues.map((issue) => {
-          const [lat, lng] = issue.gps_coords
-            ? issue.gps_coords.split(',').map(Number)
-            : [null, null];
-          if (lat && lng) {
-            return (
-              <Marker
-                key={issue.issue_id}
-                position={{ lat, lng }}
-                onClick={() => setSelectedIssue(issue)}
-              />
-            );
-          }
-          return null;
-        })}
-        {selectedIssue && (
-          <InfoWindow
-            position={{
-              lat: parseFloat(selectedIssue.gps_coords.split(',')[0]),
-              lng: parseFloat(selectedIssue.gps_coords.split(',')[1]),
-            }}
-            onCloseClick={() => setSelectedIssue(null)}
-          >
-            <div>
-              <h6>Issue ID: {selectedIssue.issue_id}</h6>
-              <p>Type: {selectedIssue.issue_name}</p>
-              <p>Description: {selectedIssue.description}</p>
-              <p>Status: {selectedIssue.status_name}</p>
-            </div>
-          </InfoWindow>
-        )}
-      </GoogleMap>
+      <GoogleMapsIntegration
+        location={location}
+        setLocation={setLocation}
+        reportMarkers={reportMarkers}
+        setReportMarkers={setReportMarkers}
+        error={error}
+        setError={setError}
+        defaultCenter={defaultCenter}
+        tab="nearby"
+      />
     </div>
   );
 
@@ -273,21 +154,18 @@ const ViewIssues = () => {
           <p className="text-center">Description: {issueById.description}</p>
           <p className="text-center">Status: {issueById.status_name}</p>
           {issueById.gps_coords && (
-            <GoogleMap
-              mapContainerStyle={{ height: '400px', width: '100%' }}
-              center={{
+            <GoogleMapsIntegration
+              location={{
                 lat: parseFloat(issueById.gps_coords.split(',')[0]),
                 lng: parseFloat(issueById.gps_coords.split(',')[1]),
               }}
-              zoom={15}
-            >
-              <Marker
-                position={{
-                  lat: parseFloat(issueById.gps_coords.split(',')[0]),
-                  lng: parseFloat(issueById.gps_coords.split(',')[1]),
-                }}
-              />
-            </GoogleMap>
+              setLocation={() => {}}
+              reportMarkers={[issueById]}
+              setReportMarkers={() => {}}
+              error={error}
+              setError={setError}
+              tab="byId"
+            />
           )}
         </div>
       )}
