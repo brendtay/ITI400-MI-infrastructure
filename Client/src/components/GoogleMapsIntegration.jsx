@@ -77,6 +77,7 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
   };
 
   const handleMarkerClick = (issue) => {
+    console.log('[DEBUG] Selected Marker Details:', issue);
     setSelectedIssue(issue);
   };
 
@@ -121,7 +122,7 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
               {/* Text Content */}
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <h5 style={{ margin: 0 }}>ID: {selectedIssue.issue_id}</h5>
+                  <h5 style={{ margin: 0 }}>Issue ID: {selectedIssue.issue_id}</h5>
                   <button 
                     onClick={() => setSelectedIssue(null)} 
                     style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem' }}
@@ -129,6 +130,7 @@ export default function GoogleMapsIntegration({ location, setLocation, reportMar
                     ×
                   </button>
                 </div>
+                <p><strong>Type:</strong> {selectedIssue.issue_name}</p>
                 <p><strong>Status:</strong> {selectedIssue.status_name}</p>
                 <p><strong>Description:</strong> {selectedIssue.description}</p>
               </div>
