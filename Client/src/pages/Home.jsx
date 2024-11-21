@@ -89,6 +89,7 @@ export default function Home() {
         defaultCenter={defaultCenter}
         error={error}
         setError={setError}
+        tab={tab}
       />
     </div>
   </div>
