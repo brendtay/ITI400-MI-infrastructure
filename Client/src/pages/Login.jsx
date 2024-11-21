@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { loginUser, registerUser } from "../config/authConfig";
 import "./pagesCss/Login.css";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
@@ -11,6 +11,22 @@ const Login = ({ onLogin }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+
+  // Dynamically set minimum height for responsiveness
+  useEffect(() => {
+    const setMinHeight = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--min-height", `${vh * 110}px`);
+    };
+
+    setMinHeight();
+    window.addEventListener("resize", setMinHeight);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", setMinHeight);
+    };
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,8 +49,8 @@ const Login = ({ onLogin }) => {
   };
 
   return (
-    <div className="d-flex align-items-center justify-content-center login-background" style={{ minHeight: "100vh" }}>
-      <div className="container p-4 border rounded" style={{ maxWidth: "400px" }}>
+    <div className="report-issue-container">
+      <div className="container p-4 border rounded" style={{ maxWidth: "500px" }}>
         {/* Logo */}
         <div className="text-center mb-4">
           <img
