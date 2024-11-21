@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { isUserLoggedIn } from "../config/authConfig";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './pagesCss/ViewIssues.css'; // Make sure this CSS file includes the necessary styles
+import './pagesCss/ViewIssues.css';
 import GoogleMapsIntegration from '../components/GoogleMapsIntegration';
-import logo from '../images/Mi-InfraLogo.png'; // Adjust the path based on your file structure
+import logo from '../images/Mi-InfraLogo.png';
 
 const ViewIssues = () => {
   // Default center coordinates
@@ -34,17 +34,6 @@ const ViewIssues = () => {
       setIsLoggedIn(loggedIn);
     };
     checkLogin();
-  }, []);
-
-  // Set minimum height
-  useEffect(() => {
-    const setMinHeight = () => {
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty("--min-height", `${vh * 110}px`);
-    };
-    setMinHeight(); // Set height on load
-    window.addEventListener("resize", setMinHeight);
-    return () => window.removeEventListener("resize", setMinHeight); // Cleanup on unmount
   }, []);
 
   // Fetch user's issues when tab is 'myReports' and user is logged in
@@ -124,7 +113,7 @@ const ViewIssues = () => {
 
   // Render functions
   const renderNearbyIssues = () => (
-    <div>
+    <div className="google-maps-container mb-3">
       <GoogleMapsIntegration
         location={location}
         setLocation={setLocation}
@@ -246,56 +235,54 @@ const ViewIssues = () => {
     </div>
   );
 
+
   // Main return
   return (
-    <div
-      className="d-flex align-items-center justify-content-center view-issues-container"
-      style={{ minHeight: '100vh' }}
-    >
-      <div className="container p-4 border rounded" style={{ maxWidth: '800px' }}>
-         {/* Logo */}
-         <div className="text-center mb-4">
-          <img
-            src={logo}
-            alt="MI-Infrastructure Logo"
-            style={{ maxWidth: "400px" }}
-          />
+    <div className="report-issue-container">
+        <div className="container p-4 border rounded" style={{ maxWidth: '800px' }}>
+            {/* Logo */}
+            <div className="text-center mb-4">
+                <img
+                    src={logo}
+                    alt="MI-Infrastructure Logo"
+                    style={{ maxWidth: '400px' }}
+                />
+            </div>
+            <h2 className="text-center mb-4">View Reported Issues</h2>
+            {error && <p className="text-danger text-center">{error}</p>}
+            {!isLoggedIn && (
+                <div className="alert alert-warning text-center mb-4">
+                    <p>
+                        You are not logged in. <a href="/login">Log in</a> to access all features.
+                    </p>
+                </div>
+            )}
+            <div className="mb-4 text-center">
+                <button
+                    className={`btn btn-outline-primary mx-1 ${tab === 'nearby' ? 'active' : ''}`}
+                    onClick={() => setTab('nearby')}
+                >
+                    View Nearby Issues
+                </button>
+                <button
+                    className={`btn btn-outline-primary mx-1 ${tab === 'myReports' ? 'active' : ''}`}
+                    onClick={() => setTab('myReports')}
+                >
+                    View My Reports
+                </button>
+                <button
+                    className={`btn btn-outline-primary mx-1 ${tab === 'byId' ? 'active' : ''}`}
+                    onClick={() => setTab('byId')}
+                >
+                    Look Up Issue by ID
+                </button>
+            </div>
+            {tab === 'nearby' && renderNearbyIssues()}
+            {tab === 'myReports' && renderMyIssues()}
+            {tab === 'byId' && renderIssueById()}
         </div>
-        <h2 className="text-center mb-4">View Reported Issues</h2>
-        {error && <p className="text-danger text-center">{error}</p>}
-        {!isLoggedIn && (
-          <div className="alert alert-warning text-center mb-4">
-            <p>
-              You are not logged in. <a href="/login">Log in</a> to access all features.
-            </p>
-          </div>
-        )}
-        <div className="mb-4 text-center">
-          <button
-            className={`btn btn-outline-primary mx-1 ${tab === 'nearby' ? 'active' : ''}`}
-            onClick={() => setTab('nearby')}
-          >
-            View Nearby Issues
-          </button>
-          <button
-            className={`btn btn-outline-primary mx-1 ${tab === 'myReports' ? 'active' : ''}`}
-            onClick={() => setTab('myReports')}
-          >
-            View My Reports
-          </button>
-          <button
-            className={`btn btn-outline-primary mx-1 ${tab === 'byId' ? 'active' : ''}`}
-            onClick={() => setTab('byId')}
-          >
-            Look Up Issue by ID
-          </button>
-        </div>
-        {tab === 'nearby' && renderNearbyIssues()}
-        {tab === 'myReports' && renderMyIssues()}
-        {tab === 'byId' && renderIssueById()}
-      </div>
     </div>
-  );
-};
+);
+}
 
 export default ViewIssues;

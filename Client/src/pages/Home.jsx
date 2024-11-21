@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './pagesCss/Home.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from '../components/Navbar';
-
+import { Link } from 'react-router-dom';
 import HowItWorks from '../components/HowItWorksComponent';
 import GoogleMapsIntegration from "../components/GoogleMapsIntegration";
 import SearchBar from '../components/SearchBar';
@@ -25,19 +25,19 @@ export default function Home() {
   return (
     <div>
       {/* Main Content */}
-      <div className="custom-card-container Scontent-container mt-5  " >
+      <div className="Scontent-container mt-5  " >
         {/* Welcome Section */}
         <div className="row justify-content-center mt-4">
           <div className="col-auto text-center">
             {/* Logo */}
             <img 
-              src={logo} 
-              alt="MI-Infrastructure Logo" 
-              style={{ maxWidth: '600px', marginBottom: '20px' }} 
-            />
-            <h1><b>Welcome to MI-Infrastructure</b></h1>
+  src={logo} 
+  alt="MI-Infrastructure Logo" 
+  style={{ maxWidth: '60%', height: 'auto', marginBottom: '30px', marginTop: '30px' }} 
+/>
+           
             <p className="mt-3 mb-3">
-              <b>Report infrastructure issues like potholes, broken sidewalks, or streetlights with ease.</b>
+              <h3>Report infrastructure issues like potholes, broken sidewalks, or streetlights with ease.</h3>
             </p>
             
           </div>
@@ -53,14 +53,14 @@ export default function Home() {
       
     </h4>
   </div>
-  <div className="button-container d-flex flex-column flex-md-row justify-content-center">
-    <button className="btn btn-primary btn-lg mx-2 mb-2 mb-md-0" onClick={() => navigate('/form')}>
-      Report An Issue Now
-    </button>
-    <button className="btn btn-secondary btn-lg mx-2" onClick={() => navigate('/viewreports')}>
-      Check In On A Report
-    </button>
-  </div>
+  <div className="mb-3 button-container">
+  <Link to="/form" className="action-button action-button-primary">
+    Report an Issue Now
+  </Link>
+  <Link to="/viewreports" className="action-button action-button-secondary">
+    Check on a Report
+  </Link>
+</div>
 </div>
 
         {/* How It Works Section */}
@@ -69,18 +69,19 @@ export default function Home() {
 </div>
 {/* Google Maps and Search Bar Section */}
 <div className="custom-card-container mt-4">
-  <div className="card-body">
-    <h5 className="card-title text-center"><b>View Nearby Issues</b></h5>
-
+  <h5 className="card-title text-center"><b>Search Nearby Issues</b></h5>
+  <div className="d-flex flex-wrap align-items-start justify-content-between">
     {/* Search Bar */}
-    <SearchBar
-      address={address}
-      setAddress={setAddress}
-      setLocation={setLocation}
-    />
-
+    <div className="search-bar-container me-4" style={{ flex: '1' }}>
+      <SearchBar
+        address={address}
+        setAddress={setAddress}
+        setLocation={setLocation}
+      />
+    </div>
+    
     {/* Google Maps */}
-    <div className="google-map-container mt-4">
+    <div className="google-map-container" style={{ flex: '2', height:"300px" }}>
       <GoogleMapsIntegration
         location={location}
         setLocation={setLocation}
@@ -94,6 +95,8 @@ export default function Home() {
     </div>
   </div>
 </div>
+
+
 
         
       </div>

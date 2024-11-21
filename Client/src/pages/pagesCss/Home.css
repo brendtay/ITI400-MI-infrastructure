@@ -1,163 +1,221 @@
-/* Container adjustments for smaller screens */
+/* General Container Styling */
 .container {
   max-width: 100%;
   padding: 1rem;
-}
-
-.row {
-  margin: 0;
-}
-
-
-
-/* Text container above images */
-.text-container {
-  font-size: 1.2rem; /* Base font size */
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-/* Google Map and SearchBar adjustments */
-.google-map-container {
-  width: 100%;
-  height: 450px; /* Default height for larger screens */
-  margin-bottom: 1rem;
-  overflow: hidden; /* Prevent overflow */
-  border-radius: 8px; /* Optional: Adds rounded corners */
-}
-
-/* Search Bar container */
-.search-bar-container {
-  width: 100%;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  /* Adjust Google Map container height on smaller screens */
-  .google-map-container {
-    height: 300px;
-  }
-
-  /* Reduce font size of text above images for tablets */
-  .text-container {
-    font-size: 1rem;
-  }
-
-  /* Adjust flex directions for narrow screens */
-  .d-flex {
-    flex-direction: column;
-  }
-
-  /* Increase padding on smaller screens for better readability */
-  .container {
-    padding: 0.5rem;
-  }
-
-  /* Reduce padding in cards for smaller screens */
-  .card-body {
-    padding: 0.75rem;
-  }
-}
-
-@media (max-width: 576px) {
-  /* Further reduce Google Map container height for mobile */
-  .google-map-container {
-    height: 250px;
-  }
-
-  /* Further reduce font size of text above images for mobile */
-  .text-container {
-    font-size: 0.9rem;
-  }
-
-  /* Adjust card margins for small screens */
-  .card {
-    margin: 10px;
-  }
+  margin: 0 auto;
 }
 
 .content-container {
-  max-width: 1100px; /* Adjust the width as needed */
-  margin: 0 auto; /* Centers the container */
-  padding: 0 1rem; /* Adds some padding on smaller screens */
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem;
 }
 
-@media (min-width: 768px) {
-  /* Add more padding for larger screens */
-  .content-container {
-    padding: 0 2rem;
-  }
+/* Custom Card Container */
+.custom-card-container {
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 1rem auto;
+  max-width: 1200px;
 }
 
-/* Background image container spacing adjustments */
-.background-image {
-  margin-bottom: 2rem; /* Adds spacing between background and content */
+/* Google Maps and Search Bar Section */
+.google-map-container {
+  height: 300px;
+  flex-grow: 2; /* Take more space */
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-/* Card Title adjustments for alignment and size */
+.search-bar-container {
+  flex-grow: 1; /* Take less space */
+  max-width: 300px;
+}
+
+/* Typography */
 .card-title {
   text-align: center;
   font-weight: bold;
   margin-bottom: 1rem;
-  font-size: 1.5rem; /* Adjust font size for card titles */
-}
-/* Shared container styles for new sections */
-/* Shared container styles for new sections and Google Maps card */
-.custom-card-container {
-  background-color: #fff; /* White background */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Card-like shadow */
-  border-radius: 8px; /* Rounded corners */
-  padding: 20px; /* Padding for spacing */
-  margin: 1rem auto; /* Center and space out the card */
-  max-width: 1200px; /* Restrict width */
+  font-size: 1.5rem;
 }
 
-.card-body {
-  padding: 0; /* Reset padding if nested */
-  border: none; /* Ensure no additional borders */
-  box-shadow: none; /* Remove unnecessary shadow */
+h1, h2, h3, h4, h5 {
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+/* Responsive Typography */
+h1, 
+h3 {
+  font-size: clamp(1rem, 2.5vw, 1.5rem); /* Scale with screen size */
+  line-height: 1.5;
 }
 
 
-/* Responsive adjustments */
+.action-button {
+  max-width: 300px; /* Consistent maximum width */
+  width: 100%; /* Ensures responsiveness */
+  padding: 10px 15px; /* Consistent padding */
+  font-size: 1rem; /* Adjust text size */
+  text-align: center; /* Center-align text */
+  margin: 10px auto; /* Center the button and add spacing */
+}
+
+.action-button-primary {
+  background-color: #007bff; /* Primary color for action */
+  color: #fff; /* White text */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Rounded corners */
+}
+
+.action-button-secondary {
+  background-color: #6c757d; /* Secondary color */
+  color: #fff; /* White text */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Rounded corners */
+}
+
+.action-button:hover {
+  opacity: 0.9; /* Subtle hover effect */
+}
+
+.button-container {
+  display: flex;
+  justify-content: center; /* Center buttons horizontally */
+  gap: 2px; /* Spacing between buttons */
+}
+
 @media (max-width: 768px) {
-  .custom-card-container {
-    padding: 15px; /* Reduce padding for smaller screens */
+  .button-container {
+    flex-direction: column; /* Stack buttons vertically */
+    align-items: center; /* Center buttons horizontally */
+    gap: 15px; /* Increase spacing between buttons */
   }
 }
-
-@media (max-width: 576px) {
-  .custom-card-container {
-    padding: 10px; /* Further reduce padding for mobile screens */
-  }
+.button-container {
+  display: flex;
+  justify-content: center; /* Center buttons in the container */
+  gap: 0; /* Remove any gap between buttons */
 }
 
-/* Responsive typography for large text */
-.custom-card-container h1, 
-.custom-card-container h3 {
-  font-size: 2vw; /* Scales with viewport width */
+.button-container .action-button {
+  flex: 1 1 auto; /* Allow buttons to resize equally */
+  margin: 0 5px; /* Add minimal space between buttons */
 }
 
 @media (max-width: 768px) {
-  .custom-card-container h1 {
-    font-size: 1.5rem; /* Fall back for tablets */
+  .button-container {
+    flex-direction: column; /* Stack buttons vertically */
+    gap: 15px; /* Add spacing for stacked buttons */
+    align-items: center; /* Center buttons horizontally */
   }
-  .custom-card-container h3 {
-    font-size: 1rem; /* Fall back for tablets */
+
+  .button-container .action-button {
+    margin: 0; /* Remove horizontal margin for stacked buttons */
+    width: 100%; /* Ensure buttons span the full width in a column */
+  }
+}
+/* Responsive Design for Buttons Above the Map */
+@media (max-width: 768px) {
+  .d-flex.flex-wrap.align-items-start.justify-content-between {
+    flex-direction: column; /* Stack the elements vertically */
+    align-items: center; /* Center-align all elements */
+  }
+
+  .search-bar-container {
+    margin-bottom: 20px; /* Add space below the search bar */
+    max-width: 90%; /* Adjust the width for smaller screens */
+  }
+
+  .google-map-container {
+    width: 100%; /* Full width on smaller screens */
+    height: 300px; /* Ensure height remains defined */
+    margin-top: 20px; /* Add spacing between buttons and the map */
+  }
+
+  .button-container {
+    flex-direction: column; /* Stack buttons vertically */
+    gap: 15px; /* Add spacing between buttons */
+    width: 100%; /* Full width for better responsiveness */
+  }
+
+  .button-container .action-button {
+    margin: 0; /* Remove horizontal margins */
+    width: 90%; /* Make the buttons span most of the screen width */
+    text-align: center; /* Center-align the button text */
+  }
+}
+@media (max-width: 768px) {
+  .d-flex.flex-wrap.align-items-start.justify-content-between {
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center; /* Center all elements */
+    text-align: center; /* Center-align text in the container */
+  }
+
+  .button-container {
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    align-items: center; /* Center buttons */
+    justify-content: center; /* Align buttons in the center */
+    gap: 15px; /* Add spacing between buttons */
+    width: 100%; /* Full width for the container */
+    margin-bottom: 20px; /* Add space below the buttons */
+  }
+
+  .button-container .action-button {
+    width: 80%; /* Make buttons responsive */
+    max-width: 300px; /* Limit maximum width */
+    margin: 0 auto; /* Center the buttons */
+  }
+
+  .google-map-container {
+    width: 100%; /* Full width for the map */
+    height: 300px; /* Maintain map height */
+    margin-top: 20px; /* Add spacing between buttons and map */
   }
 }
 
-@media (max-width: 576px) {
-  .custom-card-container h1 {
-    font-size: 1.2rem; /* Smaller font size for mobile screens */
+@media (max-width: 768px) {
+  /* Adjust the container layout */
+  .d-flex.flex-wrap.align-items-start.justify-content-between {
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center; /* Center all elements horizontally */
+    text-align: center; /* Center-align text in the container */
+    gap: 15px; /* Add spacing between elements */
   }
-  .custom-card-container h3 {
-    font-size: 0.9rem; /* Smaller font size for mobile screens */
-  }
-}
 
-.custom-card-container h3 {
-  font-size: clamp(1rem, 2.5vw, 1.5rem); /* Minimum 1rem, scales with 2.5% of viewport width, max 1.5rem */
-  line-height: 1.5; /* Adjust line height for readability */
-  margin-bottom: 1
+  /* Center search bar */
+  .search-bar-container {
+    width: 90%; /* Adjust width for smaller screens */
+    max-width: 500px; /* Limit maximum width */
+    margin: 0 auto 15px; /* Center horizontally and add spacing below */
+    text-align: center; /* Center-align the text in the search bar */
+  }
+
+  /* Buttons adjustments */
+  .button-container {
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    align-items: center; /* Center buttons horizontally */
+    justify-content: center; /* Align buttons in the center */
+    gap: 15px; /* Add spacing between buttons */
+    width: 100%; /* Full width for the container */
+    margin-bottom: 15px; /* Add space below the buttons */
+  }
+
+  .button-container .action-button {
+    width: 80%; /* Make buttons responsive */
+    max-width: 300px; /* Limit maximum width */
+    margin: 0 auto; /* Center the buttons */
+  }
+
+  /* Map adjustments */
+  .google-map-container {
+    width: 100%; /* Full width for the map */
+    height: 300px; /* Maintain map height */
+    margin-top: 20px; /* Add spacing between buttons and map */
+  }
 }

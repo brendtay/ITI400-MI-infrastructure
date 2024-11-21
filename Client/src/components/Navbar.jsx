@@ -64,16 +64,18 @@ const Navbar = () => {
         <div className="collapse navbar-collapse" id="navbarNav">
           {/* Left-Aligned Links */}
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <li className="nav-item">
-              <Link className="nav-link p-1" aria-current="page" to="/form">Report An Issue</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link p-1" to="/viewreports">View Reports</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link p-1" to="/about">About Us</Link>
-            </li>
-          </ul>
+  <li className="nav-item">
+    <Link className="nav-link p-1" aria-current="page" to="/form">Report An Issue</Link>
+  </li>
+  <span className="text-light mx-2">|</span> {/* Separator */}
+  <li className="nav-item">
+    <Link className="nav-link p-1" to="/viewreports">View Reports</Link>
+  </li>
+  <span className="text-light mx-2">|</span> {/* Separator */}
+  <li className="nav-item">
+    <Link className="nav-link p-1" to="/about">About Us</Link>
+  </li>
+</ul>
   
           {/* Right-Aligned User Login/Logout Section */}
           <ul className="navbar-nav ms-auto">

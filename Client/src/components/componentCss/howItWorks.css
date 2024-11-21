@@ -52,15 +52,11 @@ h3 {
 /* Larger screens (min-width: 1200px) - More controlled scaling */
 @media (min-width: 1200px) {
     .text-above-image {
-        font-size: clamp(1.5rem, 1.5vw + 1rem, 2rem); /* Moderate scaling with an upper limit */
+        font-size: clamp(1.2rem, 1.5vw + 1rem, 2rem); /* Moderate scaling with an upper limit */
     }
 }
 
-/* Image Styles */
-img {
-    width: 100%; /* Full width by default to make images responsive */
-    height: auto; /* Maintains aspect ratio */
-}
+
 
 /* Smaller images on screens less than 768px */
 @media (max-width: 768px) {
@@ -69,4 +65,20 @@ img {
         margin: 0 auto; /* Center-align the images */
         display: block;
     }
+}
+.carousel-control-prev,
+.carousel-control-next {
+  z-index: 2;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: black; /* Make the arrows black */
+  border-radius: 50%; /* Optional: Add rounded appearance for better visibility */
+}
+
+.text-below-image {
+  margin-top: 10px;
+  font-size: 1.1rem;
+  font-weight: bold;
 }

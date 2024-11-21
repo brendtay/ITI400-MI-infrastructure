@@ -27,16 +27,9 @@ html, body {
 }
 
 body {
-  background-color: #ebf0ffd8; /* Replace with your desired color */
+  background-color: #f0eeeed8; /* Replace with your desired color */
   margin: 0; /* Remove default body margin */
   padding: 0; /* Remove default body padding */
   font-family: Arial, sans-serif; /* Optional: set a font for consistency */
-}
-.card, .white-card {
-  background-color: #ffffff; /* White background */
-  border: 1px solid #e0e0e0; /* Optional: Light border */
-  border-radius: 8px; /* Optional: Rounded corners */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add shadow */
-  padding: 20px; /* Optional: Add padding */
 }
 

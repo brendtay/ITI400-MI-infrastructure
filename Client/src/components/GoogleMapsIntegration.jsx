@@ -166,6 +166,11 @@ export default function GoogleMapsIntegration({
           </button>
         </div>
       )}
+      <div className="google-map-container">
+   
+
+
+  
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={location || defaultCenter}
@@ -238,6 +243,7 @@ export default function GoogleMapsIntegration({
         )}
       </GoogleMap>
       {error && <p className="text-danger text-center mt-3">{error}</p>}
+    </div>
     </div>
   );
 }

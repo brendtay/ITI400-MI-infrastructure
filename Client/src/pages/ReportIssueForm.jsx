@@ -166,43 +166,46 @@ const ReportIssueForm = () => {
   };
 
   return (
-    <div className="d-flex align-items-center justify-content-center report-issue-container" style={{ minHeight: "100vh" }}>
-      <div className="container p-4 border rounded" style={{ maxWidth: "600px" }}>
-         {/* Logo */}
-         <div className="text-center mb-4">
-          <img
-            src={logo}
-            alt="MI-Infrastructure Logo"
-            style={{ maxWidth: "400px" }}
-          />
-        </div>
-        {!isLoggedIn && (
-          <div className="alert alert-warning text-center mb-4">
-            <p>You are not logged in. <a href="/login">Log in</a> to track your reports or <strong>continue as a guest</strong>.</p>
-          </div>
-        )}
-        <form onSubmit={handleSubmit}>
-          {/* Issue Type Dropdown */}
-          <div className="mb-3">
-            <label htmlFor="issueType" className="form-label">Issue Type</label>
-            <select
-              id="issueType"
-              className="form-select"
-              value={issueType}
-              onChange={(e) => setIssueType(e.target.value)}
-              required
-            >
-              <option value="">Select Issue</option>
-              {issueTypes.map((type) => (
-                <option key={type.issue_id} value={type.issue_id}>
-                  {type.issue_name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <h2 className="text-center mb-4">Report an Issue</h2>
-            {error && <p className="text-danger">{error}</p>} 
-            {success && <p className="text-success">{success}</p>}
+    <div className="d-flex align-items-center justify-content-center report-issue-container">
+  <div className="container">
+    <div className="text-center mb-4">
+      <img
+        src={logo}
+        alt="MI-Infrastructure Logo"
+        style={{
+          maxWidth: '60%',
+          height: 'auto',
+          marginBottom: '30px',
+          marginTop: '30px',
+        }}
+      />
+    </div>
+    {!isLoggedIn && (
+      <div className="alert alert-warning text-center mb-4">
+        <p>
+          You are not logged in. <a href="/login">Log in</a> to track your reports or <strong>continue as a guest</strong>.
+        </p>
+      </div>
+    )}
+    <form onSubmit={handleSubmit} className="w-100">
+      {/* Issue Type Dropdown */}
+      <div className="mb-3">
+        <label htmlFor="issueType" className="form-label">Issue Type</label>
+        <select
+          id="issueType"
+          className="form-select uniform-width"
+          value={issueType}
+          onChange={(e) => setIssueType(e.target.value)}
+          required
+        >
+          <option value="">Select Issue</option>
+          {issueTypes.map((type) => (
+            <option key={type.issue_id} value={type.issue_id}>
+              {type.issue_name}
+            </option>
+          ))}
+        </select>
+      </div>
 
           {/* Description */}
           <div className="mb-3">
@@ -217,31 +220,30 @@ const ReportIssueForm = () => {
             ></textarea>
           </div>
 
-          {/* Location Section */}
-          <div className="mb-3">
-            <label htmlFor="location" className="form-label">Location</label>
-            <Autocomplete
-              onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
-              onPlaceChanged={onPlaceSelected}
-            >
-              <input
-                type="text"
-                id="location"
-                className="form-control"
-                value={location}
-                onChange={handleLocationChange}
-                placeholder="Enter address"
-              />
-            </Autocomplete>
-          </div>
-          <div className="text-center my-3">
-            <strong>or</strong>
-          </div>
-          <div className="mb-5">
-            <button type="button" className="btn btn-outline-secondary w-100" onClick={useDeviceLocation}>
-              Use My Current Location
-            </button>
-          </div>
+           {/* Location */}
+      <div className="mb-3">
+        <label htmlFor="location" className="form-label">Location</label>
+        <Autocomplete
+          onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
+          onPlaceChanged={onPlaceSelected}
+        >
+          <input
+            type="text"
+            id="location"
+            className="form-control uniform-width"
+            value={location}
+            onChange={handleLocationChange}
+            placeholder="Enter address"
+          />
+        </Autocomplete>
+      </div>
+ {/* Buttons */}
+ <div className="mb-5 centered-button">
+  <button type="button" className="btn btn-outline-secondary" onClick={useDeviceLocation}>
+    Use My Current Location
+  </button>
+</div>
+
 
           {/* Map */}
           <GoogleMap
@@ -253,17 +255,17 @@ const ReportIssueForm = () => {
           </GoogleMap>
 
           {/* Photo Upload */}
-          <div className="mb-4 mt-3">
-            <label htmlFor="photo" className="form-label">Upload Photo</label>
-            <input
-              type="file"
-              id="photo"
-              className="form-control"
-              onChange={handlePhotoChange}
-              accept="image/*"
-              ref={fileInputRef}
-            />
-          </div>
+<div className="mb-4 mt-3 ustify-content-center">
+  <label htmlFor="photo" className="form-label">Upload Photo</label>
+  <input
+    type="file"
+    id="photo"
+    className="form-control uniform-width"
+    onChange={handlePhotoChange}
+    accept="image/*"
+    ref={fileInputRef}
+  />
+</div>
 
           {/* reCAPTCHA */}
           <div className="mb-3 d-flex justify-content-center">
@@ -274,7 +276,7 @@ const ReportIssueForm = () => {
           </div>
 
           {/* Submit Button */}
-          <button type="submit" className="btn btn-primary w-100 mt-2">Submit</button>
+          <button type="submit" className="btn btn-primary w-100 mt-2  d-flex justify-content-center">Submit</button>
         </form>
       </div>
     </div>

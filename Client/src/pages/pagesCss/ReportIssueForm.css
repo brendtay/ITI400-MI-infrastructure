@@ -1,12 +1,13 @@
 /* Base style using dynamic min-height */
 .report-issue-container {
-  min-height: var(--min-height, 120vh); /* Uses JS variable or defaults to 110vh */
+  min-height: var(--min-height, 100vh); /* Uses JS variable or defaults to 110vh */
   display: flex;
   align-items: center;
   justify-content: center;
   padding-top: 100px;
   padding-left: 10px;
   padding-right: 10px;
+  padding-bottom: 40px;
 }
 
 /* Specific adjustments for each screen size, applied as fallbacks */
@@ -75,3 +76,89 @@
   padding: 20px; /* Padding inside the container */
 }
 
+/* Restrict max-width for buttons */
+.btn {
+  max-width: 300px;
+  width: 100%; /* Ensure responsiveness */
+  margin: 0 auto; /* Center the button horizontally */
+}
+
+/* Specific media query adjustments, if needed */
+@media (max-width: 576px) {
+  .btn {
+    max-width: 250px; /* Slightly reduce width for smaller screens */
+  }
+}
+
+/* Center everything inside the report issue container */
+.report-issue-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+  padding: 20px;
+}
+
+/* Center the form content */
+.container {
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  align-items: center; /* Center items horizontally */
+  justify-content: center; /* Center items vertically */
+  background-color: #ffffff; /* Set the background color */
+  border: 1px solid #e0e0e0; /* Optional: Light border for better visibility */
+  border-radius: 8px; /* Optional: Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Subtle shadow */
+  max-width: 800px;
+  padding: 20px;
+}
+
+/* Ensure uniform width for form fields */
+.uniform-width {
+  max-width: 300px; /* Set a consistent max width */
+  width: 100%; /* Ensure responsiveness */
+  margin: 10px auto; /* Center horizontally with spacing */
+}
+
+/* Center buttons with consistent width */
+.btn {
+  max-width: 300px; /* Restrict maximum width */
+  width: 100%; /* Ensure responsiveness */
+  margin: 10px auto; /* Add spacing and center horizontally */
+}
+
+/* reCAPTCHA centering */
+.recaptcha-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 15px; /* Optional spacing above */
+}
+
+/* Center buttons including "Use My Current Location" */
+.centered-button {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  width: 100%; /* Ensure it spans the full width of its container */
+  margin: 0 auto; /* Center-align the button block */
+}
+
+.centered-button .btn {
+  max-width: 300px; /* Restrict button width */
+  width: 100%; /* Ensure responsiveness */
+}
+
+/* Center the labels within their containers */
+.form-label {
+  text-align: center;
+  display: block; /* Ensure labels behave as block elements */
+  width: 100%; /* Make them span the full width of their container */
+  margin-bottom: 5px; /* Add spacing below the labels */
+  font-weight: bold; /* Optional: Make the text bold for better visibility */
+}
+
+/* Ensure consistency in alignment for inputs */
+.uniform-width {
+  margin-top: 10px; /* Add spacing between labels and inputs */
+}
