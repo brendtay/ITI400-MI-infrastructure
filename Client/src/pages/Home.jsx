@@ -81,7 +81,7 @@ export default function Home() {
     </div>
     
     {/* Google Maps */}
-    <div className="google-map-container" style={{ flex: '2', height:"300px" }}>
+    <div className="google-map-container" style={{ flex: '2' }}>
       <GoogleMapsIntegration
         location={location}
         setLocation={setLocation}

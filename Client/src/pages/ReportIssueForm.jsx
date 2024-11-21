@@ -237,12 +237,12 @@ const ReportIssueForm = () => {
           />
         </Autocomplete>
       </div>
- {/* Buttons */}
- <div className="mb-5 centered-button">
-  <button type="button" className="btn btn-outline-secondary" onClick={useDeviceLocation}>
-    Use My Current Location
-  </button>
-</div>
+          {/* Buttons */}
+          <div className="mb-5 centered-button">
+            <button type="button" className="btn btn-outline-secondary" onClick={useDeviceLocation}>
+              Use My Current Location
+            </button>
+          </div>
 
 
           {/* Map */}
@@ -255,17 +255,17 @@ const ReportIssueForm = () => {
           </GoogleMap>
 
           {/* Photo Upload */}
-<div className="mb-4 mt-3 ustify-content-center">
-  <label htmlFor="photo" className="form-label">Upload Photo</label>
-  <input
-    type="file"
-    id="photo"
-    className="form-control uniform-width"
-    onChange={handlePhotoChange}
-    accept="image/*"
-    ref={fileInputRef}
-  />
-</div>
+        <div className="mb-4 mt-3 ustify-content-center">
+          <label htmlFor="photo" className="form-label">Upload Photo</label>
+          <input
+            type="file"
+            id="photo"
+            className="form-control uniform-width"
+            onChange={handlePhotoChange}
+            accept="image/*"
+            ref={fileInputRef}
+          />
+        </div>
 
           {/* reCAPTCHA */}
           <div className="mb-3 d-flex justify-content-center">
