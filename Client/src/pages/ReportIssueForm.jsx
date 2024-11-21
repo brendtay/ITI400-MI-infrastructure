@@ -22,6 +22,7 @@ const ReportIssueForm = () => {
   const [success, setSuccess] = useState(null);
   const [captchaToken, setCaptchaToken] = useState(null);
   const autocompleteRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     const checkLogin = async () => {
@@ -111,6 +112,11 @@ const ReportIssueForm = () => {
       setPhoto(null);
       setCoordinates(null);
       setCaptchaToken(null);
+
+      // Reset file input field
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     } catch (err) {
       console.error("Error reporting issue:", err);
       setError(err.response?.data?.error || "An error occurred. Please try again.");
@@ -175,9 +181,6 @@ const ReportIssueForm = () => {
             <p>You are not logged in. <a href="/login">Log in</a> to track your reports or <strong>continue as a guest</strong>.</p>
           </div>
         )}
-        <h2 className="text-center mb-4">Report an Issue</h2>
-        {error && <p className="text-danger">{error}</p>}
-        {success && <p className="text-success">{success}</p>}
         <form onSubmit={handleSubmit}>
           {/* Issue Type Dropdown */}
           <div className="mb-3">
@@ -197,6 +200,9 @@ const ReportIssueForm = () => {
               ))}
             </select>
           </div>
+          <h2 className="text-center mb-4">Report an Issue</h2>
+            {error && <p className="text-danger">{error}</p>} 
+            {success && <p className="text-success">{success}</p>}
 
           {/* Description */}
           <div className="mb-3">
@@ -255,6 +261,7 @@ const ReportIssueForm = () => {
               className="form-control"
               onChange={handlePhotoChange}
               accept="image/*"
+              ref={fileInputRef}
             />
           </div>
 
