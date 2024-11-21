@@ -75,7 +75,15 @@ export default function GoogleMapsIntegration({
 
       setPreSignedImageUrl(response.data.url);
     } catch (error) {
-      setError('Failed to load image.');
+      if (error.response && error.response.status === 401) {
+        setError(
+          <span>
+            Login to view images. <Link to="/login">Click here to login.</Link>
+          </span>
+        );
+      } else {
+        setError('Failed to load image.');
+      }
     }
   };
 
