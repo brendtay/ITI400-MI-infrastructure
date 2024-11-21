@@ -4,6 +4,7 @@ import './pagesCss/ReportIssueForm.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { GoogleMap, Marker, Autocomplete } from '@react-google-maps/api';
 import ReCAPTCHA from 'react-google-recaptcha';
+import { isUserLoggedIn } from "../config/authConfig";
 import logo from '../images/Mi-InfraLogo.png'; // Adjust the path based on your file structure
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -23,17 +24,15 @@ const ReportIssueForm = () => {
   const autocompleteRef = useRef(null);
 
   useEffect(() => {
-    // Check if the user is logged in
-    const checkLoginStatus = async () => {
-      try {
-        const response = await axios.get('/api/check-login', { withCredentials: true });
-        setIsLoggedIn(response.data.status === 'logged_in');
-      } catch (err) {
-        console.error("Error checking login status:", err);
+    const checkLogin = async () => {
+      const loggedIn = await isUserLoggedIn();
+      if (!loggedIn) {
+        alert("You must log in to use this feature.");
+        window.location.href = "/login";
       }
+      setIsLoggedIn(loggedIn);
     };
-
-    checkLoginStatus();
+    checkLogin();
 
     const setMinHeight = () => {
       const vh = window.innerHeight * 0.01;
