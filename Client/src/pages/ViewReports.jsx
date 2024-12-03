@@ -16,6 +16,7 @@ const ViewIssues = () => {
   // State variables
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [location, setLocation] = useState(defaultCenter);
+  const [tab, setTab] = useState('nearby');
   const [reportMarkers, setReportMarkers] = useState([]);
   const [myIssues, setMyIssues] = useState([]);
   const [issueIdInput, setIssueIdInput] = useState('');
@@ -37,7 +38,7 @@ const ViewIssues = () => {
 
   // Fetch nearby issues
   useEffect(() => {
-    if (location) {
+    if (tab === 'nearby' && location) {
       const fetchNearbyIssues = async () => {
         try {
           const response = await axios.get('/api/location/nearby', {
@@ -64,7 +65,7 @@ const ViewIssues = () => {
 
       fetchNearbyIssues();
     }
-  }, [location]);
+  }, [tab, location]);
 
   // Functions
   const handleIssueIdInputChange = (e) => {
