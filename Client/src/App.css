@@ -33,3 +33,22 @@ body {
   font-family: Arial, sans-serif; /* Optional: set a font for consistency */
 }
 
+body {
+  /* Solid base color or gradient */
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.952), rgba(213, 223, 248, 0.89)), 
+  url('../src/images/noise-texture.png');
+
+
+  
+ 
+  
+  /* Texture settings */
+  background-size: cover; /* Make the texture fill the viewport */
+  background-repeat: no-repeat; /* Avoid repetition of the texture */
+  background-position: center; /* Center the texture */
+}
+
+
+
+
+

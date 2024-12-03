@@ -36,42 +36,36 @@ const ViewIssues = () => {
     checkLogin();
   }, []);
 
-  // Fetch user's issues when tab is 'myReports' and user is logged in
+  // Fetch nearby issues when tab is 'nearby'
   useEffect(() => {
-    if (tab === 'myReports' && isLoggedIn) {
-      const fetchMyIssues = async () => {
+    if (tab === 'nearby' && location) {
+      const fetchNearbyIssues = async () => {
         try {
-          const response = await axios.get('/api/issues/user', { withCredentials: true });
-          const issues = response.data;
+          const response = await axios.get('/api/location/nearby', {
+            params: {
+              lat: location.lat,
+              lng: location.lng,
+              radius: 10,
+            },
+          });
 
-          // For each issue, fetch the pre-signed URL if image_url exists
-          const issuesWithImages = await Promise.all(
-            issues.map(async (issue) => {
-              if (issue.image_url) {
-                try {
-                  const key = issue.image_url.split('/').pop();
-                  const presignedResponse = await axios.get('/api/images/presigned-url', {
-                    params: { key }
-                  });
-                  issue.preSignedImageUrl = presignedResponse.data.url;
-                } catch (err) {
-                  console.error('Failed to fetch image for issue', issue.issue_id);
-                  issue.preSignedImageUrl = null;
-                }
-              }
-              return issue;
-            })
-          );
+          const markers = response.data.map((issue) => ({
+            ...issue,
+            lat: parseFloat(issue.gps_coords.split(',')[0]),
+            lng: parseFloat(issue.gps_coords.split(',')[1]),
+          }));
 
-          setMyIssues(issuesWithImages);
+          setReportMarkers(markers);
+          setError(null);
         } catch (error) {
-          console.error('Error fetching user issues:', error);
-          setError('Failed to fetch your issues.');
+          console.error('Error fetching nearby issues:', error);
+          setError('Failed to fetch nearby issues.');
         }
       };
-      fetchMyIssues();
+
+      fetchNearbyIssues();
     }
-  }, [tab, isLoggedIn]);
+  }, [tab, location]);
 
   // Functions
   const handleIssueIdInputChange = (e) => {
@@ -234,55 +228,55 @@ const ViewIssues = () => {
       )}
     </div>
   );
-
-
+  
   // Main return
   return (
     <div className="report-issue-container">
-        <div className="container p-4 border rounded" style={{ maxWidth: '800px' }}>
-            {/* Logo */}
-            <div className="text-center mb-4">
-                <img
-                    src={logo}
-                    alt="MI-Infrastructure Logo"
-                    style={{ maxWidth: '400px' }}
-                />
-            </div>
-            <h2 className="text-center mb-4">View Reported Issues</h2>
-            {error && <p className="text-danger text-center">{error}</p>}
-            {!isLoggedIn && (
-                <div className="alert alert-warning text-center mb-4">
-                    <p>
-                        You are not logged in. <a href="/login">Log in</a> to access all features.
-                    </p>
-                </div>
-            )}
-            <div className="mb-4 text-center">
-                <button
-                    className={`btn btn-outline-primary mx-1 ${tab === 'nearby' ? 'active' : ''}`}
-                    onClick={() => setTab('nearby')}
-                >
-                    View Nearby Issues
-                </button>
-                <button
-                    className={`btn btn-outline-primary mx-1 ${tab === 'myReports' ? 'active' : ''}`}
-                    onClick={() => setTab('myReports')}
-                >
-                    View My Reports
-                </button>
-                <button
-                    className={`btn btn-outline-primary mx-1 ${tab === 'byId' ? 'active' : ''}`}
-                    onClick={() => setTab('byId')}
-                >
-                    Look Up Issue by ID
-                </button>
-            </div>
-            {tab === 'nearby' && renderNearbyIssues()}
-            {tab === 'myReports' && renderMyIssues()}
-            {tab === 'byId' && renderIssueById()}
+      <div className="container p-4 border rounded" style={{ maxWidth: '800px' }}>
+        {/* Logo */}
+        <div className="text-center mb-4">
+          <img
+            src={logo}
+            alt="MI-Infrastructure Logo"
+            style={{ maxWidth: '400px' }}
+          />
         </div>
+        <h2 className="text-center mb-4">View Reported Issues</h2>
+        {error && <p className="text-danger text-center">{error}</p>}
+        {!isLoggedIn && (
+          <div className="alert alert-warning text-center mb-4">
+            <p>
+              You are not logged in. <a href="/login">Log in</a> to access all features.
+            </p>
+          </div>
+        )}
+        <div className="mb-4 text-center">
+          <button
+            className={`btn btn-outline-primary mx-1 ${tab === 'nearby' ? 'active' : ''}`}
+            onClick={() => setTab('nearby')}
+          >
+            View Nearby Issues
+          </button>
+          <button
+            className={`btn btn-outline-primary mx-1 ${tab === 'myReports' ? 'active' : ''}`}
+            onClick={() => setTab('myReports')}
+          >
+            View My Reports
+          </button>
+          <button
+            className={`btn btn-outline-primary mx-1 ${tab === 'byId' ? 'active' : ''}`}
+            onClick={() => setTab('byId')}
+          >
+            Look Up Issue by ID
+          </button>
+        </div>
+        {tab === 'nearby' && renderNearbyIssues()}
+        {tab === 'myReports' && renderMyIssues()}
+        {tab === 'byId' && renderIssueById()}
+      </div>
     </div>
-);
-}
-
-export default ViewIssues;
+  );
+  };
+  
+  export default ViewIssues;
+  
