@@ -29,7 +29,6 @@ export default function GoogleMapsIntegration({
   error,
   setError,
   defaultCenter,
-  tab,
 }) {
   const [selectedIssue, setSelectedIssue] = useState(null);
   const [preSignedImageUrl, setPreSignedImageUrl] = useState(null);
@@ -114,5 +113,4 @@ GoogleMapsIntegration.propTypes = {
   error: PropTypes.string,
   setError: PropTypes.func.isRequired,
   defaultCenter: PropTypes.object.isRequired,
-  tab: PropTypes.string.isRequired,
 };
