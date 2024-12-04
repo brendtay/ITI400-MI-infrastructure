@@ -11,10 +11,15 @@ h2 {
   padding: 1.5rem;
 }
 
-/* Making the content responsive */
+/* Responsive Design */
+.container {
+  padding: 0 20px; /* Add padding to ensure content doesn't touch screen edges */
+  margin: 0 auto; /* Center the container */
+}
+
 @media (max-width: 768px) {
   .container {
-    padding: 0 15px;
+    padding: 0 15px; /* Reduce padding slightly for smaller screens */
   }
 
   .row {
@@ -31,8 +36,8 @@ h2 {
 }
 
 @media (max-width: 576px) {
-  .container {
-    padding: 0 10px;
+  .custom-margin {
+    padding: 0 10px; /* Further reduce padding for extra small screens */
   }
 
   h2 {
@@ -57,3 +62,27 @@ h2 {
   margin: 0 auto; /* Center the card */
 }
 
+
+
+
+
+/* Logo Styling */
+.about-logo-container img, .custom-card-container img {
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto; /* Center the logo */
+  display: block;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .about-logo-container img, .custom-card-container img {
+    max-width: 80%; /* Scale down further for smaller screens */
+  }
+}
+
+@media (min-width: 992px) {
+  .about-logo-container img, .custom-card-container img {
+    max-width: 50%; /* Limit size for larger screens */
+  }
+}

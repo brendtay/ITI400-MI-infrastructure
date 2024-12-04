@@ -11,13 +11,14 @@ export default function About() {
       <div className="card mb-5 limited-width-card"> {/* Main card with limited width */}
         <div className="card-body text-center"> {/* Center text within the card */}
           {/* Logo Section */}
-          <div className="text-center mb-5">
-            <img
-              src={logo}
-              alt="MI-Infrastructure Logo"
-              style={{ maxWidth: '400px', height: 'auto' }}
-            />
-          </div>
+          <div className="text-center mb-5 about-logo-container">
+  <img
+    src={logo}
+    alt="MI-Infrastructure Logo"
+    className="img-fluid"
+  />
+</div>
+
 
           <h2 className="card-title mb-4">Our Mission</h2>
           <p className="card-text">
