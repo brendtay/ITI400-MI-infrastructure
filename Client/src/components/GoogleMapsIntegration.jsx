@@ -34,7 +34,27 @@ export default function GoogleMapsIntegration({
   const [selectedIssue, setSelectedIssue] = useState(null);
   const [preSignedImageUrl, setPreSignedImageUrl] = useState(null);
   const mapRef = useRef(null);
+  
+  useEffect(() => {
+    let isMounted = true;
+    fetchReports(location)
+      .then((data) => {
+        if (isMounted) {
+          setReportMarkers(data);
+        }
+      })
+      .catch((err) => {
+        if (isMounted) {
+          setError(err.message);
+        }
+      });
+  
+    return () => {
+      isMounted = false;
+    };
+  }, [location]);
 
+  
   useEffect(() => {
     if (location && (tab === 'nearby' || tab === 'home')) {
       fetchReports(location);
