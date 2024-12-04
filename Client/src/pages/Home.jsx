@@ -39,7 +39,7 @@ export default function Home() {
 <div className="row justify-content-center mt-4 mb-3">
   <div className="col-10">
     <div className="text-center p-4">
-      <h1 className="display-4">A Better Way To Report Issues</h1>
+      <h1 className="display-4"><b>A Better Way To Report Issues</b></h1>
       <h3>Moving infrastructure reporting into the future</h3>
       <div className="d-flex justify-content-center mt-4">
         <Link to="/viewreports" className="btn btn-primary btn-lg me-2">
