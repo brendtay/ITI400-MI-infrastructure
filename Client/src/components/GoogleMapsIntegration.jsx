@@ -8,8 +8,9 @@ import '../components/componentCss/googleMapInt.css';
 
 const containerStyle = {
   width: '100%',
-  height: '400px',
+  height: '600px', // Adjust to a value that works for your layout
 };
+
 
 const issueTypeColors = {
   'Pothole': 'red',

@@ -110,9 +110,14 @@ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 .google-map-container {
   position: relative;
   width: 100%;
-  height: 40vh; /* Retains consistent height */
-  max-width: 100%; /* Ensure responsive width */
+  height: 40vh; /* Ensure consistent height */
+  max-width: 100%; /* Allow full width for all screen sizes */
+  overflow: hidden; /* Prevent content overflow */
+  display: block !important;
+  visibility: visible !important;
+  background-color: lightgray; /* Debugging visibility */
 }
+
 
 @media (max-width: 768px) {
   .google-map-container {
