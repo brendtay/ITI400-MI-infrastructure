@@ -1,4 +1,3 @@
-// Updated GoogleMapsIntegration.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
@@ -8,8 +7,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../components/componentCss/googleMapInt.css';
 
 const containerStyle = {
-  width: '100%', // Fully responsive width
-  height: '40vh', // Consistent height
+  width: '100%',
+  height: '400px',
 };
 
 const issueTypeColors = {
@@ -18,7 +17,7 @@ const issueTypeColors = {
   'Damaged road': 'blue',
   'Damaged sidewalk': 'green',
   'Drainage issue': 'purple',
-  'Other': 'orange',
+  'Other': 'orange'
 };
 
 export default function GoogleMapsIntegration({
