@@ -108,17 +108,17 @@ const ViewIssues = () => {
   // Render functions
   const renderNearbyIssues = () => (
     <div className="google-maps-container mb-3">
-      <GoogleMapsIntegration
-        location={location}
-        setLocation={setLocation}
-        reportMarkers={reportMarkers}
-        setReportMarkers={setReportMarkers}
-        error={error}
-        setError={setError}
-        defaultCenter={defaultCenter}
-        tab="nearby"
-      />
-    </div>
+  <GoogleMapsIntegration
+    location={location}
+    setLocation={setLocation}
+    reportMarkers={reportMarkers}
+    setReportMarkers={setReportMarkers}
+    error={error}
+    setError={setError}
+    defaultCenter={defaultCenter}
+    tab="nearby"
+  />
+</div>
   );
 
   const renderMyIssues = () => {

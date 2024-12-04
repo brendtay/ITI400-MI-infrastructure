@@ -222,6 +222,13 @@
     border-radius: 8px; /* Optional: Rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Subtle shadow */
     padding: 20px; /* Padding inside the container */
+    display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+  padding: 20px;
+  box-sizing: border-box; /* Include padding in total height/width calculations */
   }
 
   /* Base style using dynamic min-height */
@@ -252,4 +259,20 @@
     .google-maps-container {
         height: 400px; /* Reduce height for smaller screens */
     }
+}
+
+.google-maps-container {
+  width: 100%;
+  min-height: 400px; /* Ensures a minimum height for visibility */
+  height: 100%; /* Makes it expand based on content */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative; /* Allows flexible adjustment if needed */
+}
+
+.google-maps-container iframe {
+  width: 100%; /* Ensures the map fits the container's width */
+  height: 100%; /* Expands to fill the container's height */
+  border: none;
 }

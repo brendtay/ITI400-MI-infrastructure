@@ -96,17 +96,19 @@ export default function Home() {
             setLocation={setLocation}
           />
         </div>
-        <div className="google-map-container" style={{ width: '100%', maxWidth: '1000px', height: '400px' }}>
-          <GoogleMapsIntegration
-            location={location}
-            setLocation={setLocation}
-            reportMarkers={reportMarkers}
-            setReportMarkers={setReportMarkers}
-            defaultCenter={defaultCenter}
-            error={error}
-            setError={setError}
-          />
-        </div>
+        <div className="google-map-container">
+  <GoogleMapsIntegration
+    location={location}
+    setLocation={setLocation}
+    reportMarkers={reportMarkers}
+    setReportMarkers={setReportMarkers}
+    defaultCenter={defaultCenter}
+    error={error}
+    setError={setError}
+    tab="nearby" // Pass 'nearby' to fetch nearby issues
+  />
+</div>
+
       </div>
     </div>
   </div>
