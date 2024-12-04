@@ -35,7 +35,7 @@ body {
 
 body {
   /* Solid base color or gradient */
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.952), rgba(179, 199, 250, 0.89)), 
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.952), rgba(216, 227, 255, 0.89)), 
   url('../src/images/noise-texture.png');
 
 
