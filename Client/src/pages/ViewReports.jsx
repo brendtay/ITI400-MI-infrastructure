@@ -67,6 +67,43 @@ const ViewIssues = () => {
     }
   }, [tab, location]);
 
+  // Fetch user's issues
+  useEffect(() => {
+    if (tab === 'myReports' && isLoggedIn) {
+      const fetchMyIssues = async () => {
+        try {
+          const response = await axios.get('/api/issues/user');
+          const issues = response.data;
+
+          // For each issue, fetch the pre-signed URL if image_url exists
+          const issuesWithImages = await Promise.all(issues.map(async (issue) => {
+            if (issue.image_url) {
+              try {
+                const key = issue.image_url.split('/').pop();
+                const presignedResponse = await axios.get('/api/images/presigned-url', {
+                  params: { key }
+                });
+                issue.preSignedImageUrl = presignedResponse.data.url;
+              } catch (err) {
+                console.error('Failed to fetch image for issue', issue.issue_id);
+                issue.preSignedImageUrl = null;
+              }
+            }
+            return issue;
+          }));
+
+          setMyIssues(issuesWithImages);
+          setError(null);
+        } catch (error) {
+          console.error('Error fetching user issues:', error);
+          setError('Failed to fetch your reported issues.');
+        }
+      };
+
+      fetchMyIssues();
+    }
+  }, [tab, isLoggedIn]);
+
   // Functions
   const handleIssueIdInputChange = (e) => {
     setIssueIdInput(e.target.value);
