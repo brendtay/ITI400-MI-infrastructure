@@ -74,6 +74,13 @@ const ReportIssueForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+     // Client-side validation
+  if (!issueType || !description || !captchaToken) {
+    setError("Please fill out all required fields and complete the CAPTCHA.");
+    alert("Please Fill Out The Form");
+    return;
+  }
+
     if (!captchaToken) {
       setError("Please complete the CAPTCHA to submit the form.");
       return;
@@ -117,10 +124,14 @@ const ReportIssueForm = () => {
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
+
+      alert("Your issue has been reported successfully!");
+      
     } catch (err) {
       console.error("Error reporting issue:", err);
       setError(err.response?.data?.error || "An error occurred. Please try again.");
       setSuccess(null);
+      alert("Please Fill Out The Form");
     }
   };
 
@@ -275,8 +286,13 @@ const ReportIssueForm = () => {
             />
           </div>
 
-          {/* Submit Button */}
-          <button type="submit" className="btn btn-primary w-100 mt-2  d-flex justify-content-center">Submit</button>
+          <button
+          type="submit"
+          className="btn btn-primary w-100 mt-2 d-flex justify-content-center"
+        >
+          Submit
+        </button>
+
         </form>
       </div>
     </div>
