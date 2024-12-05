@@ -49,6 +49,11 @@ app.use(cookieParser()); // Cookie monster
 
 // Sanitize and detailed log of incoming requests
 app.use((req, res, next) => {
+  // Exclude specific URLs from logging
+  if (req.path === '/api/users/checklogin' || req.path === '/api/users/me') {
+    return next();
+  }
+
   const startTime = Date.now();
 
   // Get client IP address (support for proxies)
