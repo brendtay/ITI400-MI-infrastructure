@@ -75,7 +75,7 @@ export default function Home() {
         {/* How It Works Section */}
         <div className="row justify-content-center mt-4">
           <div className="col-10">
-            <div className="custom-card-container">
+            <div className="custom-card-container-howItWorks ">
             
               <HowItWorks />
             </div>
