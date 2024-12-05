@@ -4,7 +4,6 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const path = require("path");
 const cookieParser = require('cookie-parser');
-const crypto = require("crypto");
 
 // Load environment variables from .env file
 dotenv.config();
@@ -47,11 +46,6 @@ app.use(cors(corsOptions)); // CORS middleware
 app.use(express.json()); // Parse JSON requests
 app.use(cookieParser()); // Cookie monster
 
-// Secure inline scripts
-app.use((req, res, next) => {
-  res.locals.nonce = crypto.randomBytes(16).toString("base64");
-  next();
-});
 
 // Sanitize and detailed log of incoming requests
 app.use((req, res, next) => {
