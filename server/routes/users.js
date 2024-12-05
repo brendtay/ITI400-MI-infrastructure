@@ -89,6 +89,7 @@ router.post('/logout', (req, res) => {
 // Route: Check login status
 router.get('/checklogin', authenticateToken, (req, res) => {
     try {
+        console.log("Authenticated user data:", req.user);
         res.json({
             status: 'logged_in',
             user: req.user,
