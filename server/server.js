@@ -24,11 +24,9 @@ const allowedOrigins = [
   process.env.FRONTEND_URL_ALT,           // Alternate frontend URL
 ];
 
-const normalizeOrigin = (origin) => (origin ? origin.replace(/\/$/, "") : origin);
-
 const corsOptions = {
   origin: (origin, callback) => {
-    if (allowedOrigins.map(normalizeOrigin).includes(normalizeOrigin(origin)) || !origin) {
+    if (allowedOrigins.includes(origin) || !origin) {
       callback(null, true);
     } else {
       console.error(`Blocked by CORS: ${origin}`);
@@ -39,16 +37,43 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
+// Apply global security measures
+app.disable("x-powered-by"); // Removes framework version headers
+app.use(express.static("public", { dotfiles: "deny" }));
+
 // Apply global middlewares
 app.use(cors(corsOptions)); // CORS middleware
 app.use(express.json()); // Parse JSON requests
 app.use(cookieParser()); // Cookie monster
 
-// Middleware to log origins and routes
+// Sanitize and detailed log of incoming requests
 app.use((req, res, next) => {
-  const origin = req.headers.origin || "No Origin Header";
-  console.log(`Request Origin: ${origin}`);
-  console.log(`Incoming Request: Method=${req.method}, URL=${req.url}`);
+  const startTime = Date.now();
+
+  // Get client IP address (support for proxies)
+  const clientIp = req.headers["x-forwarded-for"]?.split(",").shift() || req.ip;
+
+  // Capture request details
+  console.log(`[${new Date().toISOString()}] Incoming Request:`);
+  console.log(`  Method: ${req.method}`);
+  console.log(`  URL: ${req.url}`);
+  console.log(`  Client IP: ${clientIp}`);
+  console.log(`  User-Agent: ${req.headers["user-agent"]}`);
+  console.log(`  Content-Type: ${req.headers["content-type"] || "N/A"}`);
+
+  // Check for directory traversal patterns
+  if (/(\.\.|%2e%2e)/i.test(req.url)) {
+    console.log(`  Blocked potential directory traversal attempt: ${req.url}`);
+    return res.status(400).send("Bad Request");
+  }
+
+  // Hook into response to log response status and processing time
+  res.on("finish", () => {
+    const duration = Date.now() - startTime;
+    console.log(`  Response Status: ${res.statusCode}`);
+    console.log(`  Processing Time: ${duration}ms`);
+  });
+
   next();
 });
 
@@ -71,10 +96,7 @@ app.get("/api/status", (req, res) => {
 });
 
 // Catch-all route to serve the React app for any unmatched routes
-app.get("*", (req, res, next) => {
-  if (req.path.startsWith("/api/")) {
-    return next(); // Skip React app serving for API requests
-  }
+app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../Client/dist/index.html"));
 });
 
